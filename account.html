@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Sports BFF — The home base for the modern female fan</title>
-<meta name="description" content="Content, culture, and community designed for how women actually experience sports. No gatekeeping. No dumbing down.">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>Account — Your Sports BFF</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 @font-face {
     font-family: 'Perfectly Nineties';
@@ -54,84 +52,36 @@
   }
 </style>
 <style>
-
-
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --mandarin: #FE6735;
+    --mandarin-dark: #E55A2D;
     --charcoal: #1E1C1A;
     --stone: #FEFEFE;
     --pink: #FFE1EE;
-    --white: #FFFFFF;
+    --line: rgba(30,28,26,0.08);
+    --line-nav: rgba(30,28,26,0.1);
     --text-primary: #1E1C1A;
-    --text-secondary: rgba(30,28,26,0.6);
-    --line: rgba(30,28,26,0.1);
-    --radius: 12px;
-    --font-display: 'Perfectly Nineties', Georgia, serif;
+    --text-secondary: rgba(30,28,26,0.55);
+    --font-display: 'Perfectly Nineties', sans-serif;
+    --font-serif: 'Perfectly Nineties', Georgia, serif;
     --font-sans: 'Manrope', sans-serif;
     --font-body: 'Manrope', sans-serif;
+    --radius: 12px;
   }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body {
-    font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.6;
-    color: var(--text-primary);
-    background: var(--stone);
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 99999;
-  }
+  body { font-family: var(--font-body); color: var(--text-primary); background: var(--stone); -webkit-font-smoothing: antialiased; min-height: 100vh; }
   a { color: inherit; text-decoration: none; }
 
-  /* Mobile-only line break — hidden by default, shown in mobile media query */
-  .mobile-br { display: none; }
-
-  /* Desktop-only line break — hidden by default, shown at desktop sizes */
-  .desktop-br { display: none; }
-
-  /* Keep "modern female fan" as one line on large desktop; allow wrap below */
-  @media (min-width: 1025px) {
-    .nowrap-desktop { white-space: nowrap; }
-    .desktop-br { display: inline; }
-  }
+  /* PAGE SYSTEM */
+  .page { display: none; min-height: 100vh; }
+  .page.is-active { display: flex; }
 
   /* ============================================
-     GRID LINES — behind content, z-index:1
-     Only visible on light sections
-     ============================================ */
-  .grid-lines-wrap {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .grid-lines {
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: 0 40px;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
-  .grid-lines span {
-    width: 1px;
-    background: var(--line);
-    height: 100%;
-  }
-
-  /* All content sits above grid lines */
-  .container { max-width: 1320px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-
-  /* ============================================
-     FLOATING PILL NAV — wider, all caps
+     FLOATING PILL NAV
+     Dashboard only, tablet/mobile only.
+     Just logo + hamburger. Hidden on desktop (sidebar handles nav).
+     Hidden entirely on auth/onboarding pages (static logo only).
      ============================================ */
   .nav-wrap {
     position: fixed;
@@ -141,13 +91,14 @@
     z-index: 1000;
     width: calc(100% - 48px);
     max-width: 960px;
+    display: none; /* shown on tablet/mobile when on dashboard */
   }
   .nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: #fff;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-nav);
     border-radius: 100px;
     padding: 8px 8px 8px 28px;
     box-shadow: 0 4px 24px rgba(31,31,35,0.06);
@@ -162,742 +113,23 @@
     height: 28px;
     width: auto;
   }
-  .nav__links { display: flex; gap: 4px; list-style: none; }
-  .nav__links a {
-    font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-secondary);
-    padding: 8px 16px;
-    border-radius: 100px;
-    transition: color 0.2s, background 0.2s;
-  }
-  .nav__links a:hover { color: var(--text-primary); background: #f0efed; }
-  /* Active page — pill highlight */
-  .nav__links a.is-active {
-    background: var(--charcoal);
-    color: #fff;
-  }
-  .nav__links a.is-active:hover {
-    background: var(--stone);
-    color: var(--text-primary);
-  }
-  .nav__right { display: flex; align-items: center; gap: 6px; }
-  .nav__cta {
-    font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    background: var(--mandarin);
-    color: #fff;
-    padding: 10px 22px;
-    border-radius: 100px;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-  .nav__cta:hover { background: var(--pink); color: var(--charcoal); }
-
-  /* Buttons */
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-family: var(--font-sans); font-size: 14px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.1em;
-    padding: 14px 28px; border-radius: 100px;
-    transition: all 0.2s; cursor: pointer; border: none;
-  }
-  .btn--mandarin { background: var(--mandarin); color: #fff; }
-  .btn--mandarin:hover { background: var(--pink); color: var(--charcoal); transform: translateY(-1px); }
-  .btn--outline { background: transparent; color: var(--text-primary); border: 1.5px solid var(--line); }
-  .btn--outline:hover { border-color: var(--mandarin); color: var(--mandarin); transform: translateY(-1px); }
-  .btn--white { background: #fff; color: var(--charcoal); }
-  .btn--white:hover { background: var(--mandarin); color: #fff; transform: translateY(-1px); }
-  .btn--pink { background: var(--pink); color: var(--charcoal); }
-  .btn--pink:hover { background: var(--mandarin); color: #fff; transform: translateY(-1px); }
-  .btn svg { width: 14px; height: 14px; }
-
-  /* ============================================
-     HERO
-     ============================================ */
-  .hero {
-    position: relative;
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    height: 100vh;
-    min-height: 720px;
-    max-height: 900px;
-    background-color: var(--charcoal);
-    background-image: url('hero-seats.png');
-    background-size: cover;
-    background-position: center;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(30,28,26,0.45) 0%, rgba(30,28,26,0.25) 40%, rgba(30,28,26,0.55) 100%);
-    z-index: 1;
-  }
-  .hero__inner {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 40px;
-    text-align: center;
-    color: #fff;
-  }
-  .hero__headline {
-    font-family: var(--font-display);
-    font-size: clamp(80px, 10vw, 148px);
-    font-weight: 600;
-    line-height: 0.92;
-    letter-spacing: -0.025em;
-    color: #fff;
-    margin-bottom: 32px;
-  }
-  .hero__headline i { font-style: italic; font-weight: 400; color: #fff; }
-  .hero__sub {
-    font-family: var(--font-body);
-    font-size: 22px;
-    line-height: 1.45;
-    color: #fff;
-    max-width: 640px;
-    margin: 0 auto 40px;
-  }
-  .hero__buttons {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .hero__buttons .btn--outline {
-    background: transparent;
-    color: #fff;
-    border: 1.5px solid rgba(255,255,255,0.4);
-  }
-  .hero__buttons .btn--outline:hover {
-    border-color: var(--mandarin);
-    color: var(--mandarin);
-    background: transparent;
-  }
-
-  /* ============================================
-     MARQUEE BANNERS
-     ============================================ */
-  .marquee {
-    display: flex; align-items: center; width: max-content;
-    animation: mq 25s linear infinite;
-    padding: 13px 0;
-  }
-  .marquee__text {
-    white-space: nowrap; font-family: var(--font-sans); font-size: 14px;
-    font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
-  }
-  .marquee__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pink); flex-shrink: 0; margin: 0 24px; }
-  .mq-band { overflow: hidden; position: relative; z-index: 5; }
-  @keyframes mq { 0% { transform: translateX(0); } 100% { transform: translateX(-33.333%); } }
-
-  /* ============================================
-     MANIFESTO
-     ============================================ */
-  .manifesto { padding: 100px 0; }
-  .manifesto__eyebrow {
-    font-family: var(--font-sans); font-size: 13px; font-weight: 700;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--mandarin); margin-bottom: 28px;
-  }
-  .manifesto__text {
-    font-family: var(--font-display); font-size: 56px; font-weight: 600;
-    line-height: 1.12; letter-spacing: -0.03em; max-width: 1280px;
-  }
-  .manifesto__text i { font-style: italic; color: var(--charcoal); }
-  .manifesto__text .pill-img {
-    display: inline-block; width: 75px; height: 44px;
-    border-radius: 100px; background: #D9D9D9;
-    background-size: cover; background-position: center;
-    vertical-align: middle;
-    margin: 0 4px; position: relative; top: -2px;
-  }
-  .manifesto__text .pill-img--wide { width: 100px; }
-
-  /* ============================================
-     POLAROID PHOTO CARDS
-     Matching the Padelthon event page exactly:
-     - Large, nearly square
-     - White border/padding ALL around (like a polaroid)
-     - Rounded outer corners
-     - Text label BELOW the card, in the bg
-     - Overlap significantly with alternating rotations
-     - Bleed off viewport edges
-     - STATIC, no wiggle
-     ============================================ */
-  .polaroid-strip {
-    padding: 60px 0;
-    overflow: hidden;
-    position: relative;
-    z-index: 3;
-  }
-  .polaroid-strip__track {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 40px 0 20px;
-    margin: 0 -80px;
-  }
-  .polaroid {
-    flex-shrink: 0;
-    width: 380px;
-    background: var(--white);
-    border-radius: 16px;
-    padding: 12px 12px 8px;
-    box-shadow: 0 6px 30px rgba(31,31,35,0.08);
-    position: relative;
-    margin-left: -50px;
-  }
-  .polaroid:first-child { margin-left: 0; }
-  /* Alternating rotations */
-  .polaroid:nth-child(1) { transform: rotate(-5deg) translateY(20px); z-index: 1; }
-  .polaroid:nth-child(2) { transform: rotate(5deg) translateY(-10px); z-index: 2; }
-  .polaroid:nth-child(3) { transform: rotate(-5deg) translateY(20px); z-index: 3; }
-  .polaroid:nth-child(4) { transform: rotate(5deg) translateY(-10px); z-index: 4; }
-  .polaroid:nth-child(5) { transform: rotate(-5deg) translateY(20px); z-index: 5; }
-
-  .polaroid__image {
-    width: 100%;
-    aspect-ratio: 1/1;
-    background: #D9D9D9;
-    background-size: cover;
-    background-position: center;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(0,0,0,0.3);
-    font-size: 13px;
-    overflow: hidden;
-  }
-  /* Text label inside the card, on the white border below the image */
-  .polaroid__label {
-    padding: 14px 4px 6px;
-    text-align: center;
-    font-family: var(--font-body);
-    font-size: 12px;
-    font-weight: 300;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-secondary);
-    white-space: nowrap;
-  }
-
-  /* Bigger version for 2nd strip */
-  .polaroid-strip--big .polaroid { width: 380px; margin-left: -50px; }
-  .polaroid-strip--big .polaroid:first-child { margin-left: 0; }
-
-  /* ============================================
-     BFF BRIEF — dark section, NO grid lines
-     ============================================ */
-  .bff-brief {
-    padding: 100px 0;
-    background: var(--charcoal);
-    color: #fff;
-    position: relative;
-    z-index: 3;
-  }
-  .bff-brief__inner {
-    display: grid; grid-template-columns: 1.35fr 1fr;
-    gap: 64px; align-items: center;
-  }
-  .bff-brief__eyebrow {
-    font-family: var(--font-sans); font-size: 13px; font-weight: 700;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: #fff; background: var(--mandarin);
-    padding: 6px 14px; border-radius: 100px;
-    display: inline-block; margin-bottom: 20px;
-  }
-  .bff-brief__headline {
-    font-family: var(--font-display); font-size: 56px; font-weight: 600;
-    line-height: 1.15; margin-bottom: 18px; color: #fff;
-  }
-  .bff-brief__headline i { font-style: italic; color: var(--mandarin); }
-  .bff-brief__sub {
-    font-size: 16px; line-height: 1.65;
-    color: #fff; margin-bottom: 28px; max-width: 420px;
-  }
-  .bff-brief__features { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
-  .bff-brief__feature {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 15px; color: #fff;
-  }
-  .check-dot {
-    width: 22px; height: 22px; border-radius: 50%;
-    background: var(--mandarin); display: flex;
-    align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .check-dot svg { width: 11px; height: 11px; color: #fff; }
-  .bff-brief__phone-wrap { display: flex; justify-content: center; align-items: flex-start; }
-  .bff-sms {
-    display: flex; flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    max-width: 420px;
-    font-family: 'Manrope', sans-serif;
-  }
-  .bff-sms__bubble {
-    background: #E9E9EB;
-    color: #000000;
-    padding: 11px 16px;
-    border-radius: 18px 18px 18px 4px;
-    font-size: 13px;
-    line-height: 1.4;
-    letter-spacing: -0.01em;
-    position: relative;
-    align-self: flex-start;
-    max-width: 92%;
-  }
-  .bff-sms__bubble--signature {
-    max-width: none;
-    align-self: flex-start;
-    padding: 8px 14px;
-    font-size: 12px;
-  }
-  .bff-sms__reaction {
-    position: absolute;
-    top: -6px; right: -10px;
-    background: #E9E9EB;
-    border: 2.5px solid var(--charcoal);
-    border-radius: 50%;
-    width: 24px; height: 24px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px;
-  }
-
-  /* ============================================
-     SPORTS HOTLINE
-     ============================================ */
-  .hotline {
-    padding: 100px 0;
-    background: var(--charcoal);
-    color: #fff;
-    position: relative;
-    z-index: 3;
-    overflow: hidden;
-  }
-  .hotline__inner {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 48px; align-items: center;
-  }
-  /* iMessage chat — solid colors, proper spacing */
-  .imessage {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    width: 380px;
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px;
-    line-height: 1.38;
-    letter-spacing: -0.01em;
-  }
-  .im-row { display: flex; flex-direction: column; }
-  .im-row--right { align-items: flex-end; }
-  .im-row--left { align-items: flex-start; }
-  .im {
-    max-width: 85%;
-    padding: 9px 14px;
-    font-size: 14px;
-    line-height: 1.38;
-  }
-  /* Blue sent bubble */
-  .im--blue {
-    background: #3B82F6;
-    color: #fff;
-    border-radius: 18px 18px 4px 18px;
-  }
-  /* Gray received bubble — solid iPhone gray, black text */
-  .im--gray {
-    background: #E9E9EB;
-    color: #000000;
-    border-radius: 18px 18px 18px 4px;
-  }
-  /* Gap between different senders (blue to gray or gray to blue) */
-  .im__gap { height: 14px; }
-  /* Tight gap between consecutive same-sender bubbles */
-  .im__gap--tight { height: 3px; }
-
-  /* Right side — branded creative layout */
-  .hotline__right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .hotline__brand-tag {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #fff;
-    background: var(--mandarin);
-    padding: 6px 14px;
-    border-radius: 100px;
-    margin-bottom: 24px;
-    display: inline-block;
-  }
-  .hotline__title {
-    font-family: var(--font-display);
-    font-size: 56px;
-    font-weight: 600;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    margin-bottom: 12px;
-  }
-  .hotline__title i {
-    font-style: italic;
-    color: var(--pink);
-  }
-  .hotline__tagline {
-    font-family: var(--font-body);
-    font-size: 18px;
-    font-weight: 400;
-    color: #fff;
-    margin-bottom: 20px;
-    max-width: 380px;
-    line-height: 1.5;
-  }
-  .hotline__body {
-    font-size: 15px;
-    line-height: 1.65;
-    color: #fff;
-    margin-bottom: 28px;
-    max-width: 400px;
-  }
-  .hotline__perks {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 32px;
-  }
-  .hotline__perk {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    flex: 1;
-  }
-  .hotline__perk-content {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .hotline__perk-content .hotline__perk-title { display: block; }
-  .hotline__perk-content .hotline__perk-text { display: block; }
-  .hotline__perk-content .hotline__perk-dash { display: none; }
-  .hotline__perk-check {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    background: var(--mandarin);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 4px;
-  }
-  .hotline__perk-check svg { width: 10px; height: 10px; color: #fff; }
-  .hotline__perk-text {
-    font-size: 12px;
-    line-height: 1.4;
-    color: #fff;
-  }
-  .hotline__perk-title {
-    font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #fff;
-  }
-
-  /* ============================================
-     TESTIMONIALS — editorial pull quote, box on grid
-     ============================================ */
-  .testimonials {
-    padding: 100px 0;
-    position: relative;
-    z-index: 3;
-    overflow: hidden;
-  }
-  .testimonials__inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-  .testimonials__frame {
-    grid-column: 2 / 4;
-    border-left: 1px solid var(--line);
-    border-right: 1px solid var(--line);
-    padding: 56px 48px 48px;
-    text-align: center;
-    background: var(--stone);
-    position: relative;
-    z-index: 2;
-  }
-  /* Extend top and bottom lines full-width across the screen */
-  .testimonials__frame::before,
-  .testimonials__frame::after {
-    content: '';
-    position: absolute;
-    left: -50vw;
-    right: -50vw;
-    height: 1px;
-    background: var(--line);
-  }
-  .testimonials__frame::before { top: 0; }
-  .testimonials__frame::after { bottom: 0; }
-  .testimonials__headline {
-    font-family: var(--font-display);
-    font-size: 56px;
-    font-weight: 600;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    margin-bottom: 40px;
-  }
-  .testimonials__headline i { font-style: italic; color: var(--mandarin); }
-  .testimonials__stars {
-    color: var(--mandarin);
-    font-size: 18px;
-    letter-spacing: 4px;
-    margin-bottom: 4px;
-  }
-  .testimonials__quote-wrap {
-    position: relative;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 4px;
-  }
-  .testimonials__quote {
-    font-family: var(--font-body);
-    font-size: 19px;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: -0.01em;
-    color: var(--text-primary);
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    padding: 0 10px;
-  }
-  .testimonials__quote.is-active {
-    opacity: 1;
-  }
-  .testimonials__dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 0;
-  }
-  .testimonials__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    border: 1.5px solid var(--line);
-    background: transparent;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
-    padding: 0;
-  }
-  .testimonials__dot:hover {
-    border-color: var(--mandarin);
-  }
-  .testimonials__dot.is-active {
-    background: var(--mandarin);
-    border-color: var(--mandarin);
-  }
-
-  /* ============================================
-     VALUE PROPS — Padelthon-style grid
-     Transparent bg, lines align with page grid
-     ============================================ */
-  .values { padding: 100px 0; position: relative; z-index: 2; }
-  .values__eyebrow {
-    font-family: var(--font-sans); font-size: 13px; font-weight: 700;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--mandarin); margin-bottom: 16px;
-  }
-  .values__headline {
-    font-family: var(--font-display); font-size: 56px; font-weight: 600;
-    line-height: 1.15; margin-bottom: 40px;
-    max-width: 1150px;
-  }
-  .values__headline i { font-style: italic; }
-  .values__grid {
-    display: grid;
-    /* 4 equal columns matching the 5 background grid lines */
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    /* No background — stone shows through */
-  }
-  .v-cell {
-    padding: 36px 28px 36px 38px;
-    border-right: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    display: flex; flex-direction: column;
-    justify-content: flex-start; gap: 14px;
-  }
-  .v-cell--no-right { border-right: none; }
-  .v-cell--no-bottom { border-bottom: none; }
-  /* Wide cell spanning 2 columns */
-  .v-cell--wide {
-    grid-column: span 2;
-    background: var(--stone);
-    position: relative;
-    z-index: 2;
-  }
-  .v-cell__icon {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: var(--mandarin); display: flex;
-    align-items: center; justify-content: center;
-    color: #fff; margin-bottom: 4px;
-  }
-  .v-cell__icon svg { width: 16px; height: 16px; }
-  .v-cell__title { font-family: var(--font-display); font-size: 22px; font-weight: 400; font-style: normal; letter-spacing: -0.02em; line-height: 1.15; }
-  .v-cell__body { font-size: 14px; line-height: 1.5; color: var(--text-secondary); }
-  .v-image {
-    grid-row: 1 / 3; grid-column: 2;
-    background-color: #D9D9D9;
-    background-image: url('values-tv-vertical.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-right: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    min-height: 420px;
-  }
-
-  /* ============================================
-     SOCIAL — full-width slider rows
-     ============================================ */
-  .social-section { padding: 100px 0 60px; position: relative; z-index: 3; }
-  .social-section__header {
-    display: flex; justify-content: space-between;
-    align-items: flex-end; margin-bottom: 40px;
-  }
-  .social-section__headline {
-    font-family: var(--font-display); font-size: 56px; font-weight: 600;
-    line-height: 1.05; letter-spacing: -0.03em; white-space: nowrap;
-  }
-  .social-section__headline i { font-style: italic; color: var(--mandarin); }
-  .platform-pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.06em;
-    padding: 10px 18px; border-radius: 100px;
-    border: 1.5px solid var(--line); transition: all 0.2s;
-  }
-  .platform-pill:hover { border-color: var(--mandarin); color: var(--mandarin); }
-  .social-tracks {
-    display: flex; flex-direction: column; gap: 16px;
-    overflow: hidden; margin: 0 -40px;
-  }
-  .social-track { display: flex; gap: 16px; width: max-content; animation: sl 40s linear infinite; }
-  .social-track--rev { animation: sl-rev 45s linear infinite; }
-  .social-post {
-    width: 280px; height: 350px;
-    border-radius: var(--radius); background: #D9D9D9;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    color: rgba(0,0,0,0.3); font-size: 12px;
-  }
-  @keyframes sl { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-  @keyframes sl-rev { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-
-  /* ============================================
-     CTA — dark, NO grid lines
-     ============================================ */
-  .cta {
-    padding: 120px 0; text-align: center;
-    background: var(--charcoal); color: #fff;
-    position: relative; z-index: 3;
-  }
-  .cta__headline {
-    font-family: var(--font-display); font-size: 56px; font-weight: 600;
-    line-height: 1.1; margin-bottom: 18px; max-width: 600px;
-    margin-left: auto; margin-right: auto;
-  }
-  .cta__headline i { font-style: italic; color: var(--mandarin); }
-  .cta__sub {
-    font-size: 17px; line-height: 1.6; color: #fff;
-    max-width: 440px; margin: 0 auto 36px;
-  }
-
-  /* ============================================
-     FOOTER — dark, NO grid lines
-     ============================================ */
-  .footer {
-    background: var(--charcoal);
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 56px 0 40px;
-    color: #fff;
-    position: relative; z-index: 3;
-  }
-  .footer__inner {
-    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
-  }
-  .footer__logo {
-    font-family: var(--font-sans); font-weight: 700; font-size: 18px;
-    color: #fff; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.02em;
-  }
-  .footer__logo em { color: var(--mandarin); font-style: normal; }
-  .footer__tagline { font-size: 14px; line-height: 1.55; max-width: 260px; margin-bottom: 20px; color: #fff; }
-  .footer__col-title {
-    font-family: var(--font-sans); font-size: 13px; font-weight: 700;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: #fff; margin-bottom: 16px;
-  }
-  .footer__links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .footer__links a { font-size: 14px; color: #fff; transition: color 0.2s; }
-  .footer__links a:hover { color: var(--mandarin); }
-  .footer__bottom {
-    margin-top: 40px; padding-top: 20px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    display: flex; justify-content: space-between; font-size: 12px;
-    color: #fff;
-  }
-
-  /* ============================================
-     RESPONSIVE
-     ============================================ */
-  /* ============================================
-     HAMBURGER MENU
-     ============================================ */
   .nav__hamburger {
-    display: none;
     background: none; border: none; cursor: pointer;
     width: 36px; height: 36px;
-    flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
     padding: 0;
   }
   .nav__hamburger span {
     display: block; width: 20px; height: 2px;
     background: var(--charcoal); transition: all 0.3s;
   }
-  /* Full-screen mobile menu overlay */
+
+  /* FULL-SCREEN MOBILE MENU OVERLAY */
   .nav__mobile-menu {
     display: none;
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: var(--charcoal);
-    z-index: 999;
+    z-index: 1100;
     flex-direction: column;
     color: #fff;
     overflow-y: auto;
@@ -937,6 +169,33 @@
     border-bottom: 1px solid rgba(255,255,255,0.15);
   }
   .nav__mobile-menu__primary a.is-active { color: var(--mandarin); }
+  .nav__mobile-menu__account {
+    padding: 28px 24px 20px;
+    display: flex; flex-direction: column; gap: 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+  .nav__mobile-menu__account-label {
+    font-family: var(--font-sans);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 12px;
+  }
+  .nav__mobile-menu__account a,
+  .nav__mobile-menu__account .nav__mobile-link {
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.01em;
+    padding: 10px 0;
+    cursor: pointer;
+    background: none; border: none; text-align: left;
+    display: block; width: 100%;
+  }
+  .nav__mobile-menu__account .nav__mobile-link.is-active {
+    color: var(--mandarin);
+  }
   .nav__mobile-menu__secondary {
     padding: 28px 24px 20px;
     display: flex; flex-direction: column; gap: 10px;
@@ -962,1140 +221,457 @@
   }
 
   /* ============================================
-     TABLET — max 1024px
+     AUTH PAGES — centered card layout
      ============================================ */
-  @media (max-width: 1024px) {
-    .nav__links { display: none; }
-    .nav__hamburger { display: flex; }
-    .nav__right { display: none; }
-    .container { padding: 0 32px; }
-    .grid-lines { padding: 0 32px; }
+  .auth-page {
+    flex-direction: column; align-items: center; justify-content: center;
+    background: var(--charcoal); padding: 60px 20px;
+  }
+  .auth-logo {
+    display: flex; align-items: center; justify-content: center;
+    line-height: 0;
+    margin-bottom: 40px;
+  }
+  .auth-logo img {
+    display: block;
+    height: 40px;
+    width: auto;
+  }
+  .auth-card {
+    background: #fff; border-radius: 16px; padding: 48px 40px;
+    width: 100%; max-width: 420px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+  }
+  .auth-card__title {
+    font-family: var(--font-display); font-size: 32px; font-weight: 600;
+    line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 8px;
+    text-align: center;
+  }
+  .auth-card__title i { font-style: italic; font-weight: 600; color: var(--mandarin); }
+  .auth-card__sub {
+    font-size: 14px; line-height: 1.5; color: var(--text-secondary);
+    text-align: center; margin-bottom: 32px;
+  }
+  .auth-tabs {
+    display: flex; gap: 0; margin-bottom: 28px;
+    border: 1.5px solid var(--line); border-radius: 100px; overflow: hidden;
+  }
+  .auth-tab {
+    flex: 1; padding: 12px; text-align: center;
+    font-family: var(--font-sans); font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    cursor: pointer; transition: all 0.2s;
+    background: transparent; color: var(--text-secondary); border: none;
+  }
+  .auth-tab.is-active { background: var(--charcoal); color: #fff; }
+  .form-group { margin-bottom: 20px; }
+  .form-label {
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-secondary); margin-bottom: 8px; display: block;
+  }
+  .form-input {
+    width: 100%; padding: 14px 18px;
+    border: 1.5px solid var(--line); border-radius: var(--radius);
+    font-family: var(--font-body); font-size: 15px;
+    transition: border-color 0.2s; outline: none;
+  }
+  .form-input:focus { border-color: var(--mandarin); }
+  .form-input::placeholder { color: rgba(30,28,26,0.3); }
+  .auth-btn {
+    width: 100%; padding: 16px; border: none; border-radius: 100px;
+    font-family: var(--font-sans); font-size: 14px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    cursor: pointer; transition: all 0.2s;
+    background: var(--mandarin); color: #fff;
+  }
+  .auth-btn:hover { background: var(--mandarin-dark); }
+  .auth-btn--outline {
+    background: transparent; color: var(--text-primary);
+    border: 1.5px solid var(--line);
+  }
+  .auth-btn--outline:hover { border-color: var(--mandarin); color: var(--mandarin); }
+  .auth-link {
+    display: block; text-align: center; margin-top: 20px;
+    font-size: 13px; color: var(--text-secondary);
+  }
+  .auth-link a { color: var(--mandarin); font-weight: 700; }
+  .auth-back {
+    color: rgba(255,255,255,0.5); font-size: 13px; margin-top: 24px;
+    cursor: pointer; text-align: center;
+  }
+  .auth-back:hover { color: #fff; }
 
-    /* Hero — tablet: real hero with clamp sizing */
-    .hero {
-      height: auto !important;
-      min-height: 70vh !important;
-      max-height: none !important;
-      padding: 140px 32px 72px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-    .hero__inner { grid-template-columns: 1fr; padding: 0 !important; max-width: 760px; }
-    .hero__headline {
-      font-size: clamp(56px, 9vw, 96px) !important;
-      font-weight: 600 !important;
-      line-height: 0.95 !important;
-      letter-spacing: -0.02em !important;
-      margin-bottom: 24px !important;
-    }
-    .hero__sub { font-size: 20px; max-width: 620px; margin-bottom: 36px !important; }
+  /* ============================================
+     VERIFY CODE — code input boxes
+     ============================================ */
+  .code-inputs {
+    display: flex; gap: 10px; justify-content: center; margin-bottom: 28px;
+  }
+  .code-input {
+    width: 52px; height: 60px; text-align: center;
+    font-family: var(--font-display); font-size: 28px; font-weight: 600;
+    border: 1.5px solid var(--line); border-radius: var(--radius);
+    outline: none; transition: border-color 0.2s;
+  }
+  .code-input:focus { border-color: var(--mandarin); }
+  .auth-resend {
+    text-align: center; font-size: 13px; color: var(--text-secondary); margin-top: 16px;
+  }
+  .auth-resend a { color: var(--mandarin); font-weight: 700; cursor: pointer; }
 
-    /* Manifesto */
-    .manifesto { padding: 64px 0; }
-    .manifesto__eyebrow { padding-left: 16px !important; }
-    .manifesto__text {
-      font-size: 44px !important;
-      font-weight: 600 !important;
-      line-height: 1.2 !important;
-      letter-spacing: -0.02em !important;
-      padding-left: 16px !important;
-      padding-right: 16px !important;
-      max-width: 900px;
-    }
-    .manifesto__text .pill-img { width: 72px !important; height: 40px !important; border-radius: 20px !important; }
-    .manifesto__text .pill-img--wide { width: 96px !important; }
+  /* ============================================
+     ONBOARDING PAGES — wider card, centered
+     ============================================ */
+  .onboard-card {
+    background: #fff; border-radius: 16px; padding: 48px 40px;
+    width: 100%; max-width: 560px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+  }
+  .onboard-progress {
+    display: flex; gap: 6px; margin-bottom: 32px; justify-content: center;
+  }
+  .onboard-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--line);
+  }
+  .onboard-dot.is-active { background: var(--mandarin); }
+  .onboard-dot.is-done { background: var(--charcoal); }
 
-    /* Polaroids — tablet: 5 visible, medium-sized, overlapping */
-    .polaroid-strip { padding: 24px 0 40px; }
-    .polaroid-strip__track { padding: 24px 0; margin: 0 -16px; }
-    .polaroid { width: 220px !important; margin-left: -28px !important; padding: 10px 10px 6px !important; border-radius: 12px !important; }
-    .polaroid:first-child { margin-left: 0 !important; }
-    .polaroid__image { border-radius: 7px !important; }
-    .polaroid__label { padding: 10px 4px 4px !important; font-size: 11px !important; }
-    .polaroid-strip--big .polaroid { width: 260px !important; margin-left: -32px !important; }
-    .polaroid-strip--big .polaroid:first-child { margin-left: 0 !important; }
+  /* Sport/City checkboxes */
+  .check-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    margin-bottom: 28px;
+  }
+  .check-item {
+    padding: 14px 16px; border: 1.5px solid var(--line);
+    border-radius: var(--radius); cursor: pointer;
+    font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+    transition: all 0.2s; text-align: center; user-select: none;
+  }
+  .check-item:hover { border-color: var(--charcoal); }
+  .check-item.is-selected {
+    background: var(--charcoal); color: #fff; border-color: var(--charcoal);
+  }
+  .city-grid { grid-template-columns: repeat(2, 1fr); }
+  .skip-link {
+    display: block; text-align: center; margin-top: 16px;
+    font-size: 13px; color: var(--text-secondary); cursor: pointer;
+  }
+  .skip-link:hover { color: var(--mandarin); }
 
-    /* BFF BRIEF — tablet: 2-col like desktop, text left, phone right */
-    .bff-brief { padding: 72px 0 0 !important; overflow: hidden; }
-    .bff-brief__inner {
-      display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      gap: 48px !important;
-      align-items: center !important;
-    }
-    .bff-brief__inner > div:first-child {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      text-align: left;
-      padding: 0 0 48px 16px;
-      max-width: 100%;
-      width: 100%;
-    }
-    .bff-brief .bff-brief__eyebrow,
-    .bff-brief .bff-brief__eyebrow[style] {
-      padding: 6px 14px !important;
-      margin-left: 0 !important;
-    }
-    .bff-brief__headline {
-      font-size: 40px !important;
-      font-weight: 600 !important;
-      line-height: 1.2 !important;
-      letter-spacing: -0.02em !important;
-      padding-left: 0 !important;
-      text-align: left !important;
-      margin-bottom: 18px !important;
-    }
-    .bff-brief__sub {
-      font-size: 17px !important;
-      line-height: 1.55 !important;
-      padding-left: 0 !important;
-      text-align: left !important;
-      max-width: 100% !important;
-      margin-bottom: 28px !important;
-    }
-    .bff-brief__features {
-      gap: 14px !important;
-      margin-bottom: 32px !important;
-      align-items: flex-start !important;
-    }
-    .bff-brief__feature {
-      font-size: 16px !important;
-      line-height: 1.4 !important;
-      align-items: flex-start !important;
-      text-align: left !important;
-    }
-    .bff-brief__buttons {
-      flex-direction: row !important;
-      gap: 12px !important;
-      width: auto !important;
-      max-width: none !important;
-      margin-bottom: 0 !important;
-    }
-    .bff-brief__buttons .btn {
-      width: auto !important;
-      font-size: 14px !important;
-      padding: 14px 28px !important;
-      min-height: auto !important;
-    }
-    /* Phone — centered in block on tablet */
-    .bff-brief__phone-wrap {
-      overflow: visible !important;
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-      margin-bottom: 0 !important;
-    }
-    .bff-sms {
-      max-width: 360px !important;
-    }
+  /* Referral share */
+  .share-box {
+    background: rgba(30,28,26,0.03); border: 1.5px dashed var(--line);
+    border-radius: var(--radius); padding: 20px;
+    text-align: center; margin-bottom: 20px;
+  }
+  .share-url {
+    font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+    color: var(--mandarin); word-break: break-all;
+  }
+  .share-btns { display: flex; gap: 10px; margin-top: 16px; justify-content: center; }
+  .share-btn {
+    padding: 10px 20px; border-radius: 100px;
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    border: 1.5px solid var(--line); background: transparent;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .share-btn:hover { border-color: var(--mandarin); color: var(--mandarin); }
 
-    /* Testimonials — frame sits on grid lines 1 & 5 */
-    .testimonials { padding: 72px 0 64px !important; }
-    .testimonials__inner { display: block; padding: 0; }
-    .testimonials__frame {
-      grid-column: auto;
-      border-left: 1px solid var(--line) !important;
-      border-right: 1px solid var(--line) !important;
-      padding: 48px 32px !important;
-      background: var(--stone) !important;
-    }
-    .testimonials__headline {
-      font-size: 44px !important;
-      font-weight: 600 !important;
-      line-height: 1.2 !important;
-      letter-spacing: -0.02em !important;
-      margin-bottom: 20px !important;
-    }
-    .testimonials__quote { font-size: 17px !important; line-height: 1.55 !important; }
-    .testimonials__quote-wrap { min-height: 100px; }
-
-    /* HOTLINE — tablet: 2-col like desktop, chat left, content right */
-    .hotline { padding: 72px 0; }
-    .hotline__inner {
-      display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      gap: 48px !important;
-      align-items: center !important;
-    }
-    .hotline__inner > div:first-child {
-      padding: 0 !important;
-      display: flex !important;
-      justify-content: center !important;
-    }
-    .hotline__right {
-      padding: 0 !important;
-      align-items: flex-start !important;
-      width: 100%;
-      max-width: 100%;
-    }
-    .hotline__brand-tag { font-size: 11px !important; padding: 6px 14px !important; margin-bottom: 20px !important; }
-    .hotline__title {
-      font-size: 44px !important;
-      font-weight: 600 !important;
-      line-height: 1.2 !important;
-      letter-spacing: -0.02em !important;
-      margin-bottom: 20px !important;
-      white-space: normal !important;
-    }
-    .hotline__tagline {
-      font-size: 18px !important;
-      line-height: 1.45 !important;
-      max-width: 100% !important;
-      margin-bottom: 18px !important;
-    }
-    .hotline__body {
-      font-size: 16px !important;
-      line-height: 1.55 !important;
-      max-width: 100% !important;
-      margin-bottom: 32px !important;
-    }
-    .hotline__perks {
-      flex-direction: row !important;
-      gap: 20px !important;
-      margin-bottom: 32px !important;
-    }
-    .hotline__perk {
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      gap: 6px !important;
-      flex: 1 !important;
-    }
-    .hotline__perk-check {
-      width: 24px !important;
-      height: 24px !important;
-      margin-bottom: 4px !important;
-      margin-top: 0 !important;
-      flex-shrink: 0 !important;
-    }
-    .hotline__perk-check svg { width: 12px !important; height: 12px !important; }
-    .hotline__perk-title { font-size: 13px !important; margin-bottom: 2px !important; }
-    .hotline__perk-text { font-size: 14px !important; line-height: 1.45 !important; }
-    .hotline .btn {
-      font-size: 14px !important;
-      padding: 14px 28px !important;
-      min-height: auto !important;
-      width: auto !important;
-      max-width: none !important;
-    }
-    .imessage { width: 100% !important; max-width: 400px !important; }
-
-    /* Values — tablet: keep desktop 4-col layout, just tighter */
-    .values { padding: 64px 0; }
-    .values__eyebrow { padding-left: 16px !important; font-size: 13px !important; }
-    .values__headline {
-      font-size: 40px !important;
-      font-weight: 600 !important;
-      line-height: 1.2 !important;
-      letter-spacing: -0.02em !important;
-      padding-left: 16px !important;
-      padding-right: 16px !important;
-      margin-bottom: 32px !important;
-    }
-    .v-cell { padding: 24px 20px !important; }
-    .v-cell__title { font-size: 18px !important; }
-    .v-cell__body { font-size: 13px !important; }
-    .v-cell__icon { width: 32px !important; height: 32px !important; }
-    .v-cell__icon svg { width: 14px !important; height: 14px !important; }
-    .v-image { min-height: 0 !important; }
-
-    /* Social */
-    .social-section { padding: 64px 0 40px; }
-    .social-section__header {
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      gap: 18px !important;
-      margin-bottom: 32px !important;
-      padding-left: 16px !important;
-    }
-    .social-section__headline {
-      font-size: 44px !important;
-      font-weight: 600 !important;
-      line-height: 1.2 !important;
-      letter-spacing: -0.02em !important;
-      white-space: normal !important;
-      padding-left: 0 !important;
-      padding-right: 16px !important;
-    }
-    .social-post { width: 300px !important; height: 375px !important; min-width: 300px !important; border-radius: 18px !important; }
-    .social-tracks { gap: 14px !important; margin: 0 -32px !important; }
-
-    /* CTA */
-    .cta { padding: 80px 0; }
-    .cta__headline {
-      font-size: 48px !important;
-      font-weight: 600 !important;
-      line-height: 1.2 !important;
-      letter-spacing: -0.02em !important;
-      margin-bottom: 20px !important;
-    }
-    .cta__sub { font-size: 18px !important; line-height: 1.55 !important; margin-bottom: 32px !important; }
-    .cta__buttons {
-      flex-direction: column !important;
-      gap: 12px !important;
-      width: 100% !important;
-      max-width: 360px !important;
-      margin: 0 auto !important;
-    }
-    .cta__buttons .btn {
-      width: 100% !important;
-      justify-content: center !important;
-      font-size: 14px !important;
-      padding: 16px 28px !important;
-      min-height: 52px !important;
-    }
-
-    /* Footer — 3 cols on tablet, logo full-width on top */
-    .footer { padding: 56px 0 32px; }
-    .footer__inner {
-      display: grid !important;
-      grid-template-columns: 1fr 1fr 1fr !important;
-      gap: 32px 24px !important;
-      padding-left: 16px !important;
-      padding-right: 16px !important;
-    }
-    .footer__inner > div:first-child {
-      grid-column: 1 / -1 !important;
-      margin-bottom: 8px;
-    }
-    .footer__bottom { padding: 20px 16px 0 !important; margin-top: 32px !important; }
+  /* Upsell cards */
+  .upsell-cards { display: flex; gap: 16px; margin-bottom: 28px; }
+  .upsell-card {
+    flex: 1; padding: 32px 24px; border: 1.5px solid var(--line);
+    border-radius: var(--radius); text-align: center;
+    transition: all 0.2s; position: relative;
+    display: flex; flex-direction: column;
+  }
+  .upsell-card:hover { border-color: var(--charcoal); }
+  .upsell-card.is-featured {
+    border-color: var(--mandarin); border-width: 2px;
+  }
+  .upsell-card__tag {
+    font-family: var(--font-sans); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    background: var(--mandarin); color: #fff;
+    padding: 5px 14px; border-radius: 100px;
+    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  .upsell-card__name {
+    font-family: var(--font-display); font-size: 24px; font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .upsell-card__price {
+    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
+    color: var(--mandarin); margin-bottom: 16px;
+  }
+  .upsell-card__features {
+    font-size: 13px; line-height: 1.8; color: var(--text-secondary);
+    text-align: center; margin-bottom: 20px; flex: 1;
+  }
+  .upsell-card__body {
+    font-size: 13px; line-height: 1.5; color: var(--text-secondary);
+    margin-bottom: 20px; flex: 1;
   }
 
   /* ============================================
-     MOBILE — max 640px
+     DASHBOARD — sidebar + main
      ============================================ */
+  .dash { flex-direction: row; min-height: 100vh; }
+  .dash-nav {
+    width: 260px; background: var(--charcoal); color: #fff;
+    padding: 32px 24px; flex-shrink: 0;
+    display: flex; flex-direction: column;
+  }
+  .dash-nav__logo {
+    display: flex; align-items: center; line-height: 0;
+    margin-bottom: 40px;
+    transition: opacity 0.2s;
+  }
+  .dash-nav__logo:hover { opacity: 0.75; }
+  .dash-nav__logo img {
+    display: block;
+    height: 32px;
+    width: auto;
+    /* Logo is mandarin-colored — stays mandarin on dark charcoal bg */
+  }
+  .dash-nav__links { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .dash-nav__link {
+    padding: 12px 16px; border-radius: var(--radius);
+    font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+    color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .dash-nav__link:hover { color: #fff; background: rgba(255,255,255,0.05); }
+  .dash-nav__link.is-active { color: #fff; background: rgba(255,255,255,0.08); }
+  .dash-nav__link svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .dash-nav__bottom {
+    margin-top: auto; padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .dash-nav__user {
+    font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px;
+  }
+  .dash-nav__email { font-size: 12px; color: rgba(255,255,255,0.4); }
+  .dash-main {
+    flex: 1; padding: 40px 48px; overflow-y: auto;
+  }
+  .dash-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 32px;
+  }
+  .dash-title {
+    font-family: var(--font-display); font-size: 36px; font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .dash-title i { font-style: italic; font-weight: 600; color: var(--mandarin); }
+
+  /* Tier card */
+  .tier-card {
+    background: var(--charcoal); color: #fff; border-radius: 16px;
+    padding: 36px 32px; margin-bottom: 24px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .tier-card__tier {
+    font-family: var(--font-display); font-size: 36px; font-weight: 700;
+    color: var(--mandarin); line-height: 1;
+  }
+  .tier-card__label {
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.5); margin-top: 4px;
+  }
+  .tier-card__meta { text-align: right; }
+  .tier-card__since {
+    font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 4px;
+  }
+  .tier-card__next {
+    font-size: 13px; color: rgba(255,255,255,0.4);
+  }
+  .tier-card__next span { color: var(--mandarin); font-weight: 700; }
+
+  /* Stat row */
+  .stat-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stat-box {
+    background: #fff; border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 24px;
+  }
+  .stat-box__number {
+    font-family: var(--font-display); font-size: 32px; font-weight: 700;
+    color: var(--mandarin); line-height: 1; margin-bottom: 4px;
+  }
+  .stat-box__label {
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text-secondary);
+  }
+
+  /* Referral progress */
+  .referral-card {
+    background: #fff; border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 28px;
+    margin-bottom: 24px;
+  }
+  .referral-card__title {
+    font-family: var(--font-sans); font-size: 14px; font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .referral-card__title--display {
+    font-family: var(--font-display); font-size: 28px; font-weight: 600;
+    line-height: 1.1; letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .referral-card__title--display i {
+    font-style: italic; font-weight: 600; color: var(--mandarin);
+  }
+  .referral-card__sub {
+    font-size: 14px; color: var(--text-secondary);
+    line-height: 1.5; margin-bottom: 16px;
+  }
+  .referral-bar {
+    height: 8px; background: var(--line); border-radius: 4px;
+    overflow: hidden; margin-bottom: 8px;
+  }
+  .referral-bar__fill {
+    height: 100%; background: var(--mandarin);
+    border-radius: 4px; width: 40%;
+  }
+  .referral-bar__text {
+    font-size: 12px; color: var(--text-secondary);
+    display: flex; justify-content: space-between;
+  }
+
+  /* Preferences panel */
+  .pref-section { margin-bottom: 32px; }
+  .pref-section__title {
+    font-family: var(--font-sans); font-size: 14px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text-secondary); margin-bottom: 16px;
+  }
+  .pref-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 0; border-bottom: 1px solid var(--line);
+  }
+  .pref-row:last-child { border-bottom: none; }
+  .pref-row__label { font-size: 15px; font-weight: 600; }
+  .pref-row__sub { font-size: 13px; color: var(--text-secondary); }
+  .pref-toggle {
+    width: 44px; height: 24px; border-radius: 12px;
+    background: var(--line); cursor: pointer; position: relative;
+    transition: background 0.2s;
+  }
+  .pref-toggle.is-on { background: var(--mandarin); }
+  .pref-toggle::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: #fff; transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .pref-toggle.is-on::after { transform: translateX(20px); }
+  .pref-locked {
+    font-size: 11px; color: var(--text-secondary);
+    background: rgba(30,28,26,0.04); padding: 4px 10px;
+    border-radius: 100px;
+  }
+
+  /* Billing */
+  .billing-card {
+    background: #fff; border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 24px; margin-bottom: 16px;
+  }
+  .billing-card__header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .billing-card__title { font-size: 15px; font-weight: 700; }
+  .billing-card__action {
+    font-size: 12px; font-weight: 700; color: var(--mandarin);
+    cursor: pointer; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .billing-card__body { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* ============================================
+     RESPONSIVE — matches homepage breakpoints
+     Desktop:  1025px+
+     Tablet:   ≤1024px
+     Mobile:   ≤640px
+     ============================================ */
+
+  /* TABLET — max 1024px */
+  @media (max-width: 1024px) {
+    /* Auth/onboard cards tighten up */
+    .auth-card, .onboard-card { padding: 40px 32px; margin: 0 16px; }
+
+    /* Dashboard: sidebar -> top pill nav */
+    .dash { flex-direction: column; }
+    .dash-nav { display: none; }
+    .dash-main { padding: 100px 32px 48px; }
+    .dash-title { font-size: 32px; }
+
+    /* Show the pill nav only on dashboard page */
+    body.is-dash .nav-wrap { display: block; }
+  }
+
+  /* MOBILE — max 640px */
   @media (max-width: 640px) {
-    .container { padding: 0 24px; }
-    .grid-lines { padding: 0 24px; }
+    /* Pill nav tightens to match homepage */
     .nav { padding: 6px 6px 6px 16px !important; }
     .nav__logo img { height: 22px !important; }
 
-    /* HERO — mobile: proper vertical center, comfortable padding, tappable CTAs */
-    .hero {
-      height: auto !important;
-      min-height: 0 !important;
-      max-height: none !important;
-      padding: 132px 24px 64px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-    .hero__inner {
-      padding: 0 !important;
-      max-width: 100% !important;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .hero__headline {
-      font-size: clamp(40px, 11vw, 56px) !important;
-      font-weight: 600 !important;
-      line-height: 0.98 !important;
-      letter-spacing: -0.02em !important;
-      margin-bottom: 20px !important;
-      max-width: 16ch;
-    }
-    .hero__sub {
-      font-size: 17px !important;
-      line-height: 1.45 !important;
-      margin-bottom: 32px !important;
-      max-width: 32ch !important;
-    }
-    .hero__buttons {
-      flex-direction: column;
-      gap: 10px;
-      width: 100%;
-      max-width: 320px;
-    }
-    .hero__buttons .btn {
-      width: 100%;
-      justify-content: center;
-      font-size: 13px;
-      padding: 16px 24px;
-      min-height: 48px;
-      letter-spacing: 0.12em;
-    }
-    .hero__buttons .btn svg { width: 14px; height: 14px; }
+    /* Auth pages */
+    .auth-page { padding: 40px 16px; }
+    .auth-logo { margin-bottom: 28px; }
+    .auth-logo img { height: 32px; }
+    .auth-card, .onboard-card { padding: 32px 24px; margin: 0; }
+    .auth-card__title { font-size: 26px; }
+    .code-input { width: 44px; height: 52px; font-size: 24px; }
+    .check-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .check-item { font-size: 13px; padding: 12px; }
+    .upsell-cards { flex-direction: column; }
 
-    /* MARQUEE */
-    .marquee__text { font-size: 11px; }
-    .marquee__dot { margin: 0 10px; width: 4px; height: 4px; }
+    /* Dashboard mobile */
+    .dash-main { padding: 90px 20px 40px; }
+    .dash-title { font-size: 28px; }
+    .tier-card {
+      flex-direction: column; align-items: flex-start; gap: 16px;
+      padding: 20px !important;
+    }
+    .tier-card > div:first-child {
+      width: 100% !important; height: 120px !important;
+    }
+    .tier-card__meta { text-align: left; }
+    .stat-row { grid-template-columns: 1fr 1fr !important; }
+    .stat-box { padding: 18px; }
+    .stat-box__number { font-size: 26px; }
 
-    /* MANIFESTO — compact, centered on mobile */
-    .manifesto { padding: 32px 0; }
-    .manifesto__eyebrow { margin-bottom: 16px !important; padding-left: 16px !important; }
-    .manifesto__text { font-size: 30px !important; font-weight: 600 !important; line-height: 1.25 !important; letter-spacing: -0.02em !important; padding-left: 16px !important; padding-right: 8px !important; }
-    .manifesto__text .pill-img { width: 52px !important; height: 30px !important; border-radius: 16px !important; }
-    .manifesto__text .pill-img--wide { width: 72px !important; }
-
-    /* POLAROIDS — 3 across, bigger with overlap, can bleed off edges */
-    .polaroid-strip { padding: 8px 0 32px; overflow: hidden; }
-    .polaroid-strip__track {
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-      gap: 0 !important;
-      padding: 16px 0 !important;
-      margin: 0 -8px !important;
-    }
-    .polaroid-strip__track .polaroid:nth-child(1),
-    .polaroid-strip__track .polaroid:nth-child(5) { display: none !important; }
-    .polaroid {
-      flex: 0 0 38% !important;
-      width: 38% !important;
-      max-width: none !important;
-      margin-left: -3% !important;
-      padding: 6px 6px 4px !important;
-      border-radius: 8px !important;
-    }
-    .polaroid:nth-child(2) { margin-left: 0 !important; }
-    .polaroid:nth-child(2) { transform: rotate(-4deg) translateY(6px) !important; }
-    .polaroid:nth-child(3) { transform: rotate(3deg) translateY(-6px) !important; }
-    .polaroid:nth-child(4) { transform: rotate(-3deg) translateY(6px) !important; }
-    .polaroid__image { border-radius: 5px !important; }
-    .polaroid__label {
-      padding: 6px 2px 2px !important;
-      font-size: 8px !important;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-    }
-    /* Big variant (2nd strip) matches the same 3-across treatment */
-    .polaroid-strip--big .polaroid { width: 38% !important; margin-left: -3% !important; }
-    .polaroid-strip--big .polaroid:first-child { margin-left: 0 !important; }
-
-    /* BFF BRIEF — stacked, headline matches manifesto */
-    .bff-brief { padding: 48px 0 !important; overflow: hidden; }
-    .bff-brief__inner {
-      grid-template-columns: 1fr !important;
-      gap: 24px !important;
-      align-items: start !important;
-    }
-    /* Content block centered, text center-aligned */
-    .bff-brief__inner > div:first-child {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 480px;
-      margin: 0 auto;
-      width: 100%;
-      text-align: center;
-      padding: 0 16px !important;
-    }
-    /* Eyebrow pill — cancel desktop grid-alignment offset, equal padding */
-    .bff-brief .bff-brief__eyebrow,
-    .bff-brief .bff-brief__eyebrow[style] {
-      padding: 6px 14px !important;
-      margin-left: 0 !important;
-    }
-    .bff-brief__headline {
-      font-size: 30px !important;
-      font-weight: 600 !important;
-      line-height: 1.25 !important;
-      letter-spacing: -0.02em !important;
-      padding-left: 0 !important;
-      text-align: center !important;
-      margin-bottom: 16px !important;
-    }
-    .bff-brief__sub {
-      font-size: 16px !important;
-      line-height: 1.55 !important;
-      padding-left: 0 !important;
-      text-align: center !important;
-      max-width: 100% !important;
-      margin-bottom: 24px !important;
-    }
-    /* Features — centered block, checkmarks in a straight line */
-    .bff-brief__features {
-      gap: 12px !important;
-      margin-bottom: 28px !important;
-      align-items: flex-start !important;
-      width: auto !important;
-    }
-    .bff-brief__feature {
-      font-size: 15px !important;
-      line-height: 1.4 !important;
-      align-items: flex-start !important;
-      text-align: left !important;
-    }
-    .check-dot { margin-top: 2px; }
-    /* Buttons stacked, full-width like hero */
-    .bff-brief__buttons {
-      flex-direction: column !important;
-      gap: 10px !important;
-      width: 100% !important;
-      max-width: 320px !important;
-      margin-bottom: 40px !important;
-    }
-    .bff-brief__buttons .btn {
-      width: 100% !important;
-      justify-content: center !important;
-      font-size: 13px !important;
-      padding: 16px 24px !important;
-      min-height: 48px !important;
-      letter-spacing: 0.12em !important;
-    }
-    /* SMS bubble wrap — mobile sizing */
-    .bff-brief__phone-wrap {
-      overflow: visible !important;
-      display: flex !important;
-      justify-content: center !important;
-      align-items: flex-start !important;
-      margin-bottom: 0 !important;
-      padding: 0 16px !important;
-    }
-    .bff-sms {
-      max-width: 100% !important;
-    }
-    .bff-sms__bubble {
-      font-size: 12px !important;
-      padding: 10px 14px !important;
-    }
-
-    /* Mobile-only line break utility */
-    .mobile-br { display: inline; }
-
-    /* TESTIMONIALS — more breathing room, bigger headline, frame edges sit on grid lines 1 & 5 */
-    .testimonials { padding: 56px 0 48px !important; }
-    .testimonials__inner { padding: 0; position: relative; }
-    .testimonials__frame {
-      padding: 32px 20px !important;
-      background: var(--stone) !important;
-      border-left: 1px solid var(--line) !important;
-      border-right: 1px solid var(--line) !important;
-    }
-    .testimonials__headline { font-size: 34px !important; font-weight: 600 !important; line-height: 1.25 !important; letter-spacing: -0.02em !important; margin-bottom: 18px !important; }
-    .testimonials__quote { font-size: 15px !important; line-height: 1.55 !important; }
-    .testimonials__quote-wrap { min-height: 90px; }
-    .testimonials__stars { font-size: 14px; letter-spacing: 2px; margin-bottom: 20px; }
-
-    /* HOTLINE — mobile: chat first, content below, left-aligned, proper sizes */
-    .hotline { padding: 48px 0; }
-    .hotline__inner {
-      gap: 32px !important;
-      display: flex !important;
-      flex-direction: column;
-    }
-    .hotline__right {
-      padding: 0 16px !important;
-      align-items: flex-start !important;
-    }
-    /* Chat matches the same inset as content */
-    .hotline__inner > div:first-child {
-      padding: 0 16px !important;
-    }
-    .hotline__brand-tag {
-      font-size: 11px !important;
-      padding: 6px 14px !important;
-      margin-bottom: 20px !important;
-    }
-    .hotline__title {
-      font-size: 34px !important;
-      font-weight: 600 !important;
-      line-height: 1.25 !important;
-      letter-spacing: -0.02em !important;
-      margin-bottom: 16px !important;
-      white-space: normal !important;
-    }
-    .hotline__tagline {
-      font-size: 17px !important;
-      line-height: 1.45 !important;
-      max-width: 100% !important;
-      margin-bottom: 16px !important;
-    }
-    .hotline__body {
-      font-size: 16px !important;
-      line-height: 1.55 !important;
-      max-width: 100% !important;
-      margin-bottom: 28px !important;
-    }
-    /* Perks — stack vertically, each perk is a row with check + text */
-    .hotline__perks {
-      flex-direction: column !important;
-      gap: 16px !important;
-      margin-bottom: 32px !important;
-    }
-    .hotline__perk {
-      flex-direction: row !important;
-      align-items: flex-start !important;
-      gap: 12px !important;
-    }
-    .hotline__perk-check {
-      width: 22px !important;
-      height: 22px !important;
-      margin-bottom: 0 !important;
-      margin-top: 2px !important;
-      flex-shrink: 0 !important;
-    }
-    .hotline__perk-check svg { width: 11px !important; height: 11px !important; }
-    /* Content wraps as single inline flow — title + em dash + description continue on one flow */
-    .hotline__perk-content {
-      display: block !important;
-      flex: 1 !important;
-      min-width: 0 !important;
-    }
-    .hotline__perk-content .hotline__perk-title {
-      display: inline !important;
-      font-size: 15px !important;
-      margin-bottom: 0 !important;
-      white-space: nowrap;
-    }
-    .hotline__perk-content .hotline__perk-dash {
-      display: inline !important;
-      color: #fff !important;
-      font-size: 15px !important;
-    }
-    .hotline__perk-content .hotline__perk-text {
-      display: inline !important;
-      font-size: 15px !important;
-      line-height: 1.45 !important;
-    }
-    /* Button full-width like hero/BFF */
-    .hotline .btn {
-      font-size: 13px !important;
-      padding: 16px 24px !important;
-      min-height: 48px !important;
-      width: 100% !important;
-      max-width: 320px !important;
-      justify-content: center !important;
-      letter-spacing: 0.12em !important;
-    }
-    /* iMessage chat below */
-    .imessage { width: 100% !important; max-width: 100% !important; }
-    .im { font-size: 13px !important; max-width: 85% !important; padding: 8px 12px !important; border-radius: 16px !important; }
-    .im--blue { border-bottom-right-radius: 4px !important; }
-    .im--gray { border-bottom-left-radius: 4px !important; }
-    .im__gap { height: 12px !important; }
-
-    /* VALUES — mobile: single column, each cell framed like testimonials, row layout */
-    .values { padding: 48px 0; }
-    .values__eyebrow {
-      font-size: 13px !important;
-      margin-bottom: 14px !important;
-      padding-left: 16px !important;
-    }
-    .values__headline {
-      font-family: var(--font-display) !important;
-      font-weight: 600 !important;
-      font-size: 32px !important;
-      line-height: 1.25 !important;
-      letter-spacing: -0.02em !important;
-      margin-bottom: 28px !important;
-      padding-left: 16px !important;
-      padding-right: 8px !important;
-    }
-    /* Break the grid into a single-column flex stack */
-    .values__grid {
-      display: flex !important;
-      flex-direction: column !important;
-      grid-template-columns: none !important;
-      grid-template-rows: none !important;
-      border-top: 1px solid var(--line) !important;
-      border-bottom: 1px solid var(--line) !important;
-    }
-    .v-cell {
-      padding: 24px !important;
-      border-right: 1px solid var(--line) !important;
-      border-left: 1px solid var(--line) !important;
-      border-bottom: 1px solid var(--line) !important;
-      background: var(--stone) !important;
-      position: relative !important;
-      z-index: 2 !important;
-      /* Row layout: icon on left, text block on right */
-      display: grid !important;
-      grid-template-columns: auto 1fr !important;
-      align-items: flex-start !important;
-      gap: 16px !important;
-      justify-content: flex-start !important;
-    }
-    .v-cell:last-child { border-bottom: none !important; }
-    .v-cell--wide, .v-cell--no-right, .v-cell--no-bottom {
-      grid-column: auto !important;
-    }
-    .v-cell__icon {
-      width: 40px !important;
-      height: 40px !important;
-      margin-bottom: 0 !important;
-      grid-row: 1 / 3 !important;
-      align-self: flex-start !important;
-      margin-top: 2px !important;
-    }
-    .v-cell__icon svg { width: 18px !important; height: 18px !important; }
-    .v-cell__title {
-      font-size: 20px !important;
-      line-height: 1.2 !important;
-      margin: 0 !important;
-      grid-column: 2 !important;
-    }
-    .v-cell__body {
-      font-size: 15px !important;
-      line-height: 1.5 !important;
-      margin: 0 !important;
-      grid-column: 2 !important;
-    }
-    /* Image — thinner horizontal band, slotted mid-stack via flex order */
-    .v-image {
-      grid-row: auto !important;
-      grid-column: auto !important;
-      min-height: 0 !important;
-      height: 180px !important;
-      border-left: 1px solid var(--line) !important;
-      border-right: 1px solid var(--line) !important;
-      border-bottom: 1px solid var(--line) !important;
-      background-image: url('values-tv-horizontal.png') !important;
-      order: 4 !important;
-    }
-    .v-cell:nth-child(1) { order: 1 !important; }
-    .v-cell:nth-child(3) { order: 2 !important; }
-    .v-cell:nth-child(4) { order: 3 !important; }
-    .v-cell:nth-child(5) { order: 5 !important; }
-    .v-cell:nth-child(6) { order: 6 !important; }
-
-    /* SOCIAL — compact */
-    .social-section { padding: 48px 0 36px; }
-    .social-section__header {
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      gap: 16px !important;
-      margin-bottom: 28px !important;
-      padding-left: 16px !important;
-    }
-    .social-section__headline {
-      font-size: 34px !important;
-      font-weight: 600 !important;
-      line-height: 1.25 !important;
-      letter-spacing: -0.02em !important;
-      white-space: normal !important;
-      padding-left: 0 !important;
-      padding-right: 8px !important;
-    }
-    .social-post { width: 240px !important; height: 300px !important; min-width: 240px !important; border-radius: 16px !important; }
-    .social-tracks { gap: 12px !important; margin: 0 -24px !important; }
-
-    /* CTA — compact */
-    .cta { padding: 56px 0; }
-    .cta__headline {
-      font-size: 34px !important;
-      font-weight: 600 !important;
-      line-height: 1.25 !important;
-      letter-spacing: -0.02em !important;
-      margin-bottom: 16px !important;
-      padding: 0 16px !important;
-    }
-    .cta__sub { font-size: 16px !important; line-height: 1.55 !important; max-width: 100%; margin-bottom: 28px !important; padding: 0 16px !important; }
-    .cta__buttons {
-      flex-direction: column !important;
-      gap: 10px !important;
-      width: 100% !important;
-      max-width: 320px !important;
-      margin: 0 auto !important;
-    }
-    .cta__buttons .btn {
-      width: 100% !important;
-      justify-content: center !important;
-      font-size: 13px !important;
-      padding: 16px 24px !important;
-      min-height: 48px !important;
-      letter-spacing: 0.12em !important;
-    }
-
-    /* FOOTER — compact */
-    .footer { padding: 40px 0 20px; }
-    .footer__inner {
-      display: grid !important;
-      grid-template-columns: 1fr 1fr 1fr !important;
-      gap: 24px 16px !important;
-      padding-left: 16px !important;
-      padding-right: 16px !important;
-    }
-    .footer__inner > div:first-child {
-      grid-column: 1 / -1 !important;
-      margin-bottom: 8px;
-    }
-    .footer__logo { font-size: 20px !important; margin-bottom: 10px !important; }
-    .footer__tagline { font-size: 14px !important; line-height: 1.55 !important; max-width: 100% !important; margin-bottom: 0 !important; }
-    .footer__col-title { font-size: 12px !important; margin-bottom: 12px !important; letter-spacing: 0.12em !important; }
-    .footer__links a { font-size: 14px !important; }
-    .footer__links { gap: 10px !important; }
-    .footer__bottom { flex-direction: column; gap: 6px; font-size: 12px; margin-top: 28px !important; padding: 20px 16px 0 !important; text-align: left; }
+    /* Mobile menu primary links — slightly smaller per homepage feel */
+    .nav__mobile-menu__primary a { font-size: 38px; padding: 18px 24px; }
   }
-
 </style>
 </head>
 <body>
 
-<!-- Grid lines — behind everything -->
-<div class="grid-lines-wrap">
-  <div class="grid-lines">
-    <span></span><span></span><span></span><span></span><span></span>
-  </div>
-</div>
-
-<!-- NAV -->
-<div class="nav-wrap">
-  <nav class="nav">
-    <a href="#" class="nav__logo" aria-label="Your Sports BFF"><img src="logo.svg" alt="Your Sports BFF"></a>
-    <ul class="nav__links">
-      <li><a href="/" class="is-active">Home</a></li>
-      <li><a href="/bff-brief">BFF Brief</a></li>
-    </ul>
-    <button class="nav__hamburger" aria-label="Menu">
+<!-- ============================================
+     FLOATING PILL NAV (dashboard only, tablet/mobile only)
+     Just logo + hamburger. Desktop dashboard uses sidebar.
+     Auth/onboarding pages don't use this at all.
+     ============================================ -->
+<div class="nav-wrap" id="navWrap">
+  <nav class="nav" id="navPill">
+    <a href="/" class="nav__logo" aria-label="Your Sports BFF"><img src="logo.svg" alt="Your Sports BFF"></a>
+    <button class="nav__hamburger" aria-label="Menu" id="navHamburger">
       <span></span><span></span><span></span>
     </button>
-    <div class="nav__right">
-      <a href="/account" class="nav__cta">Log In / Sign Up</a>
-    </div>
   </nav>
 </div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero__inner">
-    <h1 class="hero__headline">Her new home court <i>advantage.</i></h1>
-    <p class="hero__sub">Takes, recaps, and community for the women who watch, the ones who want to, and everyone in between.</p>
-    <div class="hero__buttons">
-      <a href="#" class="btn btn--mandarin">Get the BFF Brief <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
-      <a href="/bff-brief" class="btn btn--outline">Learn More</a>
-    </div>
-  </div>
-</section>
-
-<!-- MARQUEE — single straight band, black bg white text -->
-<div class="mq-band" style="background: var(--charcoal); color: #fff;">
-  <div class="marquee" style="padding: 20px 0;">
-    <span class="marquee__text">Man, I love being a woman</span><span class="marquee__dot"></span>
-    <span class="marquee__text">Let's go, girls!</span><span class="marquee__dot"></span>
-    <span class="marquee__text">Hi, icon</span><span class="marquee__dot"></span>
-    <span class="marquee__text">You go, girl!</span><span class="marquee__dot"></span>
-    <span class="marquee__text">Girls run the world</span><span class="marquee__dot"></span>
-    <span class="marquee__text">Man, I love being a woman</span><span class="marquee__dot"></span>
-    <span class="marquee__text">Let's go, girls!</span><span class="marquee__dot"></span>
-    <span class="marquee__text">Hi, icon</span><span class="marquee__dot"></span>
-    <span class="marquee__text">You go, girl!</span><span class="marquee__dot"></span>
-    <span class="marquee__text">Girls run the world</span><span class="marquee__dot"></span>
-    <span class="marquee__text">Man, I love being a woman</span><span class="marquee__dot"></span>
-    <span class="marquee__text">Let's go, girls!</span><span class="marquee__dot"></span>
-    <span class="marquee__text">Hi, icon</span><span class="marquee__dot"></span>
-    <span class="marquee__text">You go, girl!</span><span class="marquee__dot"></span>
-    <span class="marquee__text">Girls run the world</span><span class="marquee__dot"></span>
-  </div>
-</div>
-
-<!-- MANIFESTO -->
-<section class="manifesto">
-  <div class="container">
-    <div class="manifesto__eyebrow" style="padding-left: 10px;">Who We Are</div>
-    <p class="manifesto__text" style="padding-left: 10px;">We're building what should've existed all along: sports through <i>her lens.</i> <span class="pill-img" style="background-image: url('manifesto-1.avif');"></span> Content that covers the game <i>and</i> the culture. <span class="pill-img pill-img--wide" style="background-image: url('manifesto-2.avif');"></span> Community that doesn't question her fandom. Places that don't feel like a frat party. This one's <i>for the girls</i> <span class="pill-img" style="background-image: url('manifesto-3.avif');"></span> and we saved you a seat.</p>
-  </div>
-</section>
-
-<!-- SECTION DIVIDER — full-width line -->
-<div style="border-top: 1px solid rgba(30,28,26,0.1); width: 100%;"></div>
-
-<!-- POLAROID CARD STRIP #1 -->
-<section class="polaroid-strip">
-  <div class="polaroid-strip__track">
-    <div class="polaroid">
-      <div class="polaroid__image" style="background-image: url('polaroid-1-1.png');"></div>
-      <div class="polaroid__label">The Game's On</div>
-    </div>
-    <div class="polaroid">
-      <div class="polaroid__image" style="background-image: url('polaroid-1-2.png');"></div>
-      <div class="polaroid__label">Courtside Couture</div>
-    </div>
-    <div class="polaroid">
-      <div class="polaroid__image" style="background-image: url('polaroid-1-3.png');"></div>
-      <div class="polaroid__label">Kiss Cam Ready</div>
-    </div>
-    <div class="polaroid">
-      <div class="polaroid__image" style="background-image: url('polaroid-1-4.png');"></div>
-      <div class="polaroid__label">Save Me a Seat</div>
-    </div>
-    <div class="polaroid">
-      <div class="polaroid__image" style="background-image: url('polaroid-1-5.png');"></div>
-      <div class="polaroid__label">The Court Is Calling</div>
-    </div>
-  </div>
-</section>
-
-<!-- BFF BRIEF — dark, no grid lines -->
-<section class="bff-brief">
-  <div class="container">
-    <div class="bff-brief__inner">
-      <div>
-        <div class="bff-brief__eyebrow" style="padding-left: 10px;">The BFF Brief</div>
-        <h2 class="bff-brief__headline" style="padding-left: 10px;">A daily sports text from the friend who's always <i>in the know</i></h2>
-        <p class="bff-brief__sub" style="padding-left: 10px;">Everything you need to feel confident in the sports conversation — delivered to your phone every morning.</p>
-        <div class="bff-brief__features">
-          <div class="bff-brief__feature"><div class="check-dot"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>A daily text with the sports news that matters</div>
-          <div class="bff-brief__feature"><div class="check-dot"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>Written for the girls by the girls</div>
-          <div class="bff-brief__feature"><div class="check-dot"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>Context, storylines, culture — not just scores</div>
-        </div>
-        <div class="bff-brief__buttons" style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <a href="#" class="btn btn--pink">Get the BFF Brief <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
-          <a href="/bff-brief" class="btn btn--outline" style="color: #fff; border-color: rgba(255,255,255,0.4);">Learn More</a>
-        </div>
-      </div>
-      <div class="bff-brief__phone-wrap">
-        <div class="bff-sms">
-          <div class="bff-sms__bubble">🏀 A'ja Wilson is officially the highest-paid player in WNBA history. The four-time MVP re-signed with the Aces on a 3-year, $5M supermax — the largest deal the league has ever seen. For context: she made $200K last season. Now that's some girl math.</div>
-          <div class="bff-sms__bubble">🏒 NHL playoffs are officially set. Can the Colorado Avalanche beat the Presidents' Trophy curse and win both that and the Stanley Cup in the same year?</div>
-          <div class="bff-sms__bubble">🏈 NFL Draft kicks off Thursday night. The Raiders have the No. 1 pick and all signs point to Fernando Mendoza, the Indiana QB who's been the consensus top prospect all year.</div>
-          <div class="bff-sms__bubble">⛳ The Schefflers welcomed baby boy Remy last week, and at nine days old he's already had his Masters debut.<span class="bff-sms__reaction">❤️</span></div>
-          <div class="bff-sms__bubble bff-sms__bubble--signature">xx Your Sports BFF</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS — editorial pull quote in box -->
-<section class="testimonials">
-  <div class="container">
-    <div class="testimonials__inner">
-      <div class="testimonials__frame">
-        <h2 class="testimonials__headline">Don't just take <i>our word for it</i></h2>
-        <div class="testimonials__stars">★★★★★</div>
-        <div class="testimonials__quote-wrap">
-          <div class="testimonials__quote is-active">"I love it. It's predictable and I like having it to look forward to — I don't have to find this content on my own."</div>
-          <div class="testimonials__quote">"I get content I wouldn't normally find elsewhere. When they talked about Chloe Kim, I wouldn't have known that without this."</div>
-          <div class="testimonials__quote">"There's this doubt — are you actually a fan? Being a fan isn't a competition. This makes me feel like I belong."</div>
-          <div class="testimonials__quote">"I love your morning sports updates, especially with the Olympics, because I have zero time to actually watch them."</div>
-          <div class="testimonials__quote">"ESPN can be difficult to figure out and a lot of things are behind paywalls. This is so much easier and actually fun."</div>
-        </div>
-        <div class="testimonials__dots">
-          <button class="testimonials__dot is-active" data-index="0"></button>
-          <button class="testimonials__dot" data-index="1"></button>
-          <button class="testimonials__dot" data-index="2"></button>
-          <button class="testimonials__dot" data-index="3"></button>
-          <button class="testimonials__dot" data-index="4"></button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<script>
-  (function(){
-    const quotes = document.querySelectorAll('.testimonials__quote');
-    const dots = document.querySelectorAll('.testimonials__dot');
-    let current = 0;
-
-    function showQuote(i) {
-      quotes.forEach(q => q.classList.remove('is-active'));
-      dots.forEach(d => d.classList.remove('is-active'));
-      quotes[i].classList.add('is-active');
-      dots[i].classList.add('is-active');
-      current = i;
-    }
-
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => {
-        showQuote(parseInt(dot.dataset.index));
-      });
-    });
-
-    // Auto-advance every 5 seconds
-    setInterval(() => {
-      showQuote((current + 1) % quotes.length);
-    }, 5000);
-  })();
-</script>
-
-<!-- THE SPORTS HOTLINE -->
-<section class="hotline">
-  <div class="container">
-    <div class="hotline__inner">
-      <!-- iMessage chat on left -->
-      <div style="display:flex;justify-content:center;">
-        <div class="imessage">
-          <div class="im-row im-row--right">
-            <div class="im im--blue">I'm going on a date to a Cubs game tonight. What do I need to know?</div>
-          </div>
-
-          <div class="im__gap"></div>
-
-          <div class="im-row im-row--left">
-            <div class="im im--gray">You're gonna have so much fun! A Wrigley day date is always a fave. Here's what you can say to impress:<br><br>🔹 Pete Crow-Armstrong = the star. Say "that extension was massive."<br>🔹 Alex Bregman = new. Say "he's paying off already."<br>🔹 Watch for "Go Cubs Go" after a win. Everyone sings — you will too.</div>
-          </div>
-
-          <div class="im__gap"></div>
-
-          <div class="im-row im-row--right">
-            <div class="im im--blue">Wait — anything I should absolutely NOT say?</div>
-          </div>
-
-          <div class="im__gap"></div>
-
-          <div class="im-row im-row--left">
-            <div class="im im--gray">Don't call it Wrigley "Stadium" — it's Wrigley FIELD. And never put ketchup on a Chicago dog. That one's deadly serious. You've got this 💛</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right side -->
-      <div class="hotline__right">
-        <div class="hotline__brand-tag">Premium</div>
-        <h2 class="hotline__title">The Sports <i>Hotline</i></h2>
-        <div class="hotline__tagline">
-          Like having a BFF who's a sports expert in your back pocket, whenever you need her.
-        </div>
-        <div class="hotline__body">
-          Watch party with his friends. Work outing at the game. Group chat going crazy. Text us your questions and get answers like a friend would send them.
-        </div>
-        <div class="hotline__perks">
-          <div class="hotline__perk">
-            <div class="hotline__perk-check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
-            <div class="hotline__perk-content"><span class="hotline__perk-title">Real-Time</span><span class="hotline__perk-dash"> — </span><span class="hotline__perk-text">Answers when you need them, not after the game</span></div>
-          </div>
-          <div class="hotline__perk">
-            <div class="hotline__perk-check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
-            <div class="hotline__perk-content"><span class="hotline__perk-title">Personal</span><span class="hotline__perk-dash"> — </span><span class="hotline__perk-text">Tailored to your game, your team, your situation</span></div>
-          </div>
-          <div class="hotline__perk">
-            <div class="hotline__perk-check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
-            <div class="hotline__perk-content"><span class="hotline__perk-title">Judgment-Free</span><span class="hotline__perk-dash"> — </span><span class="hotline__perk-text">No dumb questions. Seriously. Ask anything.</span></div>
-          </div>
-        </div>
-        <a href="#" class="btn btn--pink">
-          Subscribe to Access
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- VALUE PROPS — Padelthon-style grid -->
-<section class="values">
-  <div class="container">
-    <div class="values__eyebrow" style="padding-left: 10px;">Why S*BFF</div>
-    <h2 class="values__headline" style="padding-left: 10px;">We were sick of feeling like an afterthought.<br class="desktop-br"> So we built what we wish had always existed.</h2>
-    <div class="values__grid">
-      <!-- Row 1, Col 1 -->
-      <div class="v-cell">
-        <div class="v-cell__icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
-        <div class="v-cell__title">No Gatekeeping</div>
-        <div class="v-cell__body">Content that doesn't assume an expert level of knowledge.</div>
-      </div>
-      <!-- Row 1-2, Col 2: Image -->
-      <div class="v-image"></div>
-      <!-- Row 1, Col 3 -->
-      <div class="v-cell">
-        <div class="v-cell__icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg></div>
-        <div class="v-cell__title">Competition &amp; Culture</div>
-        <div class="v-cell__body">The personalities, the fashion, the drama. Not just the scoreboard.</div>
-      </div>
-      <!-- Row 1, Col 4 -->
-      <div class="v-cell v-cell--no-right">
-        <div class="v-cell__icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
-        <div class="v-cell__title">In Her Words</div>
-        <div class="v-cell__body">Takes, tone, and perspective that finally sound like hers.</div>
-      </div>
-      <!-- Row 2, Col 1 -->
-      <div class="v-cell v-cell--no-bottom">
-        <div class="v-cell__icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
-        <div class="v-cell__title">Full Coverage</div>
-        <div class="v-cell__body">Men's and women's sports. She watches it all.</div>
-      </div>
-      <!-- Image spans here (col 2) -->
-      <!-- Row 2, Col 3-4: wide merged cell -->
-      <div class="v-cell v-cell--wide v-cell--no-right v-cell--no-bottom">
-        <div class="v-cell__icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
-        <div class="v-cell__title">Built by Her, for Her</div>
-        <div class="v-cell__body">We're the users. Every decision comes from lived experience. We're building what we wished had always existed.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
-<!-- POLAROID CARD STRIP #2 — bigger -->
-<section class="polaroid-strip polaroid-strip--big">
-  <div class="polaroid-strip__track">
-    <div class="polaroid" style="--rot:-4deg;">
-      <div class="polaroid__image" style="background-image: url('polaroid-2-1.png');"></div>
-      <div class="polaroid__label">Tunnel Walk Ready</div>
-    </div>
-    <div class="polaroid" style="--rot:3deg;">
-      <div class="polaroid__image" style="background-image: url('polaroid-2-2.png');"></div>
-      <div class="polaroid__label">Eyes on the Prize</div>
-    </div>
-    <div class="polaroid" style="--rot:-1.5deg;">
-      <div class="polaroid__image" style="background-image: url('polaroid-2-3.png');"></div>
-      <div class="polaroid__label">Game Face On</div>
-    </div>
-    <div class="polaroid" style="--rot:4deg;">
-      <div class="polaroid__image" style="background-image: url('polaroid-2-4.png');"></div>
-      <div class="polaroid__label">Sideline Icon</div>
-    </div>
-    <div class="polaroid" style="--rot:-3deg;">
-      <div class="polaroid__image" style="background-image: url('polaroid-2-5.png');"></div>
-      <div class="polaroid__label">She's on the Clock</div>
-    </div>
-  </div>
-</section>
-
-<!-- SECTION DIVIDER — full-width line -->
-<div style="border-top: 1px solid rgba(30,28,26,0.1); width: 100%;"></div>
-
-<!-- SOCIAL -->
-<section class="social-section">
-  <div class="container">
-    <div class="social-section__header">
-      <h2 class="social-section__headline" style="padding-left: 10px;">Your new <i>favorite</i> follow</h2>
-      <div style="display:flex;gap:8px;">
-        <a href="https://www.tiktok.com/@yoursportsbff" target="_blank" rel="noopener" class="platform-pill">TikTok</a>
-        <a href="https://www.instagram.com/yoursportsbff/" target="_blank" rel="noopener" class="platform-pill">Instagram</a>
-      </div>
-    </div>
-  </div>
-  <div class="social-tracks">
-    <div class="social-track">
-      <div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div>
-      <div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div>
-    </div>
-    <div class="social-track social-track--rev">
-      <div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div>
-      <div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta">
-  <div class="container">
-    <h2 class="cta__headline">Ready to experience sports <i>your way?</i></h2>
-    <p class="cta__sub">Join the women who start their morning with the BFF Brief. Free, daily, and designed for you.</p>
-    <div class="cta__buttons" style="display:flex;gap:12px;justify-content:center;">
-      <a href="#" class="btn btn--mandarin" style="font-size:13px;padding:16px 32px;">Get the BFF Brief <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer__inner">
-      <div>
-        <div class="footer__logo">Your Sports <em>BFF</em></div>
-        <p class="footer__tagline">Content, platforms, and experiences for the modern female sports fan.</p>
-      </div>
-      <div><div class="footer__col-title">Navigate</div><ul class="footer__links"><li><a href="/">Home</a></li><li><a href="/bff-brief">BFF Brief</a></li></ul></div>
-      <div><div class="footer__col-title">Account</div><ul class="footer__links"><li><a href="/account">Membership</a></li><li><a href="/account">Log In</a></li><li><a href="mailto:heather@yoursportsbff.com">Contact</a></li></ul></div>
-      <div><div class="footer__col-title">Follow</div><ul class="footer__links"><li><a href="https://www.instagram.com/yoursportsbff/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://www.tiktok.com/@yoursportsbff" target="_blank" rel="noopener">TikTok</a></li></ul></div>
-    </div>
-    <div class="footer__bottom">
-      <span>&copy; 2026 Your Sports BFF. All rights reserved.</span>
-      <span>Privacy &middot; Terms</span>
-    </div>
-  </div>
-</footer>
-
-
-<!-- MOBILE MENU -->
+<!-- MOBILE MENU OVERLAY — dashboard only -->
 <div class="nav__mobile-menu" id="navMobile">
   <div class="nav__mobile-menu__top">
     <span class="nav__mobile-menu__label">Menu</span>
@@ -2104,11 +680,16 @@
     </button>
   </div>
   <nav class="nav__mobile-menu__primary">
-    <a href="/" class="is-active">Home</a>
-    <a href="/bff-brief">BFF Brief</a>
+    <a href="/">Home</a>
   </nav>
+  <!-- Your Account section -->
+  <div class="nav__mobile-menu__account">
+    <div class="nav__mobile-menu__account-label">Your Account</div>
+    <button class="nav__mobile-link is-active" data-dash="dash-home">Account Home</button>
+    <button class="nav__mobile-link" data-dash="dash-prefs">BFF Brief Preferences</button>
+    <button class="nav__mobile-link" data-dash="dash-billing">Billing &amp; Membership</button>
+  </div>
   <div class="nav__mobile-menu__secondary">
-    <a href="/account">Log In</a>
     <a href="mailto:heather@yoursportsbff.com">Contact Us</a>
   </div>
   <div class="nav__mobile-menu__tertiary">
@@ -2117,18 +698,533 @@
   </div>
 </div>
 
+<!-- ============================================
+     PAGE 1: LOG IN / SIGN UP
+     ============================================ -->
+<div class="page auth-page is-active" id="page-login">
+  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <button class="auth-tab is-active" onclick="showTab('login')">Log In</button>
+      <button class="auth-tab" onclick="showTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- Login form -->
+    <div id="tab-login">
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input class="form-input" type="tel" placeholder="(555) 123-4567">
+      </div>
+      <button class="auth-btn" onclick="window._isSignup=false; goTo('page-verify')">Send Code</button>
+    </div>
+
+    <!-- Signup form -->
+    <div id="tab-signup" style="display:none;">
+      <div class="form-group">
+        <label class="form-label">First Name</label>
+        <input class="form-input" type="text" placeholder="Heather">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Last Name</label>
+        <input class="form-input" type="text" placeholder="Melcer">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" placeholder="you@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input class="form-input" type="tel" placeholder="(555) 123-4567">
+      </div>
+      <button class="auth-btn" onclick="window._isSignup=true; goTo('page-verify')">Create Account</button>
+    </div>
+  </div>
+  <div class="auth-back" onclick="window.location.href='/'">Back to S*BFF</div>
+</div>
+
+<!-- ============================================
+     PAGE 2: VERIFY CODE
+     ============================================ -->
+<div class="page auth-page" id="page-verify">
+  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
+  <div class="auth-card">
+    <div class="auth-card__title">Verify your <i>number.</i></div>
+    <div class="auth-card__sub">We sent a 5-digit code to your phone. Enter it below.</div>
+    <div class="code-inputs">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
+    </div>
+    <button class="auth-btn" onclick="goTo(window._isSignup ? 'page-sports' : 'page-dash')">Verify</button>
+    <div class="auth-resend">Didn't get it? <a onclick="alert('Code resent!')">Resend code</a></div>
+  </div>
+  <div class="auth-back" onclick="goTo('page-login')">Back</div>
+</div>
+
+<!-- ============================================
+     PAGE 3: SPORTS INTERESTS
+     ============================================ -->
+<div class="page auth-page" id="page-sports">
+  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
+  <div class="onboard-card">
+    <div class="onboard-progress">
+      <div class="onboard-dot is-active"></div>
+      <div class="onboard-dot"></div>
+      <div class="onboard-dot"></div>
+      <div class="onboard-dot"></div>
+    </div>
+    <div class="auth-card__title">What sports are you <i>into?</i></div>
+    <div class="auth-card__sub">Select all that apply. You can always change these later.</div>
+    <div class="check-grid">
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">Football</div>
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">Basketball</div>
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">Baseball</div>
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">Hockey</div>
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">Soccer</div>
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">Tennis</div>
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">Golf</div>
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">F1</div>
+
+    </div>
+    <button class="auth-btn" onclick="goTo('page-cities')">Continue</button>
+    <div class="skip-link" onclick="goTo('page-referral')">Skip for now</div>
+  </div>
+</div>
+
+<!-- ============================================
+     PAGE 4: CITY SELECTION
+     ============================================ -->
+<div class="page auth-page" id="page-cities">
+  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
+  <div class="onboard-card">
+    <div class="onboard-progress">
+      <div class="onboard-dot is-done"></div>
+      <div class="onboard-dot is-active"></div>
+      <div class="onboard-dot"></div>
+      <div class="onboard-dot"></div>
+    </div>
+    <div class="auth-card__title">Do you live in any of these <i>cities?</i></div>
+    <div class="auth-card__sub">We'll customize your updates with local sports coverage.</div>
+    <div class="check-grid city-grid">
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">Chicago</div>
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">New York</div>
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">Los Angeles</div>
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">San Francisco</div>
+      <div class="check-item" onclick="this.classList.toggle('is-selected')">Seattle</div>
+    </div>
+    <div class="form-group" style="margin-top: 16px;">
+      <label class="form-label">Don't see your city?</label>
+      <input class="form-input" type="text" placeholder="Type your city...">
+    </div>
+    <button class="auth-btn" style="margin-top: 24px;" onclick="goTo('page-referral')">Continue</button>
+    <div class="skip-link" onclick="goTo('page-referral')">Skip for now</div>
+  </div>
+</div>
+
+<div class="page auth-page" id="page-referral">
+  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
+  <div class="onboard-card">
+    <div class="onboard-progress">
+      <div class="onboard-dot is-done"></div>
+      <div class="onboard-dot is-done"></div>
+      <div class="onboard-dot is-active"></div>
+      <div class="onboard-dot"></div>
+    </div>
+    <div class="auth-card__title">Who are your <i>sports BFFs?</i></div>
+    <div class="auth-card__sub">Share your link with friends. The more BFFs, the more rewards.</div>
+    <div class="share-box">
+      <div style="font-size:13px; color:var(--text-secondary); margin-bottom:8px;">Your referral link</div>
+      <div class="share-url">yoursportsbff.com/ref/heather2026</div>
+    </div>
+    <div class="share-btns">
+      <button class="share-btn" onclick="alert('Link copied!')">Copy Link</button>
+      <button class="share-btn">Text a Friend</button>
+    </div>
+    <div style="margin-top: 28px;">
+      <button class="auth-btn" onclick="goTo('page-upsell')">Continue</button>
+    </div>
+    <div class="skip-link" onclick="goTo('page-upsell')">Skip for now</div>
+  </div>
+</div>
+
+<!-- ============================================
+     PAGE 6: UPSELL — add-ons vs Premium
+     ============================================ -->
+<div class="page auth-page" id="page-upsell">
+  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
+  <div class="onboard-card">
+    <div class="onboard-progress">
+      <div class="onboard-dot is-done"></div>
+      <div class="onboard-dot is-done"></div>
+      <div class="onboard-dot is-done"></div>
+      <div class="onboard-dot is-active"></div>
+    </div>
+    <div class="auth-card__title">Level up your <i>experience.</i></div>
+    <div class="auth-card__sub">Sport-specific and city updates are add-ons, or go Premium for everything.</div>
+    <div class="upsell-cards">
+      <div class="upsell-card">
+        <div class="upsell-card__name">Add-On</div>
+        <div class="upsell-card__price">$4.99/mo each</div>
+        <div class="upsell-card__features">
+          One sport OR one city<br>
+          Weekly deep dive text<br>
+          &nbsp;<br>
+          &nbsp;
+        </div>
+        <button class="auth-btn auth-btn--outline" onclick="goTo('page-dash')">Add an Add-On</button>
+      </div>
+      <div class="upsell-card is-featured">
+        <div class="upsell-card__tag">Best Value</div>
+        <div class="upsell-card__name">Premium</div>
+        <div class="upsell-card__price">$12.99/mo</div>
+        <div class="upsell-card__features">
+          All sports &bull; All cities<br>
+          Breaking news alerts<br>
+          Sports Hotline access<br>
+          Early merch drops
+        </div>
+        <button class="auth-btn" onclick="goTo('page-dash')">Choose Premium</button>
+      </div>
+    </div>
+    <div style="margin-top: 16px;">
+      <button class="auth-btn auth-btn--outline" style="width: 100%;" onclick="goTo('page-dash')">Start Free for Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     PAGE 7: DASHBOARD — Account Home
+     ============================================ -->
+<div class="page dash" id="page-dash">
+  <nav class="dash-nav">
+    <a href="/" class="dash-nav__logo" aria-label="Your Sports BFF — back to homepage"><img src="logo.svg" alt="Your Sports BFF"></a>
+    <div class="dash-nav__links">
+      <div class="dash-nav__link is-active" data-dash="dash-home" onclick="showDash('dash-home')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Home
+      </div>
+      <div class="dash-nav__link" data-dash="dash-prefs" onclick="showDash('dash-prefs')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        BFF Brief Preferences
+      </div>
+      <div class="dash-nav__link" data-dash="dash-billing" onclick="showDash('dash-billing')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+        Billing & Membership
+      </div>
+    </div>
+    <div class="dash-nav__bottom">
+      <div class="dash-nav__user">Heather M.</div>
+      <div class="dash-nav__email">heather@email.com</div>
+    </div>
+  </nav>
+
+  <div class="dash-main">
+    <!-- DASHBOARD HOME -->
+    <div class="dash-panel" id="dash-home">
+      <div class="dash-header">
+        <h1 class="dash-title">Welcome back, <i>Heather.</i></h1>
+      </div>
+
+      <!-- Tier card — image inside on left -->
+      <div class="tier-card" style="display: flex; align-items: center; gap: 20px; padding: 20px;">
+        <div style="width: 140px; height: 140px; background: #D9D9D9; border-radius: var(--radius); flex-shrink: 0;"></div>
+        <div style="flex: 1;">
+          <div style="font-family: var(--font-sans); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.45); margin-bottom: 4px;">Member Tier</div>
+          <div class="tier-card__tier">Junior Varsity</div>
+        </div>
+        <div class="tier-card__meta">
+          <div class="tier-card__since">Member since April 2026</div>
+          <div class="tier-card__next"><span>11 months</span> until Varsity</div>
+        </div>
+      </div>
+
+
+
+      <!-- Stats -->
+      <div class="stat-row" style="grid-template-columns: repeat(2, 1fr);">
+        <div class="stat-box">
+          <div class="stat-box__number">2</div>
+          <div class="stat-box__label">Referrals</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box__number">Free</div>
+          <div class="stat-box__label">Current Plan</div>
+        </div>
+      </div>
+
+      <!-- Share link -->
+      <div class="referral-card">
+        <div class="referral-card__title referral-card__title--display">The BFF Brief is better with <i>friends.</i></div>
+        <div class="referral-card__sub">Invite your crew using the link below.</div>
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <div class="share-url" style="font-size:13px;">yoursportsbff.com/ref/heather2026</div>
+          <button class="share-btn" onclick="alert('Copied!')">Copy</button>
+          <button class="share-btn">Text</button>
+        </div>
+      </div>
+
+      <!-- Referral tracker -->
+      <div class="referral-card">
+        <div class="referral-card__title">Referral Progress</div>
+        <div class="referral-bar"><div class="referral-bar__fill"></div></div>
+        <div class="referral-bar__text">
+          <span>2 of 5 referrals</span>
+          <span style="color:var(--mandarin); font-weight:700;">Next: Free S*BFF Sticker Pack</span>
+        </div>
+        <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--line);">
+            <span><strong>5 referrals</strong></span>
+            <span style="color: var(--text-secondary);">Free Sticker Pack</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--line);">
+            <span><strong>10 referrals</strong></span>
+            <span style="color: var(--text-secondary);">Free Month of Premium</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--line);">
+            <span><strong>25 referrals</strong></span>
+            <span style="color: var(--text-secondary);">Free S*BFF Tee</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0;">
+            <span><strong>50 referrals</strong></span>
+            <span style="color: var(--text-secondary);">Free S*BFF Hoodie</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREFERENCES -->
+    <div class="dash-panel" id="dash-prefs" style="display:none;">
+      <div class="dash-header">
+        <h1 class="dash-title">BFF Brief <i>Preferences</i></h1>
+      </div>
+
+      <div class="pref-section">
+        <div class="pref-section__title">Daily Brief</div>
+        <div class="pref-row">
+          <div><div class="pref-row__label">The Daily BFF Brief</div><div class="pref-row__sub">Mon–Fri morning sports text</div></div>
+          <div class="pref-toggle is-on" onclick="this.classList.toggle('is-on')"></div>
+        </div>
+        <div class="pref-row">
+          <div><div class="pref-row__label">Breaking News Alerts</div><div class="pref-row__sub">Major, can't-miss updates</div></div>
+          <div class="pref-toggle is-on" onclick="this.classList.toggle('is-on')"></div>
+        </div>
+      </div>
+
+      <div class="pref-section">
+        <div class="pref-section__title">Sport-Specific Updates <span class="pref-locked">Plus or Premium</span></div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">Football</div><div class="pref-row__sub">NFL, college, and more</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">Basketball</div><div class="pref-row__sub">NBA, WNBA, college, and more</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">Baseball</div><div class="pref-row__sub">MLB scores, standings, storylines</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">Hockey</div><div class="pref-row__sub">NHL playoffs, trades, highlights</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">Soccer</div><div class="pref-row__sub">MLS, NWSL, Premier League</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">Tennis</div><div class="pref-row__sub">Grand Slams + tour</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">Golf</div><div class="pref-row__sub">Majors + tour coverage</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">F1</div><div class="pref-row__sub">Race weekends + drama</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+
+      </div>
+
+      <div class="pref-section">
+        <div class="pref-section__title">City Updates <span class="pref-locked">Plus or Premium</span></div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">Chicago</div><div class="pref-row__sub">Bears, Bulls, Cubs, Sox, Blackhawks, Sky, Red Stars, Fire</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">New York</div><div class="pref-row__sub">Giants, Jets, Knicks, Nets, Yankees, Mets, Rangers, Liberty, Gotham FC</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">Los Angeles</div><div class="pref-row__sub">Lakers, Rams, Dodgers, Chargers, Kings, Sparks, Angel City, LAFC</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">San Francisco</div><div class="pref-row__sub">49ers, Giants, Warriors, Sharks, Bay FC</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+        <div class="pref-row" style="opacity:0.4;">
+          <div><div class="pref-row__label">Seattle</div><div class="pref-row__sub">Seahawks, Mariners, Kraken, Storm, Reign, Sounders</div></div>
+          <div class="pref-toggle"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;">
+        <button class="auth-btn" style="max-width:280px;" onclick="goTo('page-upsell')">Upgrade to Unlock</button>
+      </div>
+    </div>
+
+    <!-- BILLING -->
+    <div class="dash-panel" id="dash-billing" style="display:none;">
+      <div class="dash-header">
+        <h1 class="dash-title">Billing & <i>Membership</i></h1>
+      </div>
+
+      <div class="billing-card">
+        <div class="billing-card__header">
+          <div class="billing-card__title">Current Plan</div>
+          <div class="billing-card__action" onclick="goTo('page-upsell')">Upgrade</div>
+        </div>
+        <div class="billing-card__body">
+          <strong>The Daily (Free)</strong><br>
+          Daily BFF Brief + breaking news alerts. No payment method required.
+        </div>
+      </div>
+
+      <div class="billing-card">
+        <div class="billing-card__header">
+          <div class="billing-card__title">Payment Method</div>
+          <div class="billing-card__action">Add</div>
+        </div>
+        <div class="billing-card__body">No payment method on file.</div>
+      </div>
+
+      <div class="billing-card">
+        <div class="billing-card__header">
+          <div class="billing-card__title">Account Details</div>
+          <div class="billing-card__action">Edit</div>
+        </div>
+        <div class="billing-card__body">
+          Heather Melcer<br>
+          heather@email.com<br>
+          (312) 555-1234
+        </div>
+      </div>
+
+      <div style="margin-top:24px;">
+        <div class="billing-card__action" style="color:var(--text-secondary);">Cancel Membership</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <script>
+// ============================================
+// NAV — hamburger + mobile overlay + body state
+// ============================================
 (function(){
-  const hamburger = document.querySelector('.nav__hamburger');
-  const mobile = document.getElementById('navMobile');
-  const close = document.getElementById('navClose');
+  var hamburger = document.getElementById('navHamburger');
+  var mobile = document.getElementById('navMobile');
+  var close = document.getElementById('navClose');
+
   function openMenu() { mobile.classList.add('is-open'); document.body.style.overflow='hidden'; }
   function closeMenu() { mobile.classList.remove('is-open'); document.body.style.overflow=''; }
   if(hamburger) hamburger.addEventListener('click', openMenu);
   if(close) close.addEventListener('click', closeMenu);
-  // Close when tapping a link
-  mobile.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  // Close when tapping a standard link in the overlay (Home, Contact, socials)
+  mobile.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
+
+  // Dashboard link handoff — tapping a Your Account link in the overlay
+  // switches the dashboard panel and closes the menu
+  mobile.querySelectorAll('.nav__mobile-link[data-dash]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var panelId = btn.getAttribute('data-dash');
+      // Update active state in overlay
+      mobile.querySelectorAll('.nav__mobile-link').forEach(function(b){ b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      // Switch the dashboard panel
+      document.querySelectorAll('.dash-panel').forEach(function(p){ p.style.display = 'none'; });
+      var target = document.getElementById(panelId);
+      if(target) target.style.display = 'block';
+      // Keep desktop sidebar nav in sync
+      document.querySelectorAll('.dash-nav__link').forEach(function(l){ l.classList.remove('is-active'); });
+      var sidebarMatch = document.querySelector('.dash-nav__link[data-dash="' + panelId + '"]');
+      if(sidebarMatch) sidebarMatch.classList.add('is-active');
+      closeMenu();
+    });
+  });
+
+  // Toggle body.is-dash based on which page is active.
+  // CSS uses this to show the pill nav only on dashboard (tablet/mobile only).
+  window.applyBodyState = function(pageId) {
+    document.body.classList.toggle('is-dash', pageId === 'page-dash');
+  };
+
+  // Initial state
+  var initial = document.querySelector('.page.is-active');
+  if (initial) window.applyBodyState(initial.id);
 })();
+
+// ============================================
+// PAGE NAVIGATION
+// ============================================
+function goTo(id) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('is-active'); });
+  document.getElementById(id).classList.add('is-active');
+  window.scrollTo(0, 0);
+  if (window.applyBodyState) window.applyBodyState(id);
+}
+
+// Auth tabs (login/signup)
+function showTab(tab) {
+  document.getElementById('tab-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('tab-signup').style.display = tab === 'signup' ? 'block' : 'none';
+  document.querySelectorAll('.auth-tab').forEach(function(t){ t.classList.remove('is-active'); });
+  event.target.classList.add('is-active');
+}
+
+// Dashboard panel switching
+function showDash(panel) {
+  document.querySelectorAll('.dash-panel').forEach(function(p){ p.style.display = 'none'; });
+  document.getElementById(panel).style.display = 'block';
+  document.querySelectorAll('.dash-nav__link').forEach(function(l){ l.classList.remove('is-active'); });
+  event.currentTarget.classList.add('is-active');
+  // Keep mobile overlay in sync
+  document.querySelectorAll('.nav__mobile-link[data-dash]').forEach(function(b){
+    b.classList.toggle('is-active', b.getAttribute('data-dash') === panel);
+  });
+}
+
+// Show "Other" city input when Other is selected
+document.querySelectorAll('#page-cities .check-item').forEach(function(item) {
+  item.addEventListener('click', function() {
+    if (item.textContent.trim() === 'Other') {
+      var otherInput = document.querySelector('.other-city-input');
+      if (item.classList.contains('is-selected')) {
+        otherInput.style.display = 'block';
+        otherInput.querySelector('input').focus();
+      } else {
+        otherInput.style.display = 'none';
+      }
+    }
+  });
+});
+
+// Code input auto-advance
+document.querySelectorAll('.code-input').forEach((input, i, arr) => {
+  input.addEventListener('input', () => {
+    if (input.value && i < arr.length - 1) arr[i + 1].focus();
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' && !input.value && i > 0) arr[i - 1].focus();
+  });
+});
 </script>
+
 </body>
 </html>
