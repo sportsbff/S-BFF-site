@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>Account — Your Sports BFF</title>
+<!-- MemberStack -->
+<script data-memberstack-app="app_cmo6cthsj008h0sz33bk94pkc" src="https://static.memberstack.com/scripts/v2/memberstack.js" type="text/javascript"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -711,55 +713,50 @@
     </div>
 
     <!-- Login form -->
-    <div id="tab-login">
+    <form id="tab-login" data-ms-form="login-passwordless-email" onsubmit="handleLogin(event)">
       <div class="form-group">
-        <label class="form-label">Phone Number</label>
-        <input class="form-input" type="tel" placeholder="(555) 123-4567">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" data-ms-member="email" placeholder="you@email.com" required>
       </div>
-      <button class="auth-btn" onclick="window._isSignup=false; goTo('page-verify')">Send Code</button>
-    </div>
+      <button type="submit" class="auth-btn">Send Magic Link</button>
+      <div class="auth-error" id="login-error" style="display:none; color: var(--mandarin); font-size: 13px; margin-top: 12px; text-align: center;"></div>
+    </form>
 
     <!-- Signup form -->
-    <div id="tab-signup" style="display:none;">
+    <form id="tab-signup" data-ms-form="signup-passwordless-email" style="display:none;" onsubmit="handleSignup(event)">
       <div class="form-group">
         <label class="form-label">First Name</label>
-        <input class="form-input" type="text" placeholder="Heather">
+        <input class="form-input" type="text" data-ms-member="first-name" placeholder="Heather" required>
       </div>
       <div class="form-group">
         <label class="form-label">Last Name</label>
-        <input class="form-input" type="text" placeholder="Melcer">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-input" type="email" placeholder="you@email.com">
+        <input class="form-input" type="text" data-ms-member="last-name" placeholder="Melcer" required>
       </div>
       <div class="form-group">
         <label class="form-label">Phone Number</label>
-        <input class="form-input" type="tel" placeholder="(555) 123-4567">
+        <input class="form-input" type="tel" data-ms-member="phone" placeholder="(555) 123-4567" required>
       </div>
-      <button class="auth-btn" onclick="window._isSignup=true; goTo('page-verify')">Create Account</button>
-    </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" data-ms-member="email" placeholder="you@email.com" required>
+      </div>
+      <button type="submit" class="auth-btn">Create Account</button>
+      <div class="auth-error" id="signup-error" style="display:none; color: var(--mandarin); font-size: 13px; margin-top: 12px; text-align: center;"></div>
+    </form>
   </div>
   <div class="auth-back" onclick="window.location.href='/'">Back to S*BFF</div>
 </div>
 
 <!-- ============================================
-     PAGE 2: VERIFY CODE
+     PAGE 2: CHECK EMAIL (replaces old verify-code page)
      ============================================ -->
 <div class="page auth-page" id="page-verify">
   <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
   <div class="auth-card">
-    <div class="auth-card__title">Verify your <i>number.</i></div>
-    <div class="auth-card__sub">We sent a 5-digit code to your phone. Enter it below.</div>
-    <div class="code-inputs">
-      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
-      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
-      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
-      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
-      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
-    </div>
-    <button class="auth-btn" onclick="goTo(window._isSignup ? 'page-sports' : 'page-dash')">Verify</button>
-    <div class="auth-resend">Didn't get it? <a onclick="alert('Code resent!')">Resend code</a></div>
+    <div class="auth-card__title">Check your <i>email.</i></div>
+    <div class="auth-card__sub">We sent you a link to log in. Please head there to continue.</div>
+    <div class="auth-resend" style="margin-top: 32px;">Didn't get it? <a onclick="handleResend()" style="cursor:pointer;">Resend link</a></div>
+    <div class="auth-resend" id="resend-confirmation" style="display:none; margin-top: 12px; color: var(--mandarin);">Link resent! Check your inbox.</div>
   </div>
   <div class="auth-back" onclick="goTo('page-login')">Back</div>
 </div>
@@ -779,18 +776,18 @@
     <div class="auth-card__title">What sports are you <i>into?</i></div>
     <div class="auth-card__sub">Select all that apply. You can always change these later.</div>
     <div class="check-grid">
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">Football</div>
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">Basketball</div>
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">Baseball</div>
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">Hockey</div>
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">Soccer</div>
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">Tennis</div>
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">Golf</div>
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">F1</div>
+      <div class="check-item" data-value="Football" onclick="this.classList.toggle('is-selected')">Football</div>
+      <div class="check-item" data-value="Basketball" onclick="this.classList.toggle('is-selected')">Basketball</div>
+      <div class="check-item" data-value="Baseball" onclick="this.classList.toggle('is-selected')">Baseball</div>
+      <div class="check-item" data-value="Hockey" onclick="this.classList.toggle('is-selected')">Hockey</div>
+      <div class="check-item" data-value="Soccer" onclick="this.classList.toggle('is-selected')">Soccer</div>
+      <div class="check-item" data-value="Tennis" onclick="this.classList.toggle('is-selected')">Tennis</div>
+      <div class="check-item" data-value="Golf" onclick="this.classList.toggle('is-selected')">Golf</div>
+      <div class="check-item" data-value="F1" onclick="this.classList.toggle('is-selected')">F1</div>
 
     </div>
-    <button class="auth-btn" onclick="goTo('page-cities')">Continue</button>
-    <div class="skip-link" onclick="goTo('page-referral')">Skip for now</div>
+    <button class="auth-btn" onclick="saveSportsAndContinue()">Continue</button>
+    <div class="skip-link" onclick="goTo('page-cities')">Skip for now</div>
   </div>
 </div>
 
@@ -809,17 +806,17 @@
     <div class="auth-card__title">Do you live in any of these <i>cities?</i></div>
     <div class="auth-card__sub">We'll customize your updates with local sports coverage.</div>
     <div class="check-grid city-grid">
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">Chicago</div>
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">New York</div>
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">Los Angeles</div>
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">San Francisco</div>
-      <div class="check-item" onclick="this.classList.toggle('is-selected')">Seattle</div>
+      <div class="check-item" data-value="Chicago" onclick="this.classList.toggle('is-selected')">Chicago</div>
+      <div class="check-item" data-value="New York" onclick="this.classList.toggle('is-selected')">New York</div>
+      <div class="check-item" data-value="Los Angeles" onclick="this.classList.toggle('is-selected')">Los Angeles</div>
+      <div class="check-item" data-value="San Francisco" onclick="this.classList.toggle('is-selected')">San Francisco</div>
+      <div class="check-item" data-value="Seattle" onclick="this.classList.toggle('is-selected')">Seattle</div>
     </div>
     <div class="form-group" style="margin-top: 16px;">
       <label class="form-label">Don't see your city?</label>
-      <input class="form-input" type="text" placeholder="Type your city...">
+      <input class="form-input" type="text" id="other-city-input" placeholder="Type your city...">
     </div>
-    <button class="auth-btn" style="margin-top: 24px;" onclick="goTo('page-referral')">Continue</button>
+    <button class="auth-btn" style="margin-top: 24px;" onclick="saveCitiesAndContinue()">Continue</button>
     <div class="skip-link" onclick="goTo('page-referral')">Skip for now</div>
   </div>
 </div>
@@ -837,11 +834,11 @@
     <div class="auth-card__sub">Share your link with friends. The more BFFs, the more rewards.</div>
     <div class="share-box">
       <div style="font-size:13px; color:var(--text-secondary); margin-bottom:8px;">Your referral link</div>
-      <div class="share-url">yoursportsbff.com/ref/heather2026</div>
+      <div class="share-url" id="referral-link-onboarding">yoursportsbff.com/account?ref=your-code</div>
     </div>
     <div class="share-btns">
-      <button class="share-btn" onclick="alert('Link copied!')">Copy Link</button>
-      <button class="share-btn">Text a Friend</button>
+      <button class="share-btn" onclick="copyReferralLink('referral-link-onboarding', this)">Copy Link</button>
+      <button class="share-btn" onclick="textReferralLink('referral-link-onboarding')">Text a Friend</button>
     </div>
     <div style="margin-top: 28px;">
       <button class="auth-btn" onclick="goTo('page-upsell')">Continue</button>
@@ -851,7 +848,7 @@
 </div>
 
 <!-- ============================================
-     PAGE 6: UPSELL — add-ons vs Premium
+     PAGE 6: PLAN SELECTION
      ============================================ -->
 <div class="page auth-page" id="page-upsell">
   <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
@@ -862,36 +859,57 @@
       <div class="onboard-dot is-done"></div>
       <div class="onboard-dot is-active"></div>
     </div>
-    <div class="auth-card__title">Level up your <i>experience.</i></div>
-    <div class="auth-card__sub">Sport-specific and city updates are add-ons, or go Premium for everything.</div>
+    <div class="auth-card__title">Pick your <i>plan.</i></div>
+    <div class="auth-card__sub">Start free, upgrade anytime.</div>
     <div class="upsell-cards">
       <div class="upsell-card">
-        <div class="upsell-card__name">Add-On</div>
-        <div class="upsell-card__price">$4.99/mo each</div>
+        <div class="upsell-card__name">The Insider</div>
+        <div class="upsell-card__price">Free</div>
         <div class="upsell-card__features">
-          One sport OR one city<br>
-          Weekly deep dive text<br>
+          Weekday sports texts<br>
+          Top headlines &amp; culture<br>
           &nbsp;<br>
           &nbsp;
         </div>
-        <button class="auth-btn auth-btn--outline" onclick="goTo('page-dash')">Add an Add-On</button>
+        <button class="auth-btn auth-btn--outline" data-ms-price:add="pln_the-insider-jbbd0e0g" onclick="handleFreePlan(event)">Get Started Free</button>
+      </div>
+      <div class="upsell-card">
+        <div class="upsell-card__name">The VIP</div>
+        <div class="upsell-card__price">$5.99/mo</div>
+        <div class="upsell-card__features">
+          Everything in Insider<br>
+          Your sport or city<br>
+          Weekly deep-dives<br>
+          Breaking news alerts
+        </div>
+        <button class="auth-btn auth-btn--outline" data-ms-price:add="prc_the-vip-z2650aam">Get The VIP</button>
       </div>
       <div class="upsell-card is-featured">
         <div class="upsell-card__tag">Best Value</div>
-        <div class="upsell-card__name">Premium</div>
-        <div class="upsell-card__price">$12.99/mo</div>
+        <div class="upsell-card__name">The All-Access</div>
+        <div class="upsell-card__price">$14.99/mo</div>
         <div class="upsell-card__features">
-          All sports &bull; All cities<br>
-          Breaking news alerts<br>
+          All sports &amp; cities<br>
           Sports Hotline access<br>
-          Early merch drops
+          Partner discounts<br>
+          Early event access
         </div>
-        <button class="auth-btn" onclick="goTo('page-dash')">Choose Premium</button>
+        <button class="auth-btn" data-ms-price:add="prc_the-all-access-qf640adh">Go All-Access</button>
       </div>
     </div>
-    <div style="margin-top: 16px;">
-      <button class="auth-btn auth-btn--outline" style="width: 100%;" onclick="goTo('page-dash')">Start Free for Now</button>
-    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     PAGE 6B: WELCOME — shown after plan selection
+     ============================================ -->
+<div class="page auth-page" id="page-welcome">
+  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
+  <div class="auth-card">
+    <div class="auth-card__title">Welcome to <i>S*BFF.</i></div>
+    <div class="auth-card__sub" style="margin-bottom: 24px;">Your first BFF Brief arrives next weekday morning.</div>
+    <div class="auth-card__sub" style="margin-bottom: 32px;">Visit your member settings anytime to update your plan, sports, or cities.</div>
+    <button class="auth-btn" onclick="goTo('page-dash')">Continue to Account</button>
   </div>
 </div>
 
@@ -918,6 +936,7 @@
     <div class="dash-nav__bottom">
       <div class="dash-nav__user">Heather M.</div>
       <div class="dash-nav__email">heather@email.com</div>
+      <a href="#" onclick="handleLogout(event)" style="display: block; margin-top: 12px; font-size: 12px; color: var(--text-secondary); text-decoration: underline; font-weight: 500;">Log out</a>
     </div>
   </nav>
 
@@ -926,6 +945,15 @@
     <div class="dash-panel" id="dash-home">
       <div class="dash-header">
         <h1 class="dash-title">Welcome back, <i>Heather.</i></h1>
+      </div>
+
+      <!-- Onboarding nudge (shown if onboarding incomplete) -->
+      <div id="onboarding-nudge" style="display:none; background: var(--mandarin); color: #fff; padding: 16px 20px; border-radius: var(--radius); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+        <div>
+          <div style="font-weight: 700; font-size: 15px; margin-bottom: 2px;">Finish setting up your BFF Brief</div>
+          <div style="font-size: 13px; opacity: 0.9;">Tell us your sports and cities so we can personalize your texts.</div>
+        </div>
+        <button class="share-btn" style="background: #fff; color: var(--charcoal); border-color: #fff;" onclick="goTo('page-sports')">Continue</button>
       </div>
 
       <!-- Tier card — image inside on left -->
@@ -960,9 +988,9 @@
         <div class="referral-card__title referral-card__title--display">The BFF Brief is better with <i>friends.</i></div>
         <div class="referral-card__sub">Invite your crew using the link below.</div>
         <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-          <div class="share-url" style="font-size:13px;">yoursportsbff.com/ref/heather2026</div>
-          <button class="share-btn" onclick="alert('Copied!')">Copy</button>
-          <button class="share-btn">Text</button>
+          <div class="share-url" id="referral-link-dash" style="font-size:13px;">yoursportsbff.com/account?ref=your-code</div>
+          <button class="share-btn" onclick="copyReferralLink('referral-link-dash', this)">Copy</button>
+          <button class="share-btn" onclick="textReferralLink('referral-link-dash')">Text</button>
         </div>
       </div>
 
@@ -1013,68 +1041,92 @@
         </div>
       </div>
 
-      <div class="pref-section">
-        <div class="pref-section__title">Sport-Specific Updates <span class="pref-locked">Plus or Premium</span></div>
-        <div class="pref-row" style="opacity:0.4;">
+      <!-- SPORTS: free-tier view (read-only, shows what they picked) -->
+      <div class="pref-section" data-sbff-tier="free">
+        <div class="pref-section__title">Your Sports <span class="pref-locked">VIP or All-Access</span></div>
+        <div style="padding: 16px 0; font-size: 14px; color: var(--text-secondary);">
+          <div style="margin-bottom: 8px; color: var(--text-primary);">
+            <strong id="prefs-sports-summary">—</strong>
+          </div>
+          <div style="font-size: 13px;">Upgrade to VIP or All-Access to get personalized updates for these sports.</div>
+        </div>
+      </div>
+
+      <!-- SPORTS: paid-tier view (functional toggles, hidden for free) -->
+      <div class="pref-section" data-sbff-tier="paid" style="display:none;">
+        <div class="pref-section__title">Sport-Specific Updates</div>
+        <div class="pref-row">
           <div><div class="pref-row__label">Football</div><div class="pref-row__sub">NFL, college, and more</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-sport="Football" onclick="toggleSportPref(this)"></div>
         </div>
-        <div class="pref-row" style="opacity:0.4;">
+        <div class="pref-row">
           <div><div class="pref-row__label">Basketball</div><div class="pref-row__sub">NBA, WNBA, college, and more</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-sport="Basketball" onclick="toggleSportPref(this)"></div>
         </div>
-        <div class="pref-row" style="opacity:0.4;">
+        <div class="pref-row">
           <div><div class="pref-row__label">Baseball</div><div class="pref-row__sub">MLB scores, standings, storylines</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-sport="Baseball" onclick="toggleSportPref(this)"></div>
         </div>
-        <div class="pref-row" style="opacity:0.4;">
+        <div class="pref-row">
           <div><div class="pref-row__label">Hockey</div><div class="pref-row__sub">NHL playoffs, trades, highlights</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-sport="Hockey" onclick="toggleSportPref(this)"></div>
         </div>
-        <div class="pref-row" style="opacity:0.4;">
+        <div class="pref-row">
           <div><div class="pref-row__label">Soccer</div><div class="pref-row__sub">MLS, NWSL, Premier League</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-sport="Soccer" onclick="toggleSportPref(this)"></div>
         </div>
-        <div class="pref-row" style="opacity:0.4;">
+        <div class="pref-row">
           <div><div class="pref-row__label">Tennis</div><div class="pref-row__sub">Grand Slams + tour</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-sport="Tennis" onclick="toggleSportPref(this)"></div>
         </div>
-        <div class="pref-row" style="opacity:0.4;">
+        <div class="pref-row">
           <div><div class="pref-row__label">Golf</div><div class="pref-row__sub">Majors + tour coverage</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-sport="Golf" onclick="toggleSportPref(this)"></div>
         </div>
-        <div class="pref-row" style="opacity:0.4;">
+        <div class="pref-row">
           <div><div class="pref-row__label">F1</div><div class="pref-row__sub">Race weekends + drama</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-sport="F1" onclick="toggleSportPref(this)"></div>
         </div>
-
       </div>
 
-      <div class="pref-section">
-        <div class="pref-section__title">City Updates <span class="pref-locked">Plus or Premium</span></div>
-        <div class="pref-row" style="opacity:0.4;">
+      <!-- CITIES: free-tier view -->
+      <div class="pref-section" data-sbff-tier="free">
+        <div class="pref-section__title">Your Cities <span class="pref-locked">VIP or All-Access</span></div>
+        <div style="padding: 16px 0; font-size: 14px; color: var(--text-secondary);">
+          <div style="margin-bottom: 8px; color: var(--text-primary);">
+            <strong id="prefs-cities-summary">—</strong>
+          </div>
+          <div style="font-size: 13px;">Upgrade to VIP or All-Access for local coverage of your teams.</div>
+        </div>
+      </div>
+
+      <!-- CITIES: paid-tier view -->
+      <div class="pref-section" data-sbff-tier="paid" style="display:none;">
+        <div class="pref-section__title">City Updates</div>
+        <div class="pref-row">
           <div><div class="pref-row__label">Chicago</div><div class="pref-row__sub">Bears, Bulls, Cubs, Sox, Blackhawks, Sky, Red Stars, Fire</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-city="Chicago" onclick="toggleCityPref(this)"></div>
         </div>
-        <div class="pref-row" style="opacity:0.4;">
+        <div class="pref-row">
           <div><div class="pref-row__label">New York</div><div class="pref-row__sub">Giants, Jets, Knicks, Nets, Yankees, Mets, Rangers, Liberty, Gotham FC</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-city="New York" onclick="toggleCityPref(this)"></div>
         </div>
-        <div class="pref-row" style="opacity:0.4;">
+        <div class="pref-row">
           <div><div class="pref-row__label">Los Angeles</div><div class="pref-row__sub">Lakers, Rams, Dodgers, Chargers, Kings, Sparks, Angel City, LAFC</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-city="Los Angeles" onclick="toggleCityPref(this)"></div>
         </div>
-        <div class="pref-row" style="opacity:0.4;">
+        <div class="pref-row">
           <div><div class="pref-row__label">San Francisco</div><div class="pref-row__sub">49ers, Giants, Warriors, Sharks, Bay FC</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-city="San Francisco" onclick="toggleCityPref(this)"></div>
         </div>
-        <div class="pref-row" style="opacity:0.4;">
+        <div class="pref-row">
           <div><div class="pref-row__label">Seattle</div><div class="pref-row__sub">Seahawks, Mariners, Kraken, Storm, Reign, Sounders</div></div>
-          <div class="pref-toggle"></div>
+          <div class="pref-toggle" data-city="Seattle" onclick="toggleCityPref(this)"></div>
         </div>
       </div>
 
-      <div style="margin-top:24px;">
+      <!-- Upgrade CTA — only visible to free users -->
+      <div data-sbff-tier="free" style="margin-top:24px;">
         <button class="auth-btn" style="max-width:280px;" onclick="goTo('page-upsell')">Upgrade to Unlock</button>
       </div>
     </div>
@@ -1172,6 +1224,66 @@
 })();
 
 // ============================================
+// ONBOARDING SAVE HELPERS
+// ============================================
+function saveSportsAndContinue() {
+  var selected = Array.from(document.querySelectorAll('#page-sports .check-item.is-selected'))
+    .map(function(el) { return el.getAttribute('data-value'); });
+
+  var memberstack = window.$memberstackDom;
+  if (memberstack && selected.length) {
+    memberstack.updateMember({
+      customFields: { 'sports': selected.join(', ') }
+    }).then(function() { goTo('page-cities'); })
+      .catch(function() { goTo('page-cities'); });
+  } else {
+    goTo('page-cities');
+  }
+}
+
+function saveCitiesAndContinue() {
+  var selected = Array.from(document.querySelectorAll('#page-cities .check-item.is-selected'))
+    .map(function(el) { return el.getAttribute('data-value'); });
+  var otherInput = document.getElementById('other-city-input');
+  if (otherInput && otherInput.value.trim()) {
+    selected.push(otherInput.value.trim());
+  }
+
+  var memberstack = window.$memberstackDom;
+  if (memberstack && selected.length) {
+    memberstack.updateMember({
+      customFields: { 'cities': selected.join(', ') }
+    }).then(function() { goTo('page-referral'); })
+      .catch(function() { goTo('page-referral'); });
+  } else {
+    goTo('page-referral');
+  }
+}
+
+function copyReferralLink(elementId, buttonEl) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  var url = el.textContent.startsWith('http') ? el.textContent : 'https://' + el.textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() {
+      if (buttonEl) {
+        var original = buttonEl.textContent;
+        buttonEl.textContent = 'Copied!';
+        setTimeout(function() { buttonEl.textContent = original; }, 2000);
+      }
+    });
+  }
+}
+
+function textReferralLink(elementId) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  var url = el.textContent.startsWith('http') ? el.textContent : 'https://' + el.textContent;
+  var body = "Join me on Your Sports BFF — the daily sports text for the girls: " + url;
+  window.location.href = 'sms:?&body=' + encodeURIComponent(body);
+}
+
+// ============================================
 // PAGE NAVIGATION
 // ============================================
 function goTo(id) {
@@ -1216,15 +1328,320 @@ document.querySelectorAll('#page-cities .check-item').forEach(function(item) {
   });
 });
 
-// Code input auto-advance
-document.querySelectorAll('.code-input').forEach((input, i, arr) => {
-  input.addEventListener('input', () => {
-    if (input.value && i < arr.length - 1) arr[i + 1].focus();
+// ============================================
+// MEMBERSTACK INTEGRATION
+// ============================================
+
+// Store signup data in sessionStorage so custom fields can be saved after magic link click
+function handleSignup(event) {
+  event.preventDefault();
+  var form = event.target;
+  var errorDiv = document.getElementById('signup-error');
+  errorDiv.style.display = 'none';
+
+  var firstName = form.querySelector('[data-ms-member="first-name"]').value.trim();
+  var lastName = form.querySelector('[data-ms-member="last-name"]').value.trim();
+  var phone = form.querySelector('[data-ms-member="phone"]').value.trim();
+  var email = form.querySelector('[data-ms-member="email"]').value.trim();
+
+  if (!firstName || !lastName || !phone || !email) {
+    errorDiv.textContent = 'Please fill out all fields.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+
+  // Capture referral code from URL if present (?ref=xxx)
+  var urlParams = new URLSearchParams(window.location.search);
+  var referredBy = urlParams.get('ref') || '';
+
+  // Store pending custom fields — we'll apply them after the user clicks the magic link
+  sessionStorage.setItem('sbff_pending_fields', JSON.stringify({
+    'first-name': firstName,
+    'last-name': lastName,
+    'phone': phone,
+    'referred-by': referredBy
+  }));
+
+  var memberstack = window.$memberstackDom;
+  memberstack.sendMemberSignupPasswordlessEmail({ email: email })
+    .then(function() {
+      // Store email so resend works on the verify page
+      sessionStorage.setItem('sbff_pending_email', email);
+      sessionStorage.setItem('sbff_pending_mode', 'signup');
+      goTo('page-verify');
+    })
+    .catch(function(err) {
+      errorDiv.textContent = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
+      errorDiv.style.display = 'block';
+    });
+}
+
+function handleLogin(event) {
+  event.preventDefault();
+  var form = event.target;
+  var errorDiv = document.getElementById('login-error');
+  errorDiv.style.display = 'none';
+
+  var email = form.querySelector('[data-ms-member="email"]').value.trim();
+  if (!email) {
+    errorDiv.textContent = 'Please enter your email.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+
+  var memberstack = window.$memberstackDom;
+  memberstack.sendMemberLoginPasswordlessEmail({ email: email })
+    .then(function() {
+      sessionStorage.setItem('sbff_pending_email', email);
+      sessionStorage.setItem('sbff_pending_mode', 'login');
+      goTo('page-verify');
+    })
+    .catch(function(err) {
+      errorDiv.textContent = (err && err.message) ? err.message : 'No account found with that email. Try signing up instead.';
+      errorDiv.style.display = 'block';
+    });
+}
+
+function handleResend() {
+  var email = sessionStorage.getItem('sbff_pending_email');
+  var mode = sessionStorage.getItem('sbff_pending_mode');
+  if (!email) { goTo('page-login'); return; }
+
+  var memberstack = window.$memberstackDom;
+  var method = mode === 'login' ? 'sendMemberLoginPasswordlessEmail' : 'sendMemberSignupPasswordlessEmail';
+  memberstack[method]({ email: email }).then(function() {
+    var confirm = document.getElementById('resend-confirmation');
+    confirm.style.display = 'block';
+    setTimeout(function() { confirm.style.display = 'none'; }, 4000);
   });
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Backspace' && !input.value && i > 0) arr[i - 1].focus();
+}
+
+// After a user clicks the magic link and returns logged in, save their pending custom fields
+function applyPendingCustomFields() {
+  var pending = sessionStorage.getItem('sbff_pending_fields');
+  if (!pending) return Promise.resolve();
+
+  var fields;
+  try { fields = JSON.parse(pending); } catch (e) { return Promise.resolve(); }
+
+  var memberstack = window.$memberstackDom;
+  return memberstack.updateMember({ customFields: fields }).then(function() {
+    sessionStorage.removeItem('sbff_pending_fields');
+    sessionStorage.removeItem('sbff_pending_email');
+    sessionStorage.removeItem('sbff_pending_mode');
+  }).catch(function(err) {
+    console.error('Failed to save custom fields:', err);
   });
-});
+}
+
+// Handle Insider (free) plan selection — MemberStack attaches the free plan via data attribute
+function handleFreePlan(event) {
+  // data-ms-price:add handles the plan attachment; we just mark onboarding complete and show welcome
+  var memberstack = window.$memberstackDom;
+  memberstack.updateMember({
+    customFields: { 'onboarding-complete': 'true' }
+  }).then(function() {
+    goTo('page-welcome');
+  }).catch(function() {
+    goTo('page-welcome');
+  });
+}
+
+// ============================================
+// ON PAGE LOAD — check auth state and route
+// ============================================
+(function() {
+  function waitForMemberstack(cb) {
+    if (window.$memberstackDom) { cb(); return; }
+    setTimeout(function() { waitForMemberstack(cb); }, 100);
+  }
+
+  waitForMemberstack(function() {
+    var memberstack = window.$memberstackDom;
+    var urlParams = new URLSearchParams(window.location.search);
+    var isOnboarding = urlParams.get('onboarding') === 'true';
+
+    memberstack.getCurrentMember().then(function(result) {
+      var member = result && result.data;
+
+      if (!member) {
+        // Not logged in — show login/signup page (default)
+        return;
+      }
+
+      // Logged in — apply any pending signup custom fields
+      applyPendingCustomFields().then(function() {
+        // Re-fetch member to get updated custom fields
+        return memberstack.getCurrentMember();
+      }).then(function(result) {
+        var member = result && result.data;
+        var customFields = (member && member.customFields) || {};
+        var onboardingComplete = customFields['onboarding-complete'] === 'true';
+        var planConnections = (member && member.planConnections) || [];
+        var hasPlan = planConnections.some(function(pc) { return pc.active; });
+
+        // If they have a plan but onboarding flag isn't set (e.g. returned from Stripe), mark it done
+        if (hasPlan && !onboardingComplete) {
+          memberstack.updateMember({
+            customFields: { 'onboarding-complete': 'true' }
+          }).catch(function() {});
+          onboardingComplete = true;
+          if (member && member.customFields) member.customFields['onboarding-complete'] = 'true';
+        }
+
+        if (isOnboarding && !onboardingComplete) {
+          // New signup flow — start at sports
+          goTo('page-sports');
+        } else {
+          // Returning user OR completed onboarding — go to dashboard
+          goTo('page-dash');
+          populateDashboard(member);
+        }
+      });
+    });
+  });
+})();
+
+// ============================================
+// DASHBOARD PERSONALIZATION
+// ============================================
+function populateDashboard(member) {
+  if (!member) return;
+  var customFields = member.customFields || {};
+  var firstName = customFields['first-name'] || 'there';
+  var lastName = customFields['last-name'] || '';
+  var referralCode = customFields['referral-code'] || '';
+  var sportsStr = customFields['sports'] || '';
+  var citiesStr = customFields['cities'] || '';
+
+  // Welcome greeting
+  var titleEl = document.querySelector('#dash-home .dash-title');
+  if (titleEl) titleEl.innerHTML = 'Welcome back, <i>' + escapeHtml(firstName) + '.</i>';
+
+  // Sidebar user name
+  var userEl = document.querySelector('.dash-nav__user');
+  if (userEl) {
+    userEl.textContent = firstName + (lastName ? ' ' + lastName.charAt(0) + '.' : '');
+  }
+  var emailEl = document.querySelector('.dash-nav__email');
+  if (emailEl && member.auth && member.auth.email) emailEl.textContent = member.auth.email;
+
+  // Referral link (both onboarding and dashboard copies)
+  var refLink = referralCode
+    ? 'yoursportsbff.com/account?ref=' + referralCode
+    : 'Your link is being set up — check back shortly';
+  ['referral-link-onboarding', 'referral-link-dash'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = refLink;
+  });
+
+  // Tier gating — check if user has a paid plan attached
+  var planConnections = member.planConnections || [];
+  var hasPaidPlan = planConnections.some(function(pc) {
+    return pc.active && pc.planId && pc.planId !== 'pln_the-insider-jbbd0e0g';
+  });
+
+  document.querySelectorAll('[data-sbff-tier="free"]').forEach(function(el) {
+    el.style.display = hasPaidPlan ? 'none' : '';
+  });
+  document.querySelectorAll('[data-sbff-tier="paid"]').forEach(function(el) {
+    el.style.display = hasPaidPlan ? '' : 'none';
+  });
+
+  // Current plan label in stats
+  var planLabel = 'Free';
+  if (hasPaidPlan) {
+    var active = planConnections.find(function(pc) { return pc.active; });
+    if (active) {
+      if (active.planId === 'prc_the-vip-z2650aam' || (active.planId || '').indexOf('vip') > -1) planLabel = 'VIP';
+      else if (active.planId === 'prc_the-all-access-qf640adh' || (active.planId || '').indexOf('all-access') > -1) planLabel = 'All-Access';
+    }
+  }
+  var planStatEl = document.querySelector('.stat-box__number[data-sbff-plan-label]');
+  // The plan label stat is the second stat-box — find it by position if not data-tagged
+  var statBoxes = document.querySelectorAll('#dash-home .stat-box__number');
+  if (statBoxes.length >= 2) statBoxes[1].textContent = planLabel;
+
+  // Free-tier summary text
+  var sportsSummaryEl = document.getElementById('prefs-sports-summary');
+  if (sportsSummaryEl) {
+    sportsSummaryEl.textContent = sportsStr ? sportsStr : 'No sports selected yet';
+  }
+  var citiesSummaryEl = document.getElementById('prefs-cities-summary');
+  if (citiesSummaryEl) {
+    citiesSummaryEl.textContent = citiesStr ? citiesStr : 'No cities selected yet';
+  }
+
+  // Paid-tier toggles — sync with saved preferences
+  if (hasPaidPlan) {
+    var selectedSports = sportsStr.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+    document.querySelectorAll('[data-sport]').forEach(function(toggle) {
+      toggle.classList.toggle('is-on', selectedSports.indexOf(toggle.getAttribute('data-sport')) > -1);
+    });
+    var selectedCities = citiesStr.split(',').map(function(c) { return c.trim(); }).filter(Boolean);
+    document.querySelectorAll('[data-city]').forEach(function(toggle) {
+      toggle.classList.toggle('is-on', selectedCities.indexOf(toggle.getAttribute('data-city')) > -1);
+    });
+  }
+
+  // Onboarding nudge banner
+  var onboardingComplete = customFields['onboarding-complete'] === 'true';
+  var nudge = document.getElementById('onboarding-nudge');
+  if (nudge) nudge.style.display = onboardingComplete ? 'none' : 'flex';
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, function(c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+// ============================================
+// PAID-TIER PREFERENCE TOGGLES
+// ============================================
+var _prefsSaveTimer = null;
+function toggleSportPref(el) {
+  el.classList.toggle('is-on');
+  schedulePrefsSave();
+}
+function toggleCityPref(el) {
+  el.classList.toggle('is-on');
+  schedulePrefsSave();
+}
+function schedulePrefsSave() {
+  // Debounce: only save 500ms after user stops toggling
+  if (_prefsSaveTimer) clearTimeout(_prefsSaveTimer);
+  _prefsSaveTimer = setTimeout(savePrefs, 500);
+}
+function savePrefs() {
+  var sports = Array.from(document.querySelectorAll('[data-sport].is-on'))
+    .map(function(el) { return el.getAttribute('data-sport'); });
+  var cities = Array.from(document.querySelectorAll('[data-city].is-on'))
+    .map(function(el) { return el.getAttribute('data-city'); });
+
+  var memberstack = window.$memberstackDom;
+  if (!memberstack) return;
+  memberstack.updateMember({
+    customFields: {
+      'sports': sports.join(', '),
+      'cities': cities.join(', ')
+    }
+  }).catch(function(err) { console.error('Failed to save prefs:', err); });
+}
+
+// ============================================
+// LOGOUT
+// ============================================
+function handleLogout(event) {
+  if (event) event.preventDefault();
+  var memberstack = window.$memberstackDom;
+  if (!memberstack) { window.location.href = '/'; return; }
+  memberstack.logout().then(function() {
+    window.location.href = '/';
+  }).catch(function() {
+    window.location.href = '/';
+  });
+}
 </script>
 
 </body>
