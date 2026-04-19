@@ -713,7 +713,7 @@
     </div>
 
     <!-- Login form -->
-    <form id="tab-login" data-ms-form="login-passwordless-email" onsubmit="handleLogin(event)">
+    <form id="tab-login" data-ms-form="passwordless-login" onsubmit="handleLogin(event)">
       <div class="form-group">
         <label class="form-label">Email</label>
         <input class="form-input" type="email" data-ms-member="email" placeholder="you@email.com" required>
@@ -723,7 +723,7 @@
     </form>
 
     <!-- Signup form -->
-    <form id="tab-signup" data-ms-form="signup-passwordless-email" style="display:none;" onsubmit="handleSignup(event)">
+    <form id="tab-signup" data-ms-form="passwordless-signup" style="display:none;" onsubmit="handleSignup(event)">
       <div class="form-group">
         <label class="form-label">First Name</label>
         <input class="form-input" type="text" data-ms-member="first-name" placeholder="Heather" required>
@@ -748,15 +748,25 @@
 </div>
 
 <!-- ============================================
-     PAGE 2: CHECK EMAIL (replaces old verify-code page)
+     PAGE 2: VERIFY CODE (6-digit passwordless)
      ============================================ -->
 <div class="page auth-page" id="page-verify">
   <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
   <div class="auth-card">
     <div class="auth-card__title">Check your <i>email.</i></div>
-    <div class="auth-card__sub">We sent you a link to log in. Please head there to continue.</div>
-    <div class="auth-resend" style="margin-top: 32px;">Didn't get it? <a onclick="handleResend()" style="cursor:pointer;">Resend link</a></div>
-    <div class="auth-resend" id="resend-confirmation" style="display:none; margin-top: 12px; color: var(--mandarin);">Link resent! Check your inbox.</div>
+    <div class="auth-card__sub">We sent a 6-digit code to your email. Enter it below to continue.</div>
+    <div class="code-inputs">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric">
+    </div>
+    <button class="auth-btn" onclick="handleVerifyCode()">Verify</button>
+    <div class="auth-error" id="verify-error" style="display:none; color: var(--mandarin); font-size: 13px; margin-top: 12px; text-align: center;"></div>
+    <div class="auth-resend" style="margin-top: 24px;">Didn't get it? <a onclick="handleResend()" style="cursor:pointer;">Resend code</a></div>
+    <div class="auth-resend" id="resend-confirmation" style="display:none; margin-top: 12px; color: var(--mandarin);">Code resent! Check your inbox.</div>
   </div>
   <div class="auth-back" onclick="goTo('page-login')">Back</div>
 </div>
@@ -1416,22 +1426,109 @@ function handleResend() {
   });
 }
 
-// After a user clicks the magic link and returns logged in, save their pending custom fields
-function applyPendingCustomFields() {
-  var pending = sessionStorage.getItem('sbff_pending_fields');
-  if (!pending) return Promise.resolve();
+// ============================================
+// VERIFY 6-DIGIT CODE
+// ============================================
+function handleVerifyCode() {
+  var errorDiv = document.getElementById('verify-error');
+  errorDiv.style.display = 'none';
 
-  var fields;
-  try { fields = JSON.parse(pending); } catch (e) { return Promise.resolve(); }
+  // Collect all 6 digits from the code inputs
+  var inputs = document.querySelectorAll('#page-verify .code-input');
+  var code = Array.from(inputs).map(function(i) { return i.value.trim(); }).join('');
+  if (code.length !== 6) {
+    errorDiv.textContent = 'Please enter all 6 digits.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+
+  var email = sessionStorage.getItem('sbff_pending_email');
+  var mode = sessionStorage.getItem('sbff_pending_mode');
+  if (!email) {
+    errorDiv.textContent = 'Session expired. Please start over.';
+    errorDiv.style.display = 'block';
+    setTimeout(function() { goTo('page-login'); }, 1500);
+    return;
+  }
 
   var memberstack = window.$memberstackDom;
-  return memberstack.updateMember({ customFields: fields }).then(function() {
-    sessionStorage.removeItem('sbff_pending_fields');
-    sessionStorage.removeItem('sbff_pending_email');
-    sessionStorage.removeItem('sbff_pending_mode');
-  }).catch(function(err) {
-    console.error('Failed to save custom fields:', err);
+
+  if (mode === 'signup') {
+    // Pull pending fields so we can pass them directly to signup
+    var pending = sessionStorage.getItem('sbff_pending_fields');
+    var customFields = {};
+    if (pending) {
+      try { customFields = JSON.parse(pending); } catch (e) {}
+    }
+
+    memberstack.signupMemberPasswordless({
+      passwordlessToken: code,
+      email: email,
+      customFields: customFields
+    }).then(function() {
+      // Clean up pending session data
+      sessionStorage.removeItem('sbff_pending_fields');
+      sessionStorage.removeItem('sbff_pending_email');
+      sessionStorage.removeItem('sbff_pending_mode');
+      // New signup → start onboarding
+      goTo('page-sports');
+    }).catch(function(err) {
+      errorDiv.textContent = (err && err.message) ? err.message : 'Invalid or expired code. Please try again.';
+      errorDiv.style.display = 'block';
+      // Clear the code inputs so user can retry
+      inputs.forEach(function(i) { i.value = ''; });
+      if (inputs[0]) inputs[0].focus();
+    });
+  } else {
+    // Login flow
+    memberstack.loginMemberPasswordless({
+      passwordlessToken: code,
+      email: email
+    }).then(function() {
+      sessionStorage.removeItem('sbff_pending_email');
+      sessionStorage.removeItem('sbff_pending_mode');
+      // Returning user → go to dashboard
+      return memberstack.getCurrentMember();
+    }).then(function(result) {
+      goTo('page-dash');
+      if (result && result.data) populateDashboard(result.data);
+    }).catch(function(err) {
+      errorDiv.textContent = (err && err.message) ? err.message : 'Invalid or expired code. Please try again.';
+      errorDiv.style.display = 'block';
+      inputs.forEach(function(i) { i.value = ''; });
+      if (inputs[0]) inputs[0].focus();
+    });
+  }
+}
+
+// Code-input auto-advance and paste support
+(function() {
+  var inputs = document.querySelectorAll('#page-verify .code-input');
+  if (!inputs.length) return;
+  inputs.forEach(function(input, idx) {
+    input.addEventListener('input', function(e) {
+      // Only digits
+      input.value = input.value.replace(/\D/g, '');
+      if (input.value && idx < inputs.length - 1) inputs[idx + 1].focus();
+    });
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Backspace' && !input.value && idx > 0) inputs[idx - 1].focus();
+    });
+    input.addEventListener('paste', function(e) {
+      e.preventDefault();
+      var text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+      for (var i = 0; i < text.length && i < inputs.length; i++) {
+        inputs[i].value = text[i];
+      }
+      var nextEmpty = Array.from(inputs).findIndex(function(i) { return !i.value; });
+      (nextEmpty === -1 ? inputs[inputs.length - 1] : inputs[nextEmpty]).focus();
+    });
   });
+})();
+
+// Legacy helper kept for backward compat if other code references it — no-op since fields now attach at signup
+function applyPendingCustomFields() {
+  return Promise.resolve();
 }
 
 // Handle Insider (free) plan selection — MemberStack attaches the free plan via data attribute
