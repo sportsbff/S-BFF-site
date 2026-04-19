@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Your Sports BFF — The home base for the modern female fan</title>
 <meta name="description" content="Content, culture, and community designed for how women actually experience sports. No gatekeeping. No dumbing down.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -152,14 +153,15 @@
     box-shadow: 0 4px 24px rgba(31,31,35,0.06);
   }
   .nav__logo {
-    font-family: var(--font-sans);
-    font-weight: 700;
-    font-size: 16px;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    line-height: 0;
   }
-  .nav__logo em { color: var(--mandarin); font-style: normal; }
+  .nav__logo img {
+    display: block;
+    height: 24px;
+    width: auto;
+  }
   .nav__links { display: flex; gap: 4px; list-style: none; }
   .nav__links a {
     font-family: var(--font-sans);
@@ -1267,6 +1269,7 @@
     .container { padding: 0 24px; }
     .grid-lines { padding: 0 24px; }
     .nav { padding: 6px 6px 6px 16px !important; }
+    .nav__logo img { height: 20px !important; }
 
     /* HERO — mobile: proper vertical center, comfortable padding, tappable CTAs */
     .hero {
@@ -1733,7 +1736,7 @@
 <!-- NAV -->
 <div class="nav-wrap">
   <nav class="nav">
-    <a href="#" class="nav__logo">S<em>*</em>BFF</a>
+    <a href="#" class="nav__logo" aria-label="Your Sports BFF"><img src="logo.svg" alt="Your Sports BFF"></a>
     <ul class="nav__links">
       <li><a href="/" class="is-active">Home</a></li>
       <li><a href="/bff-brief">BFF Brief</a></li>
