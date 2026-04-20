@@ -7,8 +7,8 @@
 <title>Account — Your Sports BFF</title>
 <!-- MemberStack -->
 <script data-memberstack-app="app_cmo6cthsj008h0sz33bk94pkc" src="https://static.memberstack.com/scripts/v2/memberstack.js" type="text/javascript"></script>
-<!-- Viral Loops SDK -->
-<script src="https://app.viral-loops.com/widgetsV2/core/bundle.js" async data-campaign-id="jhk8cLABhj4fBoDUCKM9FFE0Ww8"></script>
+<!-- Viral Loops SDK (v3.0) -->
+<script type="text/javascript" id="viral-loops-loader" data-campaign-id="jhk8cLABhj4fBoDUCKM9FFE0Ww8" src="https://app.viral-loops.com/widgetsV2/core/loader.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -460,11 +460,14 @@
   /* ============================================
      DASHBOARD — sidebar + main
      ============================================ */
-  .dash { flex-direction: row; min-height: 100vh; }
+  .dash { flex-direction: row; min-height: 100vh; align-items: flex-start; }
   .dash-nav {
     width: 260px; background: var(--charcoal); color: #fff;
     padding: 32px 24px; flex-shrink: 0;
     display: flex; flex-direction: column;
+    position: sticky; top: 0;
+    height: 100vh;
+    overflow-y: auto;
   }
   .dash-nav__logo {
     display: flex; align-items: center; line-height: 0;
@@ -1008,6 +1011,65 @@
   </div>
 </div>
 
+<!-- ============================================
+     PAGE: ADJUST PLAN (for existing logged-in members)
+     Identical layout to page-upsell but on the dashboard's light background
+     and with a back button to dashboard instead of onboarding.
+     ============================================ -->
+<div class="page" id="page-adjust-plan" style="background: var(--stone); min-height: 100vh; padding: 40px 20px;">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div style="display:flex; align-items:center; gap:16px; margin-bottom: 32px;">
+      <button onclick="goTo('page-dash'); populateDashboardFromMemory();" style="background: none; border: none; color: var(--charcoal); cursor: pointer; font-family: var(--font-sans); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; padding: 8px 0;">
+        ← Back to Account
+      </button>
+    </div>
+    <div style="text-align:center; margin-bottom: 40px;">
+      <h1 style="font-family: var(--font-display); font-size: 56px; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 12px; color: var(--charcoal);">Adjust your <i style="color: var(--mandarin);">plan.</i></h1>
+      <p style="font-family: var(--font-sans); font-size: 15px; color: var(--text-secondary);" id="adjust-plan-subtitle">Upgrade, downgrade, or cancel anytime.</p>
+    </div>
+
+    <div class="upsell-cards" style="max-width: 1000px; margin: 0 auto;">
+      <div class="upsell-card" style="background: #fff;">
+        <div class="upsell-card__name">The Insider</div>
+        <div class="upsell-card__price">Free</div>
+        <div class="upsell-card__features">
+          Weekday sports texts<br>
+          Top headlines &amp; culture<br>
+          &nbsp;<br>
+          &nbsp;
+        </div>
+        <button class="auth-btn auth-btn--outline" id="adjust-btn-insider" onclick="handleAdjustToInsider(event, this)">Switch to Insider</button>
+      </div>
+      <div class="upsell-card" style="background: #fff;">
+        <div class="upsell-card__name">The VIP</div>
+        <div class="upsell-card__price">$5.99<span style="font-size:14px; font-weight:400;">/mo</span></div>
+        <div class="upsell-card__features">
+          Everything in Insider<br>
+          One sport OR one city<br>
+          Weekly deep-dives<br>
+          Breaking news alerts
+        </div>
+        <button class="auth-btn auth-btn--outline" id="adjust-btn-vip" onclick="handleAdjustToPaid('prc_the-vip-z2650aam', this)">Switch to VIP</button>
+      </div>
+      <div class="upsell-card" style="background: #fff;">
+        <div class="upsell-card__name">All-Access</div>
+        <div class="upsell-card__price">$14.99<span style="font-size:14px; font-weight:400;">/mo</span></div>
+        <div class="upsell-card__features">
+          Everything in VIP<br>
+          All sports &amp; all cities<br>
+          Sports Hotline access<br>
+          Partner perks &amp; early access
+        </div>
+        <button class="auth-btn" id="adjust-btn-all" onclick="handleAdjustToPaid('prc_the-all-access-qf640adh', this)">Switch to All-Access</button>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top: 32px; font-size: 13px; color: var(--text-secondary);">
+      Billing changes are handled securely through Stripe.
+    </div>
+  </div>
+</div>
+
 <div class="page auth-page" id="page-welcome">
   <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
   <div class="auth-card">
@@ -1155,7 +1217,7 @@
           <div style="font-weight: 700; margin-bottom: 2px;">Personalized updates are a VIP perk.</div>
           <div style="font-size: 13px; color: var(--text-secondary);">Upgrade to choose your sport or city for tailored texts.</div>
         </div>
-        <button class="auth-btn" style="max-width:160px; padding: 10px 18px; font-size: 13px;" onclick="goTo('page-upsell')">Upgrade</button>
+        <button class="auth-btn" style="max-width:160px; padding: 10px 18px; font-size: 13px;" onclick="openUpgradeFromDashboard()">Upgrade</button>
       </div>
 
       <!-- SPORT toggles — same markup for all tiers, JS grays out for free -->
@@ -1222,7 +1284,7 @@
 
       <!-- Upgrade CTA — only visible to free users -->
       <div data-sbff-tier="free" style="margin-top:24px;">
-        <button class="auth-btn" style="max-width:280px;" onclick="goTo('page-upsell')">Upgrade to Unlock</button>
+        <button class="auth-btn" style="max-width:280px;" onclick="openUpgradeFromDashboard()">Upgrade to Unlock</button>
       </div>
     </div>
 
@@ -1235,9 +1297,9 @@
       <div class="billing-card">
         <div class="billing-card__header">
           <div class="billing-card__title">Current Plan</div>
-          <div class="billing-card__action" onclick="goTo('page-upsell')">Upgrade</div>
+          <div class="billing-card__action" id="billing-plan-action" onclick="openUpgradeFromDashboard()">Adjust</div>
         </div>
-        <div class="billing-card__body">
+        <div class="billing-card__body" id="billing-plan-body">
           <strong>The Daily (Free)</strong><br>
           Daily BFF Brief + breaking news alerts. No payment method required.
         </div>
@@ -1928,6 +1990,121 @@ function handlePaidPlan(priceId, buttonEl) {
 }
 
 // ============================================
+// DASHBOARD → ADJUST PLAN FLOW
+// When an existing logged-in member wants to change plans
+// ============================================
+function openUpgradeFromDashboard() {
+  // Update subtitle based on current tier
+  var sub = document.getElementById('adjust-plan-subtitle');
+  var currentTier = getCurrentTier();
+  if (sub) {
+    if (currentTier === 'All-Access') {
+      sub.textContent = "You're on All-Access — our top tier. Downgrade or cancel anytime.";
+    } else if (currentTier === 'VIP') {
+      sub.textContent = "You're on VIP. Upgrade to All-Access or downgrade anytime.";
+    } else {
+      sub.textContent = "Upgrade, downgrade, or cancel anytime.";
+    }
+  }
+
+  // Hide the button for whichever plan the user already has
+  var insiderBtn = document.getElementById('adjust-btn-insider');
+  var vipBtn = document.getElementById('adjust-btn-vip');
+  var allBtn = document.getElementById('adjust-btn-all');
+  if (insiderBtn) insiderBtn.style.display = (currentTier === 'Insider' || currentTier === 'Free') ? 'none' : '';
+  if (vipBtn) vipBtn.style.display = currentTier === 'VIP' ? 'none' : '';
+  if (allBtn) allBtn.style.display = currentTier === 'All-Access' ? 'none' : '';
+
+  goTo('page-adjust-plan');
+}
+
+// Helper: determine current tier from cached member
+function getCurrentTier() {
+  if (!_lastMember) return 'Free';
+  var planConnections = _lastMember.planConnections || [];
+  var allAccess = planConnections.find(function(pc) {
+    return pc.active && pc.planId && pc.planId.indexOf('all-access') > -1;
+  });
+  if (allAccess) return 'All-Access';
+  var vip = planConnections.find(function(pc) {
+    return pc.active && pc.planId && pc.planId.indexOf('vip') > -1;
+  });
+  if (vip) return 'VIP';
+  var insider = planConnections.find(function(pc) {
+    return pc.active && pc.planId;
+  });
+  if (insider) return 'Insider';
+  return 'Free';
+}
+
+// Switch to Insider (free) — remove paid plans
+function handleAdjustToInsider(event, buttonEl) {
+  if (event) event.preventDefault();
+  var confirmed = window.confirm(
+    "Switch to the free Insider plan? You'll lose personalized texts and premium features at the end of your current billing period."
+  );
+  if (!confirmed) return;
+
+  var memberstack = window.$memberstackDom;
+  if (!memberstack) {
+    alert('Please try again in a moment.');
+    return;
+  }
+
+  if (buttonEl) {
+    buttonEl.disabled = true;
+    buttonEl.dataset.originalText = buttonEl.textContent;
+    buttonEl.textContent = 'Processing...';
+  }
+
+  // MemberStack's downgrade flow: open Stripe Customer Portal so user can cancel
+  // paid subscription. The Insider plan stays attached (or we can add it if missing).
+  // For simplicity, route to Stripe Customer Portal via MemberStack's built-in.
+  memberstack.launchStripeCustomerPortal({
+    returnUrl: window.location.origin + '/account'
+  }).catch(function(err) {
+    console.error('Customer portal failed:', err);
+    alert('Could not open billing portal. Please contact hello@yoursportsbff.com.');
+    if (buttonEl) {
+      buttonEl.disabled = false;
+      buttonEl.textContent = buttonEl.dataset.originalText || 'Switch to Insider';
+    }
+  });
+}
+
+// Switch to or upgrade to a paid plan — Stripe checkout
+function handleAdjustToPaid(priceId, buttonEl) {
+  var memberstack = window.$memberstackDom;
+  if (!memberstack) {
+    alert('Checkout is loading — please try again in a moment.');
+    return;
+  }
+
+  if (buttonEl) {
+    buttonEl.disabled = true;
+    buttonEl.dataset.originalText = buttonEl.textContent;
+    buttonEl.textContent = 'Loading...';
+  }
+
+  // Success returns to dashboard (not welcome — this isn't a new signup)
+  var successUrl = window.location.origin + '/account';
+  var cancelUrl = window.location.origin + '/account';
+
+  memberstack.purchasePlansWithCheckout({
+    priceId: priceId,
+    successUrl: successUrl,
+    cancelUrl: cancelUrl
+  }).catch(function(err) {
+    console.error('Adjust checkout failed:', err);
+    alert('Sorry, checkout could not start. Please try again or contact hello@yoursportsbff.com.');
+    if (buttonEl) {
+      buttonEl.disabled = false;
+      buttonEl.textContent = buttonEl.dataset.originalText || 'Try again';
+    }
+  });
+}
+
+// ============================================
 // ON PAGE LOAD — check auth state and route
 // ============================================
 (function() {
@@ -2153,17 +2330,36 @@ function populateDashboard(member) {
     else r.classList.add('is-locked');
   });
 
-  // Current plan label in stats — use id-based lookup now
+  // Current plan label — prefer highest paid tier when user has multiple active plans
   var planLabel = 'Free';
   if (hasPaidPlan) {
-    var active = planConnections.find(function(pc) { return pc.active; });
-    if (active) {
-      if (active.planId === 'prc_the-vip-z2650aam' || (active.planId || '').indexOf('vip') > -1) planLabel = 'VIP';
-      else if (active.planId === 'prc_the-all-access-qf640adh' || (active.planId || '').indexOf('all-access') > -1) planLabel = 'All-Access';
-    }
+    var allAccessPlan = planConnections.find(function(pc) {
+      return pc.active && pc.planId && pc.planId.indexOf('all-access') > -1;
+    });
+    var vipPlan = planConnections.find(function(pc) {
+      return pc.active && pc.planId && pc.planId.indexOf('vip') > -1;
+    });
+    if (allAccessPlan) planLabel = 'All-Access';
+    else if (vipPlan) planLabel = 'VIP';
   }
   var planEl = document.getElementById('stat-plan');
   if (planEl) planEl.textContent = planLabel;
+
+  // Billing panel: update Current Plan card body
+  var billingBody = document.getElementById('billing-plan-body');
+  var billingAction = document.getElementById('billing-plan-action');
+  if (billingBody) {
+    if (planLabel === 'All-Access') {
+      billingBody.innerHTML = '<strong>All-Access — $14.99/month</strong><br>Full access: all sports, all cities, Sports Hotline, partner perks.';
+    } else if (planLabel === 'VIP') {
+      billingBody.innerHTML = '<strong>VIP — $5.99/month</strong><br>Personalized texts on your chosen sport or city, plus weekly deep-dives and breaking alerts.';
+    } else {
+      billingBody.innerHTML = '<strong>The Insider (Free)</strong><br>Daily BFF Brief + breaking news alerts. No payment method required.';
+    }
+  }
+  if (billingAction) {
+    billingAction.textContent = (planLabel === 'Free' || planLabel === 'Insider') ? 'Upgrade' : 'Adjust';
+  }
 
   // (Referral count and referral link are populated by Viral Loops via loadViralLoopsData)
 
@@ -2194,9 +2390,9 @@ function escapeHtml(str) {
 }
 
 // ============================================
-// VIRAL LOOPS INTEGRATION
-// Identifies the member, retrieves their referral link + count,
-// and updates the referral UI (link, stat card, progress bar, rewards list).
+// VIRAL LOOPS INTEGRATION (v3.0 SDK)
+// Uses window.ViralLoops.getCampaign() with Promise-based API.
+// SDK is loaded via loader.js script with id="viral-loops-loader".
 // ============================================
 var VL_CAMPAIGN_ID = 'jhk8cLABhj4fBoDUCKM9FFE0Ww8';
 var VL_TIERS = [
@@ -2206,55 +2402,120 @@ var VL_TIERS = [
   { threshold: 50, label: 'Free S*BFF Hoodie' }
 ];
 
+// Cache to avoid re-identifying on every page change
+var _vlCampaign = null;
+var _vlUser = null;
+var _vlReadyFired = false;
+
+// Listen for the vlReady event — fires once when SDK is fully loaded
+window.addEventListener('vlReady', function() {
+  _vlReadyFired = true;
+  console.log('[VL] vlReady event fired');
+});
+
 function loadViralLoopsData(firstName, lastName, email) {
-  // Wait for the VL SDK to be ready — it loads async
+  if (!email) {
+    console.warn('[VL] No email provided, skipping identify');
+    setReferralUIFallback();
+    return;
+  }
+  console.log('[VL] Starting identify for', email);
+
   waitForViralLoops(function(VL) {
-    if (!VL || !VL.getCampaign) {
-      console.warn('Viral Loops SDK did not load. Skipping referral setup.');
+    if (!VL) {
+      console.warn('[VL] ViralLoops global never loaded — check domain allowlist in Viral Loops campaign settings');
       setReferralUIFallback();
       return;
     }
 
-    var campaign = VL.getCampaign(VL_CAMPAIGN_ID);
-    if (!campaign) {
-      console.warn('Viral Loops campaign not found:', VL_CAMPAIGN_ID);
-      setReferralUIFallback();
-      return;
-    }
+    // v3 API: getCampaign returns a Promise
+    Promise.resolve(VL.getCampaign(VL_CAMPAIGN_ID))
+      .then(function(campaign) {
+        if (!campaign || typeof campaign.identify !== 'function') {
+          console.warn('[VL] Campaign not found:', VL_CAMPAIGN_ID);
+          setReferralUIFallback();
+          return null;
+        }
+        _vlCampaign = campaign;
 
-    // Identify the member — VL creates their referral profile or retrieves it
-    campaign.identify({
-      firstname: firstName || '',
-      lastname: lastName || '',
-      email: email
-    }, function(err, user) {
-      if (err || !user) {
-        console.error('Viral Loops identify failed:', err);
+        var userObj = {
+          email: email,
+          firstname: firstName || '',
+          lastname: lastName || ''
+        };
+        console.log('[VL] Calling campaign.identify with', userObj);
+        return campaign.identify(userObj);
+      })
+      .then(function(response) {
+        if (!response) return;
+        console.log('[VL] identify response:', response);
+        _vlUser = response;
+
+        // Extract referral link from response.referralUrls
+        // Shape can be: string | array | object with { main, twitter, ... }
+        var referralLink = '';
+        if (response.referralUrls) {
+          if (typeof response.referralUrls === 'string') {
+            referralLink = response.referralUrls;
+          } else if (Array.isArray(response.referralUrls)) {
+            referralLink = response.referralUrls[0] || '';
+          } else if (typeof response.referralUrls === 'object') {
+            referralLink = response.referralUrls.main
+              || response.referralUrls.default
+              || response.referralUrls.home
+              || Object.values(response.referralUrls)[0]
+              || '';
+          }
+        }
+        // Fallback: construct from referralCode if no URL provided
+        if (!referralLink && response.referralCode) {
+          referralLink = 'https://yoursportsbff.com/?referralCode=' + response.referralCode;
+        }
+
+        // Get referral count via campaign.getRank()
+        if (_vlCampaign && typeof _vlCampaign.getRank === 'function') {
+          return Promise.resolve(_vlCampaign.getRank())
+            .then(function(rankData) {
+              console.log('[VL] rank data:', rankData);
+              var count = 0;
+              if (rankData && typeof rankData === 'object') {
+                count = rankData.referralCountTotal
+                  || rankData.referralsCount
+                  || rankData.referrals
+                  || rankData.count
+                  || 0;
+              } else if (typeof rankData === 'number') {
+                count = rankData;
+              }
+              updateReferralUI(referralLink, count);
+            })
+            .catch(function(err) {
+              console.warn('[VL] getRank failed, defaulting to 0:', err);
+              updateReferralUI(referralLink, 0);
+            });
+        } else {
+          // No getRank available — show link with 0 count
+          updateReferralUI(referralLink, 0);
+        }
+      })
+      .catch(function(err) {
+        console.error('[VL] Integration failed:', err);
         setReferralUIFallback();
-        return;
-      }
-
-      // user.referralLink = full sharable URL
-      // user.referralCountTotal = number of referrals this user has made
-      var link = user.referralLink || user.referralUrl || '';
-      var count = typeof user.referralCountTotal === 'number'
-        ? user.referralCountTotal
-        : (typeof user.referralsCount === 'number' ? user.referralsCount : 0);
-
-      updateReferralUI(link, count);
-    });
+      });
   });
 }
 
 function waitForViralLoops(callback) {
+  // SDK exposes global as window.ViralLoops (capital V, capital L)
   var attempts = 0;
   (function check() {
-    if (window.VL && window.VL.getCampaign) {
-      callback(window.VL);
-    } else if (attempts < 50) {  // Wait up to ~5 seconds
+    if (window.ViralLoops && typeof window.ViralLoops.getCampaign === 'function') {
+      callback(window.ViralLoops);
+    } else if (attempts < 60) {  // Wait up to ~6 seconds (loader.js can be slow)
       attempts++;
       setTimeout(check, 100);
     } else {
+      console.warn('[VL] Timed out waiting for window.ViralLoops after 6s');
       callback(null);
     }
   })();
@@ -2301,7 +2562,6 @@ function updateReferralUI(referralLink, referralCount) {
   if (barFill) {
     var pct;
     if (nextTier) {
-      // Determine the previous threshold (or 0 if this is the first tier)
       var prevThreshold = 0;
       for (var j = 0; j < VL_TIERS.length; j++) {
         if (VL_TIERS[j].threshold === nextTier.threshold) break;
