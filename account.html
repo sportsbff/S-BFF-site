@@ -454,8 +454,9 @@
     margin-bottom: 20px; flex: 1;
   }
   .upsell-card .auth-btn {
-    width: 100%; padding: 14px 16px; font-size: 13px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    width: 100%; padding: 14px 12px; font-size: 13px;
+    white-space: normal; word-break: keep-all; line-height: 1.2;
+    min-height: 46px;
     margin-top: auto;
   }
   /* Expand onboard-card to fit 3 plans comfortably on desktop */
@@ -926,17 +927,14 @@
     <div class="auth-card__title">Who are your <i>sports BFFs?</i></div>
     <div class="auth-card__sub">Share your link with friends. The more BFFs, the more rewards.</div>
     <div class="share-box">
-      <div style="font-size:13px; color:var(--text-secondary); margin-bottom:8px;">Your referral link</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <div style="font-size:13px; color:var(--text-secondary);">Your referral link</div>
+        <button onclick="copyReferralLink('referral-link-onboarding', this)" style="background: none; border: none; color: var(--mandarin); font-family: var(--font-sans); font-size: 12px; font-weight: 700; cursor: pointer; padding: 4px 0; text-transform: uppercase; letter-spacing: 0.06em;">Copy</button>
+      </div>
       <div class="share-url" id="referral-link-onboarding">Loading your link...</div>
     </div>
-    <div class="share-btns">
-      <button class="share-btn" onclick="copyReferralLink('referral-link-onboarding', this)">Copy Link</button>
-      <button class="share-btn" onclick="textReferralLink('referral-link-onboarding')">Text a Friend</button>
-    </div>
-    <div style="margin-top: 28px;">
-      <button class="auth-btn" onclick="finishOnboardingToWelcome()">Continue</button>
-    </div>
-    <div class="skip-link" onclick="finishOnboardingToWelcome()">Skip for now</div>
+    <button class="auth-btn" style="margin-top: 20px;" onclick="textReferralLink('referral-link-onboarding')">Text a Friend</button>
+    <div class="skip-link" onclick="finishOnboardingToWelcome()">Continue to account</div>
   </div>
 </div>
 
@@ -1032,7 +1030,7 @@
           &nbsp;<br>
           &nbsp;
         </div>
-        <button class="auth-btn auth-btn--outline" id="adjust-btn-insider" onclick="handleAdjustToInsider(event, this)">Switch to Insider</button>
+        <button class="auth-btn auth-btn--outline" id="adjust-btn-insider" onclick="handleAdjustToInsider(event, this)">Choose Insider</button>
       </div>
       <div class="upsell-card" style="background: #fff;">
         <div class="upsell-card__name">The VIP</div>
@@ -1043,7 +1041,7 @@
           Weekly deep-dives<br>
           Breaking news alerts
         </div>
-        <button class="auth-btn auth-btn--outline" id="adjust-btn-vip" onclick="handleAdjustToPaid('prc_the-vip-z2650aam', this)">Switch to VIP</button>
+        <button class="auth-btn auth-btn--outline" id="adjust-btn-vip" onclick="handleAdjustToPaid('prc_the-vip-z2650aam', this)">Choose VIP</button>
       </div>
       <div class="upsell-card" style="background: #fff;">
         <div class="upsell-card__name">All-Access</div>
@@ -1054,7 +1052,7 @@
           Sports Hotline access<br>
           Partner perks &amp; early access
         </div>
-        <button class="auth-btn" id="adjust-btn-all" onclick="handleAdjustToPaid('prc_the-all-access-qf640adh', this)">Switch to All-Access</button>
+        <button class="auth-btn" id="adjust-btn-all" onclick="handleAdjustToPaid('prc_the-all-access-qf640adh', this)">Choose All-Access</button>
       </div>
     </div>
 
@@ -1199,8 +1197,8 @@
           <div><div class="pref-row__label">The Daily BFF Brief</div><div class="pref-row__sub">Mon–Fri morning sports text</div></div>
           <div class="pref-toggle is-on" onclick="this.classList.toggle('is-on')"></div>
         </div>
-        <div class="pref-row">
-          <div><div class="pref-row__label">Breaking News Alerts</div><div class="pref-row__sub">Major, can't-miss updates</div></div>
+        <div class="pref-row" data-sbff-tier="paid">
+          <div><div class="pref-row__label">Breaking News Alerts</div><div class="pref-row__sub">Major, can't-miss updates on your sport or city</div></div>
           <div class="pref-toggle is-on" onclick="this.classList.toggle('is-on')"></div>
         </div>
       </div>
@@ -1210,6 +1208,15 @@
         <div style="flex: 1; min-width: 220px;">
           <div style="font-weight: 700; margin-bottom: 2px;">Personalized updates are a VIP perk.</div>
           <div style="font-size: 13px; color: var(--text-secondary);">Upgrade to choose your sport or city for tailored texts.</div>
+        </div>
+        <button class="auth-btn" style="max-width:160px; padding: 10px 18px; font-size: 13px;" onclick="openUpgradeFromDashboard()">Upgrade</button>
+      </div>
+
+      <!-- VIP lock banner — shown when VIP tries to pick a 2nd item -->
+      <div id="vip-lock-banner" style="display:none; background: var(--pink); border: 1px solid var(--mandarin); border-radius: 12px; padding: 16px 18px; margin-bottom: 24px; font-size: 14px; color: var(--charcoal); align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 220px;">
+          <div style="font-weight: 700; margin-bottom: 2px;">VIP includes one sport or one city.</div>
+          <div style="font-size: 13px; color: var(--text-secondary);">Toggle off your current pick to switch, or upgrade to All-Access for unlimited selections.</div>
         </div>
         <button class="auth-btn" style="max-width:160px; padding: 10px 18px; font-size: 13px;" onclick="openUpgradeFromDashboard()">Upgrade</button>
       </div>
@@ -2109,7 +2116,7 @@ function handleAdjustToInsider(event, buttonEl) {
     alert('Could not open billing portal. Please contact hello@yoursportsbff.com.');
     if (buttonEl) {
       buttonEl.disabled = false;
-      buttonEl.textContent = buttonEl.dataset.originalText || 'Switch to Insider';
+      buttonEl.textContent = buttonEl.dataset.originalText || 'Choose Insider';
     }
   });
 }
@@ -2352,6 +2359,11 @@ function populateDashboard(member) {
   document.querySelectorAll('[data-sbff-tier="paid"]').forEach(function(el) {
     el.style.display = hasPaidPlan ? '' : 'none';
   });
+
+  // VIP lock banner: only EVER shown programmatically when a VIP tries to pick a 2nd item.
+  // Keep it hidden by default on every dashboard load.
+  var vipBanner = document.getElementById('vip-lock-banner');
+  if (vipBanner) vipBanner.style.display = 'none';
 
   // Show the upgrade banner in preferences panel for free users
   var freeBanner = document.getElementById('prefs-free-banner');
@@ -2642,13 +2654,45 @@ function setReferralUIFallback() {
 var _prefsSaveTimer = null;
 function toggleSportPref(el) {
   if (!el || el.classList.contains('is-disabled')) return;
+  if (!canActivateToggle(el)) return;
   el.classList.toggle('is-on');
   schedulePrefsSave();
 }
 function toggleCityPref(el) {
   if (!el || el.classList.contains('is-disabled')) return;
+  if (!canActivateToggle(el)) return;
   el.classList.toggle('is-on');
   schedulePrefsSave();
+}
+// VIP members can only have ONE delivery selection total (one sport OR one city).
+// Return false + show upgrade nudge if they'd be adding a 2nd.
+function canActivateToggle(el) {
+  // Allow turning OFF anytime
+  if (el.classList.contains('is-on')) return true;
+
+  var tier = getCurrentTier();
+  if (tier !== 'VIP') return true;  // All-Access has no cap; free is already blocked
+
+  // Count currently active toggles
+  var activeCount = document.querySelectorAll(
+    '#prefs-sports-section [data-sport].is-on, #prefs-cities-section [data-city].is-on'
+  ).length;
+
+  if (activeCount >= 1) {
+    showVipLockMessage();
+    return false;
+  }
+  return true;
+}
+function showVipLockMessage() {
+  var banner = document.getElementById('vip-lock-banner');
+  if (!banner) return;
+  banner.style.display = 'flex';
+  // Auto-hide after 6 seconds
+  clearTimeout(window._vipLockTimer);
+  window._vipLockTimer = setTimeout(function() {
+    banner.style.display = 'none';
+  }, 6000);
 }
 function schedulePrefsSave() {
   // Debounce: only save 500ms after user stops toggling
