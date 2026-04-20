@@ -318,12 +318,16 @@
     cursor: pointer; transition: all 0.2s;
     background: var(--mandarin); color: #fff;
   }
-  .auth-btn:hover { background: var(--mandarin-dark); }
+  .auth-btn:hover { background: var(--mandarin-dark); color: #fff; }
   .auth-btn--outline {
     background: transparent; color: var(--text-primary);
     border: 1.5px solid var(--line);
   }
-  .auth-btn--outline:hover { border-color: var(--mandarin); color: var(--mandarin); }
+  .auth-btn--outline:hover {
+    background: var(--charcoal);
+    border-color: var(--charcoal);
+    color: #fff;
+  }
   .auth-link {
     display: block; text-align: center; margin-top: 20px;
     font-size: 13px; color: var(--text-secondary);
@@ -953,17 +957,6 @@
     <div id="plan-upsell-banner" style="display: none; background: var(--pink, #FFE1EE); border: 1.5px solid var(--mandarin); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; line-height: 1.5; color: var(--charcoal); text-align: left;"></div>
     <div class="upsell-cards">
       <div class="upsell-card">
-        <div class="upsell-card__name">The Insider</div>
-        <div class="upsell-card__price">Free</div>
-        <div class="upsell-card__features">
-          Weekday sports texts<br>
-          Top headlines &amp; culture<br>
-          &nbsp;<br>
-          &nbsp;
-        </div>
-        <button class="auth-btn auth-btn--outline" onclick="handleFreePlan(event)">Get Started Free</button>
-      </div>
-      <div class="upsell-card">
         <div class="upsell-card__name">The VIP</div>
         <div class="upsell-card__price">$5.99/mo</div>
         <div class="upsell-card__features">
@@ -987,6 +980,7 @@
         <button class="auth-btn" onclick="handlePaidPlan('prc_the-all-access-qf640adh', this)">Go All-Access</button>
       </div>
     </div>
+    <div class="skip-link" style="margin-top: 24px;" onclick="handleFreePlan(event)">No thanks, I'll stick with the free daily brief</div>
   </div>
   <div class="auth-back" onclick="goTo('page-cities')">← Back</div>
 </div>
@@ -1824,21 +1818,36 @@ function routePostCheckout(member, memberstack) {
 
   var customFields = member.customFields || {};
   var planConnections = member.planConnections || [];
+  var wasOnboarded = customFields['onboarding-complete'] === 'true';
 
-  // Detect tier from active plan
+  // Detect tier from active plans — PREFER highest paid tier when user has multiple.
   var tier = 'Insider';
-  var active = planConnections.find(function(pc) { return pc.active; });
-  if (active) {
-    var planId = active.planId || '';
-    if (planId.indexOf('vip') > -1) tier = 'VIP';
-    else if (planId.indexOf('all-access') > -1) tier = 'All-Access';
-  }
+  var allAccess = planConnections.find(function(pc) {
+    return pc.active && pc.planId && pc.planId.indexOf('all-access') > -1;
+  });
+  var vipPlan = planConnections.find(function(pc) {
+    return pc.active && pc.planId && pc.planId.indexOf('vip') > -1;
+  });
+  if (allAccess) tier = 'All-Access';
+  else if (vipPlan) tier = 'VIP';
+  console.log('[Route] Tier detected:', tier);
 
   var sportsStr = customFields['interests-sports'] || '';
   var citiesStr = customFields['interests-cities'] || '';
   var sportsArr = sportsStr ? sportsStr.split(',').map(function(s) { return s.trim(); }).filter(Boolean) : [];
   var citiesArr = citiesStr ? citiesStr.split(',').map(function(s) { return s.trim(); }).filter(Boolean) : [];
   var totalInterests = sportsArr.length + citiesArr.length;
+
+  // Helper: after a tier change for an already-onboarded user, just refresh dashboard
+  function finishForExistingMember() {
+    memberstack.getCurrentMember().then(function(result) {
+      var m = result && result.data;
+      _lastMember = m || member;
+      goTo('page-dash');
+      populateDashboard(m || member);
+      kickOffViralLoops(m || member);
+    });
+  }
 
   if (tier === 'All-Access') {
     // Copy all interests into delivery prefs
@@ -1852,9 +1861,17 @@ function routePostCheckout(member, memberstack) {
       .then(function(result) {
         var m = result && result.data;
         _lastMember = m || member;
-        populateWelcomePage(m || member);
-        kickOffViralLoops(m || member);
-        goTo('page-referral');
+        if (wasOnboarded) {
+          // Existing member upgrading — go straight to dashboard
+          goTo('page-dash');
+          populateDashboard(m || member);
+          kickOffViralLoops(m || member);
+        } else {
+          // New signup — welcome + referral flow
+          populateWelcomePage(m || member);
+          kickOffViralLoops(m || member);
+          goTo('page-referral');
+        }
       })
       .catch(function() {
         populateWelcomePage(member);
@@ -1865,6 +1882,25 @@ function routePostCheckout(member, memberstack) {
   }
 
   if (tier === 'VIP') {
+    // Existing member upgrading to VIP from something else — skip onboarding-style narrowing,
+    // just run same auto-copy logic as All-Access if they have interests.
+    if (wasOnboarded) {
+      var existingFields = { 'onboarding-complete': 'true' };
+      // If exactly 1 interest total, auto-set it; otherwise leave existing delivery fields alone
+      if (totalInterests === 1) {
+        if (sportsArr.length === 1) {
+          existingFields['delivery-sports'] = sportsArr[0];
+          existingFields['delivery-cities'] = '';
+        } else {
+          existingFields['delivery-cities'] = citiesArr[0];
+          existingFields['delivery-sports'] = '';
+        }
+      }
+      memberstack.updateMember({ customFields: existingFields })
+        .then(finishForExistingMember)
+        .catch(function() { finishForExistingMember(); });
+      return;
+    }
     if (totalInterests >= 2) {
       // Show narrow-down page — referral step comes AFTER VIP narrows down
       populateVipPickGrid(member);
@@ -1904,7 +1940,13 @@ function routePostCheckout(member, memberstack) {
     return;
   }
 
-  // Default (Insider or unknown)
+  // Insider or unknown tier
+  if (wasOnboarded) {
+    // Existing member downgraded to Insider — just go to dashboard
+    finishForExistingMember();
+    return;
+  }
+  // New Insider signup
   populateWelcomePage(member);
   kickOffViralLoops(member);
   goTo('page-referral');
@@ -2086,8 +2128,10 @@ function handleAdjustToPaid(priceId, buttonEl) {
     buttonEl.textContent = 'Loading...';
   }
 
-  // Success returns to dashboard (not welcome — this isn't a new signup)
-  var successUrl = window.location.origin + '/account';
+  // Use ?welcome=true so post-checkout routing re-syncs delivery prefs for the new tier.
+  // (routePostCheckout handles this safely — for already-onboarded users it still updates
+  // delivery fields and lands them on dashboard.)
+  var successUrl = window.location.origin + '/account?welcome=true';
   var cancelUrl = window.location.origin + '/account';
 
   memberstack.purchasePlansWithCheckout({
@@ -2138,17 +2182,14 @@ function handleAdjustToPaid(priceId, buttonEl) {
         var planConnections = (member && member.planConnections) || [];
         var hasPlan = planConnections.some(function(pc) { return pc.active; });
 
-        // If they have a plan but onboarding flag isn't set (e.g. returned from Stripe), mark it done
-        if (hasPlan && !onboardingComplete) {
-          memberstack.updateMember({
-            customFields: { 'onboarding-complete': 'true' }
-          }).catch(function() {});
-          onboardingComplete = true;
-          if (member && member.customFields) member.customFields['onboarding-complete'] = 'true';
-        }
+        // Detect post-checkout state BEFORE we mutate onboarding-complete.
+        // A user just returned from Stripe if they have a plan but haven't completed onboarding.
+        var justReturnedFromCheckout = hasPlan && !onboardingComplete;
 
-        if (isWelcome) {
+        if (isWelcome || justReturnedFromCheckout) {
+          console.log('[Route] Post-checkout detected. isWelcome=', isWelcome, 'justReturned=', justReturnedFromCheckout, 'planConnections=', planConnections);
           // Coming back from Stripe checkout — route based on tier + interests
+          // (routePostCheckout will set onboarding-complete after handling delivery prefs)
           routePostCheckout(member, memberstack);
           // Clean the URL so refresh doesn't loop them back here
           if (window.history && window.history.replaceState) {
