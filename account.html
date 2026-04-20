@@ -633,6 +633,12 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
   }
   .pref-toggle.is-on::after { transform: translateX(20px); }
+  .pref-toggle.is-disabled {
+    opacity: 0.4; cursor: not-allowed; pointer-events: none;
+  }
+  .pref-row.is-locked {
+    opacity: 0.55;
+  }
   .pref-locked {
     font-size: 11px; color: var(--text-secondary);
     background: rgba(30,28,26,0.04); padding: 4px 10px;
@@ -799,10 +805,10 @@
         <input class="form-input" type="email" data-ms-member="email" placeholder="you@email.com" required>
       </div>
 
-      <!-- Consent checkboxes (both required) -->
+      <!-- Consent checkboxes (Terms required, SMS optional) -->
       <label class="consent-row">
-        <input type="checkbox" id="consent-sms" required>
-        <span class="consent-text"><span class="consent-required">*</span>I agree to receive recurring automated text messages from Your Sports BFF at the phone number provided (this is how we deliver the BFF Brief). Msg &amp; data rates may apply. Reply HELP for help, STOP to cancel.</span>
+        <input type="checkbox" id="consent-sms">
+        <span class="consent-text">I agree to receive text messages from Your Sports BFF at the phone number provided. Msg &amp; data rates may apply. Reply HELP for help, STOP to cancel.</span>
       </label>
       <label class="consent-row">
         <input type="checkbox" id="consent-terms" required>
@@ -896,8 +902,9 @@
       <input class="form-input" type="text" id="other-city-input" placeholder="Type your city...">
     </div>
     <button class="auth-btn" style="margin-top: 24px;" onclick="saveCitiesAndContinue()">Continue</button>
-    <div class="skip-link" onclick="goTo('page-referral')">Skip for now</div>
+    <div class="skip-link" onclick="goTo('page-upsell')">Skip for now</div>
   </div>
+  <div class="auth-back" onclick="goTo('page-sports')">← Back</div>
 </div>
 
 <div class="page auth-page" id="page-referral">
@@ -906,8 +913,8 @@
     <div class="onboard-progress">
       <div class="onboard-dot is-done"></div>
       <div class="onboard-dot is-done"></div>
+      <div class="onboard-dot is-done"></div>
       <div class="onboard-dot is-active"></div>
-      <div class="onboard-dot"></div>
     </div>
     <div class="auth-card__title">Who are your <i>sports BFFs?</i></div>
     <div class="auth-card__sub">Share your link with friends. The more BFFs, the more rewards.</div>
@@ -920,9 +927,9 @@
       <button class="share-btn" onclick="textReferralLink('referral-link-onboarding')">Text a Friend</button>
     </div>
     <div style="margin-top: 28px;">
-      <button class="auth-btn" onclick="goTo('page-upsell')">Continue</button>
+      <button class="auth-btn" onclick="finishOnboardingToWelcome()">Continue</button>
     </div>
-    <div class="skip-link" onclick="goTo('page-upsell')">Skip for now</div>
+    <div class="skip-link" onclick="finishOnboardingToWelcome()">Skip for now</div>
   </div>
 </div>
 
@@ -939,7 +946,7 @@
       <div class="onboard-dot is-active"></div>
     </div>
     <div class="auth-card__title">Pick your <i>plan.</i></div>
-    <div class="auth-card__sub">Start free, upgrade anytime.</div>
+    <div class="auth-card__sub">Upgrade or cancel anytime.</div>
     <div id="plan-upsell-banner" style="display: none; background: var(--pink, #FFE1EE); border: 1.5px solid var(--mandarin); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; line-height: 1.5; color: var(--charcoal); text-align: left;"></div>
     <div class="upsell-cards">
       <div class="upsell-card">
@@ -978,6 +985,7 @@
       </div>
     </div>
   </div>
+  <div class="auth-back" onclick="goTo('page-cities')">← Back</div>
 </div>
 
 <!-- ============================================
@@ -1141,19 +1149,17 @@
         </div>
       </div>
 
-      <!-- SPORTS: free-tier view (read-only, shows what they picked) -->
-      <div class="pref-section" data-sbff-tier="free">
-        <div class="pref-section__title">Your Sports <span class="pref-locked">VIP or All-Access</span></div>
-        <div style="padding: 16px 0; font-size: 14px; color: var(--text-secondary);">
-          <div style="margin-bottom: 8px; color: var(--text-primary);">
-            <strong id="prefs-sports-summary">—</strong>
-          </div>
-          <div style="font-size: 13px;">Upgrade to VIP or All-Access to get personalized updates for these sports.</div>
+      <!-- Free-tier banner — grayed prefs view -->
+      <div id="prefs-free-banner" data-sbff-tier="free" style="display:none; background: var(--pink); border: 1px solid var(--mandarin); border-radius: 12px; padding: 16px 18px; margin-bottom: 24px; font-size: 14px; color: var(--charcoal); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 220px;">
+          <div style="font-weight: 700; margin-bottom: 2px;">Personalized updates are a VIP perk.</div>
+          <div style="font-size: 13px; color: var(--text-secondary);">Upgrade to choose your sport or city for tailored texts.</div>
         </div>
+        <button class="auth-btn" style="max-width:160px; padding: 10px 18px; font-size: 13px;" onclick="goTo('page-upsell')">Upgrade</button>
       </div>
 
-      <!-- SPORTS: paid-tier view (functional toggles, hidden for free) -->
-      <div class="pref-section" data-sbff-tier="paid" style="display:none;">
+      <!-- SPORT toggles — same markup for all tiers, JS grays out for free -->
+      <div class="pref-section" id="prefs-sports-section">
         <div class="pref-section__title">Sport-Specific Updates</div>
         <div class="pref-row">
           <div><div class="pref-row__label">Football</div><div class="pref-row__sub">NFL, college, and more</div></div>
@@ -1189,19 +1195,8 @@
         </div>
       </div>
 
-      <!-- CITIES: free-tier view -->
-      <div class="pref-section" data-sbff-tier="free">
-        <div class="pref-section__title">Your Cities <span class="pref-locked">VIP or All-Access</span></div>
-        <div style="padding: 16px 0; font-size: 14px; color: var(--text-secondary);">
-          <div style="margin-bottom: 8px; color: var(--text-primary);">
-            <strong id="prefs-cities-summary">—</strong>
-          </div>
-          <div style="font-size: 13px;">Upgrade to VIP or All-Access for local coverage of your teams.</div>
-        </div>
-      </div>
-
-      <!-- CITIES: paid-tier view -->
-      <div class="pref-section" data-sbff-tier="paid" style="display:none;">
+      <!-- CITY toggles — same markup for all tiers, JS grays out for free -->
+      <div class="pref-section" id="prefs-cities-section">
         <div class="pref-section__title">City Updates</div>
         <div class="pref-row">
           <div><div class="pref-row__label">Chicago</div><div class="pref-row__sub">Bears, Bulls, Cubs, Sox, Blackhawks, Sky, Red Stars, Fire</div></div>
@@ -1355,14 +1350,14 @@ function saveCitiesAndContinue() {
       customFields: { 'interests-cities': selected.join(', ') }
     }).then(function() {
       refreshPlanUpsellCopy();
-      goTo('page-referral');
+      goTo('page-upsell');
     }).catch(function() {
       refreshPlanUpsellCopy();
-      goTo('page-referral');
+      goTo('page-upsell');
     });
   } else {
     refreshPlanUpsellCopy();
-    goTo('page-referral');
+    goTo('page-upsell');
   }
 }
 
@@ -1461,7 +1456,7 @@ function saveVipPickAndContinue() {
 
   var memberstack = window.$memberstackDom;
   if (!memberstack) {
-    goTo('page-welcome');
+    goTo('page-referral');
     return;
   }
 
@@ -1469,12 +1464,14 @@ function saveVipPickAndContinue() {
     .then(function() { return memberstack.getCurrentMember(); })
     .then(function(result) {
       var member = result && result.data;
+      _lastMember = member;
       populateWelcomePage(member);
-      goTo('page-welcome');
+      kickOffViralLoops(member);
+      goTo('page-referral');
     })
     .catch(function(err) {
       console.error('VIP pick save failed:', err);
-      goTo('page-welcome');
+      goTo('page-referral');
     });
 }
 
@@ -1572,14 +1569,9 @@ function handleSignup(event) {
     return;
   }
 
-  // Consent validation
+  // Consent validation — Terms required, SMS optional
   var smsConsent = document.getElementById('consent-sms');
   var termsConsent = document.getElementById('consent-terms');
-  if (!smsConsent || !smsConsent.checked) {
-    errorDiv.textContent = 'Please consent to receive text messages to continue.';
-    errorDiv.style.display = 'block';
-    return;
-  }
   if (!termsConsent || !termsConsent.checked) {
     errorDiv.textContent = 'Please accept the Terms & Privacy Policy to continue.';
     errorDiv.style.display = 'block';
@@ -1596,7 +1588,7 @@ function handleSignup(event) {
     'last-name': lastName,
     'phone': phone,
     'referred-by': referredBy,
-    'sms-consent': 'true'
+    'sms-consent': (smsConsent && smsConsent.checked) ? 'true' : 'false'
   }));
 
   var memberstack = window.$memberstackDom;
@@ -1766,7 +1758,7 @@ function applyPendingCustomFields() {
 // - VIP with 0 interests: go straight to welcome (they can set prefs in dashboard)
 // ============================================
 function routePostCheckout(member, memberstack) {
-  if (!member) { goTo('page-welcome'); return; }
+  if (!member) { goTo('page-referral'); return; }
 
   var customFields = member.customFields || {};
   var planConnections = member.planConnections || [];
@@ -1797,19 +1789,22 @@ function routePostCheckout(member, memberstack) {
     }).then(function() { return memberstack.getCurrentMember(); })
       .then(function(result) {
         var m = result && result.data;
+        _lastMember = m || member;
         populateWelcomePage(m || member);
-        goTo('page-welcome');
+        kickOffViralLoops(m || member);
+        goTo('page-referral');
       })
       .catch(function() {
         populateWelcomePage(member);
-        goTo('page-welcome');
+        kickOffViralLoops(member);
+        goTo('page-referral');
       });
     return;
   }
 
   if (tier === 'VIP') {
     if (totalInterests >= 2) {
-      // Show narrow-down page
+      // Show narrow-down page — referral step comes AFTER VIP narrows down
       populateVipPickGrid(member);
       goTo('page-vip-pick');
       return;
@@ -1828,23 +1823,44 @@ function routePostCheckout(member, memberstack) {
         .then(function() { return memberstack.getCurrentMember(); })
         .then(function(result) {
           var m = result && result.data;
+          _lastMember = m || member;
           populateWelcomePage(m || member);
-          goTo('page-welcome');
+          kickOffViralLoops(m || member);
+          goTo('page-referral');
         })
         .catch(function() {
           populateWelcomePage(member);
-          goTo('page-welcome');
+          kickOffViralLoops(member);
+          goTo('page-referral');
         });
       return;
     }
-    // VIP with 0 interests — just show welcome, they'll set prefs in dashboard later
+    // VIP with 0 interests — just go to referral
     populateWelcomePage(member);
-    goTo('page-welcome');
+    kickOffViralLoops(member);
+    goTo('page-referral');
     return;
   }
 
-  // Default (Insider or unknown) — go to welcome
+  // Default (Insider or unknown)
   populateWelcomePage(member);
+  kickOffViralLoops(member);
+  goTo('page-referral');
+}
+
+// Helper: fire VL identify early so the onboarding referral page has the link ready
+function kickOffViralLoops(member) {
+  if (!member || !member.auth || !member.auth.email) return;
+  _lastMember = member;
+  var cf = member.customFields || {};
+  loadViralLoopsData(cf['first-name'] || '', cf['last-name'] || '', member.auth.email);
+}
+
+// Final step after referral page → welcome
+function finishOnboardingToWelcome() {
+  if (_lastMember) {
+    populateWelcomePage(_lastMember);
+  }
   goTo('page-welcome');
 }
 
@@ -1852,7 +1868,7 @@ function routePostCheckout(member, memberstack) {
 function handleFreePlan(event) {
   if (event) event.preventDefault();
   var memberstack = window.$memberstackDom;
-  if (!memberstack) { goTo('page-welcome'); return; }
+  if (!memberstack) { goTo('page-referral'); return; }
 
   // Attach the free Insider plan
   memberstack.addPlan({ planId: 'pln_the-insider-jbbd0e0g' }).then(function() {
@@ -1863,12 +1879,19 @@ function handleFreePlan(event) {
     return memberstack.getCurrentMember();
   }).then(function(result) {
     var member = result && result.data;
+    _lastMember = member;
     populateWelcomePage(member);
-    goTo('page-welcome');
+    if (member && member.auth && member.auth.email) {
+      loadViralLoopsData(
+        (member.customFields && member.customFields['first-name']) || '',
+        (member.customFields && member.customFields['last-name']) || '',
+        member.auth.email
+      );
+    }
+    goTo('page-referral');
   }).catch(function(err) {
     console.error('Free plan attach failed:', err);
-    // Still show welcome so user isn't stuck
-    goTo('page-welcome');
+    goTo('page-referral');
   });
 }
 
@@ -2112,6 +2135,24 @@ function populateDashboard(member) {
     el.style.display = hasPaidPlan ? '' : 'none';
   });
 
+  // Show the upgrade banner in preferences panel for free users
+  var freeBanner = document.getElementById('prefs-free-banner');
+  if (freeBanner) {
+    freeBanner.style.display = hasPaidPlan ? 'none' : 'flex';
+  }
+
+  // Apply disabled/locked styling to preference toggles for free users
+  var prefToggles = document.querySelectorAll('#prefs-sports-section .pref-toggle, #prefs-cities-section .pref-toggle');
+  var prefRows = document.querySelectorAll('#prefs-sports-section .pref-row, #prefs-cities-section .pref-row');
+  prefToggles.forEach(function(t) {
+    if (hasPaidPlan) t.classList.remove('is-disabled');
+    else t.classList.add('is-disabled');
+  });
+  prefRows.forEach(function(r) {
+    if (hasPaidPlan) r.classList.remove('is-locked');
+    else r.classList.add('is-locked');
+  });
+
   // Current plan label in stats — use id-based lookup now
   var planLabel = 'Free';
   if (hasPaidPlan) {
@@ -2126,27 +2167,19 @@ function populateDashboard(member) {
 
   // (Referral count and referral link are populated by Viral Loops via loadViralLoopsData)
 
-  // Free-tier summary text — shows their INTERESTS (what they picked, but aren't getting)
-  var sportsSummaryEl = document.getElementById('prefs-sports-summary');
-  if (sportsSummaryEl) {
-    sportsSummaryEl.textContent = interestsSportsStr ? interestsSportsStr : 'No sports selected yet';
-  }
-  var citiesSummaryEl = document.getElementById('prefs-cities-summary');
-  if (citiesSummaryEl) {
-    citiesSummaryEl.textContent = interestsCitiesStr ? interestsCitiesStr : 'No cities selected yet';
-  }
-
-  // Paid-tier toggles — sync with DELIVERY preferences (what they're actually getting)
-  if (hasPaidPlan) {
-    var selectedSports = deliverySportsStr.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
-    document.querySelectorAll('[data-sport]').forEach(function(toggle) {
-      toggle.classList.toggle('is-on', selectedSports.indexOf(toggle.getAttribute('data-sport')) > -1);
-    });
-    var selectedCities = deliveryCitiesStr.split(',').map(function(c) { return c.trim(); }).filter(Boolean);
-    document.querySelectorAll('[data-city]').forEach(function(toggle) {
-      toggle.classList.toggle('is-on', selectedCities.indexOf(toggle.getAttribute('data-city')) > -1);
-    });
-  }
+  // Sync toggles to the user's selections.
+  // Paid users see delivery prefs (what they're actually getting).
+  // Free users see their interest picks (grayed out, non-interactive).
+  var sportsSource = hasPaidPlan ? deliverySportsStr : interestsSportsStr;
+  var citiesSource = hasPaidPlan ? deliveryCitiesStr : interestsCitiesStr;
+  var selectedSports = sportsSource.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+  document.querySelectorAll('[data-sport]').forEach(function(toggle) {
+    toggle.classList.toggle('is-on', selectedSports.indexOf(toggle.getAttribute('data-sport')) > -1);
+  });
+  var selectedCities = citiesSource.split(',').map(function(c) { return c.trim(); }).filter(Boolean);
+  document.querySelectorAll('[data-city]').forEach(function(toggle) {
+    toggle.classList.toggle('is-on', selectedCities.indexOf(toggle.getAttribute('data-city')) > -1);
+  });
 
   // Onboarding nudge banner
   var onboardingComplete = customFields['onboarding-complete'] === 'true';
@@ -2307,10 +2340,12 @@ function setReferralUIFallback() {
 // ============================================
 var _prefsSaveTimer = null;
 function toggleSportPref(el) {
+  if (!el || el.classList.contains('is-disabled')) return;
   el.classList.toggle('is-on');
   schedulePrefsSave();
 }
 function toggleCityPref(el) {
+  if (!el || el.classList.contains('is-disabled')) return;
   el.classList.toggle('is-on');
   schedulePrefsSave();
 }
