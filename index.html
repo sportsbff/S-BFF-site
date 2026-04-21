@@ -831,9 +831,19 @@
     box-shadow: none !important;
   }
 
-  /* Hide "Powered by Elfsight" footer (may require paid plan to fully remove) */
+  /* Hide Elfsight-injected UI elements that duplicate or conflict with our design:
+     - "Follow us on Instagram" header (we have our own section header)
+     - "Powered by Elfsight" footer (branded link — free tier may still show)
+     - "Load more" blue button (doesn't match S*BFF aesthetic)
+     - Feed title / header section
+  */
   .ig-feed-wrap [class*="eapps-link"],
-  .ig-feed-wrap [class*="powered-by"] {
+  .ig-feed-wrap [class*="powered-by"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-title"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-header"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-more"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-show-more"],
+  .ig-feed-wrap button[class*="eapps-instagram-feed"] {
     display: none !important;
   }
 
@@ -843,8 +853,10 @@
     border-radius: var(--radius) !important;
     overflow: hidden !important;
     background: #D9D9D9 !important;
-    aspect-ratio: 4 / 3 !important;   /* your preferred ratio */
+    aspect-ratio: 3 / 4 !important;   /* portrait — taller than wide */
     transition: transform 0.2s ease !important;
+    margin: 8px !important;           /* gap between tiles */
+    position: relative !important;
   }
 
   /* Post image — fill the 4:3 tile */
@@ -862,18 +874,23 @@
     transform: translateY(-2px) !important;
   }
 
-  /* Post caption overlay — dark-to-transparent gradient, mandarin accent on links */
+  /* Post caption overlay — full-tile dark mandarin-tinted gradient on hover */
   .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-text-wrapper"],
   .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-text-wrapper"] {
+    position: absolute !important;
+    inset: 0 !important;
     background: linear-gradient(
-      to top,
-      rgba(30, 28, 26, 0.85) 0%,
-      rgba(30, 28, 26, 0.6) 40%,
-      rgba(30, 28, 26, 0) 100%
+      180deg,
+      rgba(30, 28, 26, 0.15) 0%,
+      rgba(30, 28, 26, 0.55) 50%,
+      rgba(254, 103, 53, 0.75) 100%
     ) !important;
-    padding: 40px 16px 16px !important;
+    padding: 20px !important;
+    display: flex !important;
+    align-items: flex-end !important;
     opacity: 0 !important;
     transition: opacity 0.25s ease !important;
+    border-radius: var(--radius) !important;
   }
 
   /* Show caption on post hover */
@@ -882,9 +899,11 @@
     opacity: 1 !important;
   }
 
-  /* Caption text */
+  /* Caption text — white, readable */
   .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-text"],
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-text"] {
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-text"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-text-wrapper"] *,
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-text-wrapper"] * {
     color: #fff !important;
     font-family: var(--font-sans) !important;
     font-size: 13px !important;
