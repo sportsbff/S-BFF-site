@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page Not Found — Your Sports BFF</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --mandarin: #FE6735;
+    --mandarin-dark: #E55A2D;
+    --charcoal: #1E1C1A;
+    --stone: #FEFEFE;
+    --pink: #FFE1EE;
+    --text: #1E1C1A;
+    --text-2: #64615C;
+    --line: rgba(30,28,26,0.08);
+    --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
+    --font-display: Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: var(--font-body);
+    background: var(--stone);
+    color: var(--text);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  .header {
+    position: relative;
+    z-index: 2;
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    background: var(--stone);
+  }
+  .header__logo { height: 28px; width: auto; display: block; }
+  .header__nav {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  .header__nav a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--charcoal);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .header__nav a:hover { color: var(--mandarin); }
+
+  /* Main content — centered */
+  .main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .card {
+    max-width: 640px;
+    text-align: center;
+    padding-left: 10px;
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mandarin);
+    background: rgba(254, 103, 53, 0.08);
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(64px, 12vw, 148px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin: 0 0 16px;
+    color: var(--charcoal);
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--mandarin);
+  }
+  .tagline {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(28px, 4.5vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 24px;
+    color: var(--charcoal);
+  }
+  .tagline em { font-style: italic; color: var(--mandarin); }
+  .sub {
+    font-size: 17px;
+    color: var(--text-2);
+    max-width: 480px;
+    margin: 0 auto 40px;
+    line-height: 1.55;
+  }
+
+  /* Buttons */
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    border-radius: 100px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn--mandarin {
+    background: var(--mandarin);
+    color: #fff;
+  }
+  .btn--mandarin:hover {
+    background: var(--mandarin-dark);
+    transform: translateY(-1px);
+  }
+  .btn--outline {
+    background: transparent;
+    color: var(--charcoal);
+    border-color: var(--charcoal);
+  }
+  .btn--outline:hover {
+    background: var(--charcoal);
+    color: #fff;
+    transform: translateY(-1px);
+  }
+
+  /* Footer */
+  .footer {
+    position: relative;
+    z-index: 2;
+    padding: 24px 32px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-2);
+    background: var(--stone);
+  }
+  .footer a {
+    color: var(--mandarin);
+    text-decoration: none;
+  }
+  .footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 640px) {
+    .header { padding: 20px 20px; }
+    .header__nav { gap: 16px; }
+    .header__nav a { font-size: 13px; }
+    .main { padding: 48px 20px; }
+    .card { padding-left: 0; }
+    .eyebrow { margin-bottom: 20px; }
+    .sub { font-size: 15px; margin-bottom: 32px; }
+    .btn { padding: 12px 20px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a href="/" aria-label="Your Sports BFF home">
+    <img src="logo.svg" alt="S*BFF" class="header__logo">
+  </a>
+  <nav class="header__nav">
+    <a href="/">Home</a>
+    <a href="/bff-brief">BFF Brief</a>
+    <a href="/account">Log In</a>
+  </nav>
+</header>
+
+<main class="main">
+  <div class="card">
+    <span class="eyebrow">404 — Page Not Found</span>
+    <h1>Looks like we <em>fumbled</em> that one.</h1>
+    <p class="sub">This page doesn't exist — or we moved it. Head back home or check out the BFF Brief, and you'll find us there.</p>
+    <div class="actions">
+      <a href="/" class="btn btn--mandarin">Back to S*BFF</a>
+      <a href="/bff-brief" class="btn btn--outline">BFF Brief</a>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  Need help? <a href="mailto:hello@yoursportsbff.com">hello@yoursportsbff.com</a>
+</footer>
+
+</body>
+</html>
