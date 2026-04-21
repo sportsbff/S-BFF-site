@@ -162,10 +162,23 @@
     width: 36px; height: 36px;
     flex-direction: column; justify-content: center; align-items: center; gap: 5px;
     padding: 0;
+    z-index: 10000;
+    position: relative;
   }
   .nav__hamburger span {
     display: block; width: 20px; height: 2px;
     background: var(--charcoal); transition: all 0.3s;
+    transform-origin: center;
+  }
+  .nav__hamburger.is-open span { background: #fff; }
+  .nav__hamburger.is-open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .nav__hamburger.is-open span:nth-child(2) {
+    opacity: 0;
+  }
+  .nav__hamburger.is-open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
   }
   /* Full-screen mobile menu overlay */
   .nav__mobile-menu {
@@ -1691,7 +1704,7 @@
     </div>
     <div class="footer__bottom">
       <span>&copy; 2026 Your Sports BFF. All rights reserved.</span>
-      <span><a href="/legal" style="color: inherit;">Privacy &middot; Terms</a></span>
+      <span><a href="/legal#privacy" style="color: inherit;">Privacy Policy</a> &middot; <a href="/legal#terms" style="color: inherit;">Terms of Service</a></span>
     </div>
   </div>
 </footer>
@@ -1726,9 +1739,20 @@
   const hamburger = document.querySelector('.nav__hamburger');
   const mobile = document.getElementById('navMobile');
   const close = document.getElementById('navClose');
-  function openMenu() { mobile.classList.add('is-open'); document.body.style.overflow='hidden'; }
-  function closeMenu() { mobile.classList.remove('is-open'); document.body.style.overflow=''; }
-  if(hamburger) hamburger.addEventListener('click', openMenu);
+  function openMenu() {
+    mobile.classList.add('is-open');
+    if (hamburger) hamburger.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    mobile.classList.remove('is-open');
+    if (hamburger) hamburger.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  function toggleMenu() {
+    if (mobile.classList.contains('is-open')) closeMenu(); else openMenu();
+  }
+  if(hamburger) hamburger.addEventListener('click', toggleMenu);
   if(close) close.addEventListener('click', closeMenu);
   // Close when tapping a link
   mobile.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
