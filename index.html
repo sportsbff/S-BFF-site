@@ -837,6 +837,18 @@
     height: auto !important;
   }
 
+  /* Make images/videos fill the container by cropping, not squishing.
+     Tall 9:16 reels get their sides cropped; wide images get top/bottom cropped. */
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"] img,
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] img,
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"] video,
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+
   /* Hide Elfsight's auto-generated header, branding, and utility badges */
   .ig-feed-wrap [class*="eapps-instagram-feed-title"],
   .ig-feed-wrap [class*="eapps-instagram-feed-header"],
