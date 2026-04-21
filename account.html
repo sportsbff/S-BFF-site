@@ -2750,10 +2750,20 @@ function populateDashboard(member) {
     toggle.classList.toggle('is-on', selectedCities.indexOf(toggle.getAttribute('data-city')) > -1);
   });
 
-  // Onboarding nudge banner
+  // Onboarding nudge banner — only show if the user genuinely hasn't set preferences.
+  // A paid user who already has delivery sports/cities shouldn't see this, even if
+  // the onboarding-complete flag is missing (e.g., legacy accounts created before
+  // this flag existed, or accounts edited in the MemberStack dashboard).
   var onboardingComplete = customFields['onboarding-complete'] === 'true';
+  var hasAnyPrefs = (
+    (interestsSportsStr && interestsSportsStr.length > 0) ||
+    (interestsCitiesStr && interestsCitiesStr.length > 0) ||
+    (deliverySportsStr && deliverySportsStr.length > 0) ||
+    (deliveryCitiesStr && deliveryCitiesStr.length > 0)
+  );
+  var showNudge = !onboardingComplete && !hasAnyPrefs;
   var nudge = document.getElementById('onboarding-nudge');
-  if (nudge) nudge.style.display = onboardingComplete ? 'none' : 'flex';
+  if (nudge) nudge.style.display = showNudge ? 'flex' : 'none';
 }
 
 function escapeHtml(str) {
