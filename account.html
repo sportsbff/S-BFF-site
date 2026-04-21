@@ -674,6 +674,80 @@
   }
   .billing-card__body { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
 
+  /* Account Edit Modal */
+  .account-modal {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .account-modal__backdrop {
+    position: absolute; inset: 0;
+    background: rgba(30, 28, 26, 0.6);
+    backdrop-filter: blur(4px);
+  }
+  .account-modal__card {
+    position: relative;
+    background: #fff; border-radius: var(--radius);
+    padding: 40px 36px 32px; width: 100%; max-width: 480px;
+    max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 24px 64px rgba(30, 28, 26, 0.25);
+  }
+  .account-modal__close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; cursor: pointer;
+    font-size: 28px; line-height: 1; color: var(--text-secondary);
+    width: 32px; height: 32px; border-radius: 100px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .account-modal__close:hover { background: var(--line); color: var(--charcoal); }
+  .account-modal__title {
+    font-family: var(--font-display); font-size: 36px; font-weight: 600;
+    line-height: 1.05; letter-spacing: -0.02em; color: var(--charcoal);
+    margin: 0 0 8px;
+  }
+  .account-modal__title i { font-style: italic; color: var(--mandarin); }
+  .account-modal__sub {
+    font-family: var(--font-sans); font-size: 14px; line-height: 1.5;
+    color: var(--text-secondary); margin: 0 0 28px;
+  }
+  .account-modal__row { margin-bottom: 18px; }
+  .account-modal__label {
+    display: block; font-family: var(--font-sans); font-size: 12px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--charcoal); margin-bottom: 8px;
+  }
+  .account-modal__input {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid var(--line); border-radius: 10px;
+    font-family: var(--font-sans); font-size: 15px;
+    color: var(--charcoal); background: #fff;
+    box-sizing: border-box;
+  }
+  .account-modal__input:focus {
+    outline: none; border-color: var(--mandarin);
+  }
+  .account-modal__hint {
+    font-size: 12px; color: var(--text-secondary); margin-top: 6px;
+  }
+  .account-modal__error {
+    background: rgba(254, 103, 53, 0.08);
+    border: 1px solid var(--mandarin);
+    color: var(--mandarin);
+    padding: 10px 14px; border-radius: 10px;
+    font-size: 13px; margin-bottom: 16px;
+  }
+  .account-modal__success {
+    background: rgba(52, 168, 83, 0.08);
+    border: 1px solid #34A853;
+    color: #2A8644;
+    padding: 10px 14px; border-radius: 10px;
+    font-size: 13px; margin-bottom: 16px;
+  }
+  .account-modal__actions {
+    display: flex; gap: 12px; margin-top: 24px;
+  }
+  .account-modal__actions .auth-btn { flex: 1; }
+
   /* ============================================
      RESPONSIVE — matches homepage breakpoints
      Desktop:  1025px+
@@ -766,7 +840,7 @@
     <div class="nav__mobile-menu__account-label">Your Account</div>
     <button class="nav__mobile-link is-active" data-dash="dash-home">Account Home</button>
     <button class="nav__mobile-link" data-dash="dash-prefs">BFF Brief Preferences</button>
-    <button class="nav__mobile-link" data-dash="dash-billing">Billing &amp; Membership</button>
+    <button class="nav__mobile-link" data-dash="dash-billing">Account &amp; Membership</button>
     <a href="#" onclick="handleLogout(event)" class="nav__mobile-link nav__mobile-link--logout">Log Out</a>
   </div>
   <div class="nav__mobile-menu__secondary">
@@ -1026,7 +1100,7 @@
       <p style="font-family: var(--font-sans); font-size: 15px; color: var(--text-secondary);" id="adjust-plan-subtitle">Upgrade, downgrade, or cancel anytime.</p>
     </div>
 
-    <div class="upsell-cards" style="max-width: 1000px; margin: 0 auto;">
+    <div class="upsell-cards" style="max-width: 1200px; margin: 0 auto;">
       <div class="upsell-card" style="background: #fff;">
         <div class="upsell-card__name">The Insider</div>
         <div class="upsell-card__price">Free</div>
@@ -1096,7 +1170,7 @@
       </div>
       <div class="dash-nav__link" data-dash="dash-billing" onclick="showDash('dash-billing')">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-        Billing & Membership
+        Account & Membership
       </div>
     </div>
     <div class="dash-nav__bottom">
@@ -1299,7 +1373,7 @@
     <!-- BILLING -->
     <div class="dash-panel" id="dash-billing" style="display:none;">
       <div class="dash-header">
-        <h1 class="dash-title">Billing & <i>Membership</i></h1>
+        <h1 class="dash-title">Account & <i>Membership</i></h1>
       </div>
 
       <div class="billing-card">
@@ -1315,29 +1389,68 @@
 
       <div class="billing-card">
         <div class="billing-card__header">
-          <div class="billing-card__title">Payment Method</div>
-          <div class="billing-card__action">Add</div>
-        </div>
-        <div class="billing-card__body">No payment method on file.</div>
-      </div>
-
-      <div class="billing-card">
-        <div class="billing-card__header">
           <div class="billing-card__title">Account Details</div>
-          <div class="billing-card__action">Edit</div>
+          <div class="billing-card__action" onclick="openAccountEditModal()">Edit</div>
         </div>
-        <div class="billing-card__body">
+        <div class="billing-card__body" id="billing-account-body">
           Heather Melcer<br>
           heather@email.com<br>
           (312) 555-1234
         </div>
       </div>
 
+      <div class="billing-card" id="billing-payment-card" style="display:none;">
+        <div class="billing-card__header">
+          <div class="billing-card__title">Payment Method</div>
+          <div class="billing-card__action" onclick="openStripePortal()">Update</div>
+        </div>
+        <div class="billing-card__body">Manage your card and billing history through Stripe's secure portal.</div>
+      </div>
+
       <div style="margin-top:24px;">
-        <div class="billing-card__action" style="color:var(--text-secondary);">Cancel Membership</div>
+        <div class="billing-card__action" style="color:var(--text-secondary);" onclick="handleCancelMembership()">Cancel Membership</div>
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- Account Edit Modal — writes directly to MemberStack (source of truth for SMS routing) -->
+<div class="account-modal" id="accountEditModal" style="display:none;">
+  <div class="account-modal__backdrop" onclick="closeAccountEditModal()"></div>
+  <div class="account-modal__card" role="dialog" aria-modal="true" aria-labelledby="accountEditTitle">
+    <button class="account-modal__close" onclick="closeAccountEditModal()" aria-label="Close">&times;</button>
+    <h2 class="account-modal__title" id="accountEditTitle">Edit your <i>details</i></h2>
+    <p class="account-modal__sub">Updating your email or phone here keeps your daily texts and account in sync.</p>
+
+    <form id="accountEditForm" onsubmit="submitAccountEdit(event)">
+      <div class="account-modal__row">
+        <label class="account-modal__label" for="edit-first-name">First name</label>
+        <input class="account-modal__input" type="text" id="edit-first-name" autocomplete="given-name" required>
+      </div>
+      <div class="account-modal__row">
+        <label class="account-modal__label" for="edit-last-name">Last name</label>
+        <input class="account-modal__input" type="text" id="edit-last-name" autocomplete="family-name" required>
+      </div>
+      <div class="account-modal__row">
+        <label class="account-modal__label" for="edit-email">Email</label>
+        <input class="account-modal__input" type="email" id="edit-email" autocomplete="email" required>
+        <div class="account-modal__hint">Used for login and account emails.</div>
+      </div>
+      <div class="account-modal__row">
+        <label class="account-modal__label" for="edit-phone">Phone number</label>
+        <input class="account-modal__input" type="tel" id="edit-phone" autocomplete="tel" placeholder="(312) 555-1234">
+        <div class="account-modal__hint">Where your daily BFF Brief is sent.</div>
+      </div>
+
+      <div class="account-modal__error" id="accountEditError" style="display:none;"></div>
+      <div class="account-modal__success" id="accountEditSuccess" style="display:none;">Saved!</div>
+
+      <div class="account-modal__actions">
+        <button type="button" class="auth-btn auth-btn--outline" onclick="closeAccountEditModal()">Cancel</button>
+        <button type="submit" class="auth-btn" id="accountEditSubmit">Save changes</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -2128,6 +2241,189 @@ function handleAdjustToInsider(event, buttonEl) {
   });
 }
 
+// ===========================================================
+// ACCOUNT EDIT MODAL — writes to MemberStack (source of truth)
+// ===========================================================
+// MemberStack holds: email, first-name, last-name, phone.
+// These feed Airtable → Zapier → SimpleTexting for SMS delivery.
+// Stripe holds: card/payment method only (edited via launchStripeCustomerPortal).
+
+function openAccountEditModal() {
+  var modal = document.getElementById('accountEditModal');
+  if (!modal) return;
+
+  // Prefill from cached member data
+  var firstName = '';
+  var lastName = '';
+  var email = '';
+  var phone = '';
+  if (_lastMember) {
+    var cf = _lastMember.customFields || {};
+    firstName = cf['first-name'] || '';
+    lastName = cf['last-name'] || '';
+    phone = cf['phone'] || '';
+    email = (_lastMember.auth && _lastMember.auth.email) || _lastMember.email || '';
+  }
+  var firstInput = document.getElementById('edit-first-name');
+  var lastInput = document.getElementById('edit-last-name');
+  var emailInput = document.getElementById('edit-email');
+  var phoneInput = document.getElementById('edit-phone');
+  if (firstInput) firstInput.value = firstName;
+  if (lastInput) lastInput.value = lastName;
+  if (emailInput) emailInput.value = email;
+  if (phoneInput) phoneInput.value = phone;
+
+  // Clear any prior status
+  var errEl = document.getElementById('accountEditError');
+  var okEl = document.getElementById('accountEditSuccess');
+  if (errEl) errEl.style.display = 'none';
+  if (okEl) okEl.style.display = 'none';
+
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAccountEditModal() {
+  var modal = document.getElementById('accountEditModal');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Escape key closes the account edit modal
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    var modal = document.getElementById('accountEditModal');
+    if (modal && modal.style.display === 'flex') closeAccountEditModal();
+  }
+});
+
+function submitAccountEdit(event) {
+  if (event) event.preventDefault();
+
+  var memberstack = window.$memberstackDom;
+  var submitBtn = document.getElementById('accountEditSubmit');
+  var errEl = document.getElementById('accountEditError');
+  var okEl = document.getElementById('accountEditSuccess');
+
+  if (!memberstack) {
+    if (errEl) {
+      errEl.textContent = 'Please try again in a moment.';
+      errEl.style.display = 'block';
+    }
+    return;
+  }
+
+  var firstName = (document.getElementById('edit-first-name').value || '').trim();
+  var lastName = (document.getElementById('edit-last-name').value || '').trim();
+  var email = (document.getElementById('edit-email').value || '').trim().toLowerCase();
+  var phone = (document.getElementById('edit-phone').value || '').trim();
+
+  // Basic validation
+  if (!firstName || !lastName || !email) {
+    if (errEl) {
+      errEl.textContent = 'Please fill in your name and email.';
+      errEl.style.display = 'block';
+    }
+    return;
+  }
+  if (errEl) errEl.style.display = 'none';
+  if (okEl) okEl.style.display = 'none';
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.dataset.originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Saving…';
+  }
+
+  // What was the previous email? If different, we also call updateMemberAuth.
+  var previousEmail = '';
+  if (_lastMember) {
+    previousEmail = (_lastMember.auth && _lastMember.auth.email) || _lastMember.email || '';
+    previousEmail = (previousEmail || '').toLowerCase();
+  }
+
+  // Step 1: update custom fields (name + phone) via MemberStack
+  var customFieldsUpdate = memberstack.updateMember({
+    customFields: {
+      'first-name': firstName,
+      'last-name': lastName,
+      'phone': phone
+    }
+  });
+
+  // Step 2: if the email changed, update auth too
+  var authUpdate = (email && email !== previousEmail)
+    ? memberstack.updateMemberAuth({ email: email })
+    : Promise.resolve(null);
+
+  Promise.all([customFieldsUpdate, authUpdate]).then(function() {
+    // Refresh cached member so dashboard/billing panel reflect new values immediately
+    return memberstack.getCurrentMember();
+  }).then(function(res) {
+    var fresh = (res && res.data) ? res.data : null;
+    if (fresh) {
+      _lastMember = fresh;
+      // Re-render the account details card and any dashboard UI that depends on it
+      try { populateDashboard(fresh); } catch (e) { /* non-fatal */ }
+    }
+    if (okEl) {
+      okEl.textContent = 'Saved! Your details are updated.';
+      okEl.style.display = 'block';
+    }
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = submitBtn.dataset.originalText || 'Save changes';
+    }
+    // Close modal after a short beat so user sees the success message
+    setTimeout(closeAccountEditModal, 1200);
+  }).catch(function(err) {
+    console.error('Account edit failed:', err);
+    var msg = (err && err.message) ? err.message : 'Could not save changes. Please try again.';
+    // Common MemberStack errors: email already in use, invalid format, etc.
+    if (errEl) {
+      errEl.textContent = msg;
+      errEl.style.display = 'block';
+    }
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = submitBtn.dataset.originalText || 'Save changes';
+    }
+  });
+}
+
+// Open Stripe Customer Portal for payment method / card updates.
+// Stripe handles card updates itself — no MemberStack sync needed since
+// MemberStack ↔ Stripe is already linked via customer ID.
+function openStripePortal() {
+  var memberstack = window.$memberstackDom;
+  if (!memberstack) {
+    alert('Please try again in a moment.');
+    return;
+  }
+  memberstack.launchStripeCustomerPortal({
+    returnUrl: window.location.origin + '/account'
+  }).catch(function(err) {
+    console.error('Customer portal failed:', err);
+    alert('Could not open billing portal. Please contact hello@yoursportsbff.com.');
+  });
+}
+
+// Cancel membership entirely (route to Stripe Customer Portal for paid users,
+// or route free users to support email since there's no Stripe subscription to cancel).
+function handleCancelMembership() {
+  var tier = getCurrentTier();
+  if (tier === 'Free' || tier === 'Insider') {
+    var confirmFree = window.confirm(
+      "You're currently on the free Insider plan. To fully cancel your account and stop receiving texts, email hello@yoursportsbff.com. Want to do that now?"
+    );
+    if (confirmFree) {
+      window.location.href = 'mailto:hello@yoursportsbff.com?subject=Cancel%20my%20S*BFF%20account';
+    }
+    return;
+  }
+  openStripePortal();
+}
+
 // Switch to or upgrade to a paid plan — Stripe checkout
 function handleAdjustToPaid(priceId, buttonEl) {
   var memberstack = window.$memberstackDom;
@@ -2419,6 +2715,23 @@ function populateDashboard(member) {
   }
   if (billingAction) {
     billingAction.textContent = (planLabel === 'Free' || planLabel === 'Insider') ? 'Upgrade' : 'Adjust';
+  }
+
+  // Account details card: pull name, email, phone from live member data
+  var accountBody = document.getElementById('billing-account-body');
+  if (accountBody) {
+    var firstName = customFields['first-name'] || '';
+    var lastName = customFields['last-name'] || '';
+    var fullName = (firstName + ' ' + lastName).trim() || 'Add your name';
+    var email = (member.auth && member.auth.email) || member.email || '—';
+    var phone = customFields['phone'] || 'Add your phone number';
+    accountBody.innerHTML = escapeHtml(fullName) + '<br>' + escapeHtml(email) + '<br>' + escapeHtml(phone);
+  }
+
+  // Payment Method card only shows for paid users (Insider has no card on file)
+  var paymentCard = document.getElementById('billing-payment-card');
+  if (paymentCard) {
+    paymentCard.style.display = hasPaidPlan ? '' : 'none';
   }
 
   // (Referral count and referral link are populated by Viral Loops via loadViralLoopsData)
