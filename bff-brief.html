@@ -413,6 +413,15 @@
     padding: 4px 12px;
     border-radius: 100px;
   }
+  .tier__trial-note {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--mandarin);
+    margin-top: -2px;
+    margin-bottom: 4px;
+    letter-spacing: 0.01em;
+  }
   .tier__name {
     font-family: var(--font-display); font-size: 28px; font-weight: 600;
     letter-spacing: -0.02em; margin-bottom: 8px;
@@ -423,7 +432,14 @@
     color: var(--mandarin); line-height: 1; margin-bottom: 4px;
     letter-spacing: -0.03em;
   }
-  .tier__price span {
+  .tier__dollar {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    color: var(--mandarin);
+    font-size: inherit;
+    margin-right: 2px;
+  }
+  .tier__price span:not(.tier__dollar) {
     font-family: var(--font-body); font-size: 14px; font-weight: 400;
     color: var(--text-secondary);
   }
@@ -1296,7 +1312,7 @@
       <!-- VIP -->
       <div class="tier">
         <div class="tier__name">The VIP</div>
-        <div class="tier__price">$5.99<span>/mo</span></div>
+        <div class="tier__price"><span class="tier__dollar">$</span>4.99<span>/mo</span></div>
         <div class="tier__desc">Go deeper on the sport or city you care about most. Weekly updates plus breaking news when it matters.</div>
         <ul class="tier__features">
           <li class="tier__feature"><span class="tier__check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Everything in The Insider</li>
@@ -1308,7 +1324,8 @@
       <!-- PREMIUM -->
       <div class="tier tier--featured">
         <div class="tier__name">The All-Access</div>
-        <div class="tier__price">$14.99<span>/mo</span></div>
+        <div class="tier__price"><span class="tier__dollar">$</span>9.99<span>/mo</span></div>
+        <div class="tier__trial-note">First 7 days free</div>
         <div class="tier__desc">The full experience. Your Sports BFF in your back pocket, 24/7.</div>
         <ul class="tier__features">
           <li class="tier__feature"><span class="tier__check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Everything in The VIP</li>
@@ -1317,7 +1334,7 @@
           <li class="tier__feature"><span class="tier__check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Merchant perks + partner discounts</li>
           <li class="tier__feature"><span class="tier__check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Early access to drops and events</li>
         </ul>
-        <a href="/account" class="btn btn--charcoal">Go All-Access</a>
+        <a href="/account" class="btn btn--charcoal">Start Free Trial</a>
       </div>
     </div>
   </div>

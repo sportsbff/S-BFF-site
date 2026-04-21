@@ -445,6 +445,11 @@
     font-family: var(--font-sans); font-size: 15px; font-weight: 700;
     color: var(--mandarin); margin-bottom: 16px;
   }
+  .upsell-card__trial-note {
+    font-family: var(--font-sans); font-size: 12px; font-weight: 500;
+    color: var(--mandarin); margin-top: -12px; margin-bottom: 16px;
+    letter-spacing: 0.01em;
+  }
   .upsell-card__features {
     font-size: 13px; line-height: 1.8; color: var(--text-secondary);
     text-align: center; margin-bottom: 20px; flex: 1;
@@ -956,26 +961,27 @@
     <div class="upsell-cards">
       <div class="upsell-card">
         <div class="upsell-card__name">The VIP</div>
-        <div class="upsell-card__price">$5.99/mo</div>
+        <div class="upsell-card__price">$4.99/mo</div>
         <div class="upsell-card__features">
           Everything in Insider<br>
           Your sport or city<br>
           Weekly deep-dives<br>
           Breaking news alerts
         </div>
-        <button class="auth-btn auth-btn--outline" onclick="handlePaidPlan('prc_the-vip-z2650aam', this)">Get The VIP</button>
+        <button class="auth-btn auth-btn--outline" onclick="handlePaidPlan('prc_the-vip-1zh30etf', this)">Get The VIP</button>
       </div>
       <div class="upsell-card is-featured">
         <div class="upsell-card__tag">Best Value</div>
         <div class="upsell-card__name">The All-Access</div>
-        <div class="upsell-card__price">$14.99/mo</div>
+        <div class="upsell-card__price">$9.99/mo</div>
+        <div class="upsell-card__trial-note">First 7 days free</div>
         <div class="upsell-card__features">
           All sports &amp; cities<br>
           Sports Hotline access<br>
           Partner discounts<br>
           Early event access
         </div>
-        <button class="auth-btn" onclick="handlePaidPlan('prc_the-all-access-qf640adh', this)">Go All-Access</button>
+        <button class="auth-btn" onclick="handlePaidPlan('prc_the-all-access-7-day-trial-jp40a7z', this)">Start Free Trial</button>
       </div>
     </div>
     <div class="skip-link" style="margin-top: 24px;" onclick="handleFreePlan(event)">No thanks, I'll stick with the free daily brief</div>
@@ -1034,25 +1040,26 @@
       </div>
       <div class="upsell-card" style="background: #fff;">
         <div class="upsell-card__name">The VIP</div>
-        <div class="upsell-card__price">$5.99<span style="font-size:14px; font-weight:400;">/mo</span></div>
+        <div class="upsell-card__price">$4.99<span style="font-size:14px; font-weight:400;">/mo</span></div>
         <div class="upsell-card__features">
           Everything in Insider<br>
           One sport OR one city<br>
           Weekly deep-dives<br>
           Breaking news alerts
         </div>
-        <button class="auth-btn auth-btn--outline" id="adjust-btn-vip" onclick="handleAdjustToPaid('prc_the-vip-z2650aam', this)">Choose VIP</button>
+        <button class="auth-btn auth-btn--outline" id="adjust-btn-vip" onclick="handleAdjustToPaid('prc_the-vip-1zh30etf', this)">Choose VIP</button>
       </div>
       <div class="upsell-card" style="background: #fff;">
         <div class="upsell-card__name">All-Access</div>
-        <div class="upsell-card__price">$14.99<span style="font-size:14px; font-weight:400;">/mo</span></div>
+        <div class="upsell-card__price">$9.99<span style="font-size:14px; font-weight:400;">/mo</span></div>
+        <div class="upsell-card__trial-note">First 7 days free</div>
         <div class="upsell-card__features">
           Everything in VIP<br>
           All sports &amp; all cities<br>
           Sports Hotline access<br>
           Partner perks &amp; early access
         </div>
-        <button class="auth-btn" id="adjust-btn-all" onclick="handleAdjustToPaid('prc_the-all-access-qf640adh', this)">Choose All-Access</button>
+        <button class="auth-btn" id="adjust-btn-all" onclick="handleAdjustToPaid('prc_the-all-access-7-day-trial-jp40a7z', this)">Choose All-Access</button>
       </div>
     </div>
 
@@ -2403,9 +2410,9 @@ function populateDashboard(member) {
   var billingAction = document.getElementById('billing-plan-action');
   if (billingBody) {
     if (planLabel === 'All-Access') {
-      billingBody.innerHTML = '<strong>All-Access — $14.99/month</strong><br>Full access: all sports, all cities, Sports Hotline, partner perks.';
+      billingBody.innerHTML = '<strong>All-Access — $9.99/month</strong><br>Full access: all sports, all cities, Sports Hotline, partner perks.';
     } else if (planLabel === 'VIP') {
-      billingBody.innerHTML = '<strong>VIP — $5.99/month</strong><br>Personalized texts on your chosen sport or city, plus weekly deep-dives and breaking alerts.';
+      billingBody.innerHTML = '<strong>VIP — $4.99/month</strong><br>Personalized texts on your chosen sport or city, plus weekly deep-dives and breaking alerts.';
     } else {
       billingBody.innerHTML = '<strong>The Insider (Free)</strong><br>Daily BFF Brief + breaking news alerts. No payment method required.';
     }
