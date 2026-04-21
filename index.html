@@ -835,6 +835,7 @@
      - "Follow us on Instagram" header (we have our own section header)
      - "Powered by Elfsight" footer (branded link — free tier may still show)
      - "Load more" blue button (doesn't match S*BFF aesthetic)
+     - "Test Mode" badge (shown on unpublished/demo widgets)
      - Feed title / header section
   */
   .ig-feed-wrap [class*="eapps-link"],
@@ -843,29 +844,45 @@
   .ig-feed-wrap [class*="eapps-instagram-feed-header"],
   .ig-feed-wrap [class*="eapps-instagram-feed-posts-more"],
   .ig-feed-wrap [class*="eapps-instagram-feed-posts-show-more"],
-  .ig-feed-wrap button[class*="eapps-instagram-feed"] {
+  .ig-feed-wrap button[class*="eapps-instagram-feed"],
+  [class*="test-mode"],
+  [class*="TestMode"],
+  [class*="eapps-widget-badge"],
+  [class*="eapps-widget-toolbar"] {
     display: none !important;
   }
 
-  /* Each post tile — match S*BFF .social-post aesthetic */
+  /* Slide wrapper — keep it styled, let Elfsight slider size it */
   .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"],
   .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] {
     border-radius: var(--radius) !important;
     overflow: hidden !important;
     background: #D9D9D9 !important;
-    aspect-ratio: 3 / 4 !important;   /* portrait — taller than wide */
     transition: transform 0.2s ease !important;
-    margin: 8px !important;           /* gap between tiles */
     position: relative !important;
   }
 
-  /* Post image — fill the 4:3 tile */
+  /* The inner media container inside each slide — force 3:4 portrait ratio here */
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-image"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-image"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-inner"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-inner"] {
+    aspect-ratio: 3 / 4 !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    border-radius: var(--radius) !important;
+    position: relative !important;
+  }
+
+  /* Post image — fill the 3:4 container */
   .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"] img,
   .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
     border-radius: var(--radius) !important;
+    position: absolute !important;
+    inset: 0 !important;
   }
 
   /* Hover state — subtle lift, caption overlay visible on hover */
