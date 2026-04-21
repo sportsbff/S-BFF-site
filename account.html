@@ -1950,10 +1950,10 @@ function routePostCheckout(member, memberstack) {
   // Detect tier from active plans — PREFER highest paid tier when user has multiple.
   var tier = 'Insider';
   var allAccess = planConnections.find(function(pc) {
-    return pc.active && pc.planId && pc.planId.indexOf('all-access') > -1;
+    return isPlanActive(pc) && pc.planId && pc.planId.indexOf('all-access') > -1;
   });
   var vipPlan = planConnections.find(function(pc) {
-    return pc.active && pc.planId && pc.planId.indexOf('vip') > -1;
+    return isPlanActive(pc) && pc.planId && pc.planId.indexOf('vip') > -1;
   });
   if (allAccess) tier = 'All-Access';
   else if (vipPlan) tier = 'VIP';
@@ -2192,15 +2192,15 @@ function getCurrentTier() {
   if (!_lastMember) return 'Free';
   var planConnections = _lastMember.planConnections || [];
   var allAccess = planConnections.find(function(pc) {
-    return pc.active && pc.planId && pc.planId.indexOf('all-access') > -1;
+    return isPlanActive(pc) && pc.planId && pc.planId.indexOf('all-access') > -1;
   });
   if (allAccess) return 'All-Access';
   var vip = planConnections.find(function(pc) {
-    return pc.active && pc.planId && pc.planId.indexOf('vip') > -1;
+    return isPlanActive(pc) && pc.planId && pc.planId.indexOf('vip') > -1;
   });
   if (vip) return 'VIP';
   var insider = planConnections.find(function(pc) {
-    return pc.active && pc.planId;
+    return isPlanActive(pc) && pc.planId;
   });
   if (insider) return 'Insider';
   return 'Free';
@@ -2490,7 +2490,7 @@ function handleAdjustToPaid(priceId, buttonEl) {
         var customFields = (member && member.customFields) || {};
         var onboardingComplete = customFields['onboarding-complete'] === 'true';
         var planConnections = (member && member.planConnections) || [];
-        var hasPlan = planConnections.some(function(pc) { return pc.active; });
+        var hasPlan = planConnections.some(function(pc) { return isPlanActive(pc); });
 
         // Detect post-checkout state BEFORE we mutate onboarding-complete.
         // A user just returned from Stripe if they have a plan but haven't completed onboarding.
@@ -2526,6 +2526,21 @@ function handleAdjustToPaid(priceId, buttonEl) {
 // re-populate the dashboard without a second MemberStack call
 var _lastMember = null;
 
+// ============================================
+// Plan-status helper — treat TRIALING as active.
+// MemberStack marks trialing subscriptions with active: false because no
+// payment has been collected yet, but the user has been granted access to
+// the plan. All of our tier-detection logic uses this helper so trial users
+// see the correct tier (All-Access, not Insider).
+// ============================================
+function isPlanActive(pc) {
+  if (!pc) return false;
+  if (pc.active === true) return true;
+  // TRIALING status means the user has plan access during their free trial
+  if (pc.status === 'TRIALING') return true;
+  return false;
+}
+
 function populateDashboardFromMemory() {
   if (_lastMember) populateDashboard(_lastMember);
 }
@@ -2539,7 +2554,7 @@ function populateWelcomePage(member) {
 
   // Determine which paid plan they're on (if any)
   var planLabel = 'Insider';
-  var active = planConnections.find(function(pc) { return pc.active; });
+  var active = planConnections.find(function(pc) { return isPlanActive(pc); });
   if (active) {
     var planId = active.planId || '';
     if (planId.indexOf('vip') > -1) planLabel = 'VIP';
@@ -2653,7 +2668,7 @@ function populateDashboard(member) {
   // Tier gating — check if user has a paid plan attached
   var planConnections = member.planConnections || [];
   var hasPaidPlan = planConnections.some(function(pc) {
-    return pc.active && pc.planId && pc.planId !== 'pln_the-insider-jbbd0e0g';
+    return isPlanActive(pc) && pc.planId && pc.planId !== 'pln_the-insider-jbbd0e0g';
   });
 
   document.querySelectorAll('[data-sbff-tier="free"]').forEach(function(el) {
@@ -2690,10 +2705,10 @@ function populateDashboard(member) {
   var planLabel = 'Free';
   if (hasPaidPlan) {
     var allAccessPlan = planConnections.find(function(pc) {
-      return pc.active && pc.planId && pc.planId.indexOf('all-access') > -1;
+      return isPlanActive(pc) && pc.planId && pc.planId.indexOf('all-access') > -1;
     });
     var vipPlan = planConnections.find(function(pc) {
-      return pc.active && pc.planId && pc.planId.indexOf('vip') > -1;
+      return isPlanActive(pc) && pc.planId && pc.planId.indexOf('vip') > -1;
     });
     if (allAccessPlan) planLabel = 'All-Access';
     else if (vipPlan) planLabel = 'VIP';
