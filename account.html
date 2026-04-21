@@ -123,10 +123,24 @@
     width: 36px; height: 36px;
     display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
     padding: 0;
+    z-index: 1200;
+    position: relative;
   }
   .nav__hamburger span {
     display: block; width: 20px; height: 2px;
     background: var(--charcoal); transition: all 0.3s;
+    transform-origin: center;
+  }
+  /* When open, animate the 3 bars into an X */
+  .nav__hamburger.is-open span { background: #fff; }
+  .nav__hamburger.is-open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .nav__hamburger.is-open span:nth-child(2) {
+    opacity: 0;
+  }
+  .nav__hamburger.is-open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
   }
 
   /* FULL-SCREEN MOBILE MENU OVERLAY */
@@ -899,7 +913,7 @@
       </label>
       <label class="consent-row">
         <input type="checkbox" id="consent-terms" required>
-        <span class="consent-text"><span class="consent-required">*</span>I agree to the <a href="/legal" target="_blank">Terms of Service &amp; Privacy Policy</a>.</span>
+        <span class="consent-text"><span class="consent-required">*</span>I agree to the <a href="/terms" target="_blank">Terms of Service</a> &amp; <a href="/privacy" target="_blank">Privacy Policy</a>.</span>
       </label>
 
       <button type="submit" class="auth-btn">Create Account</button>
@@ -1207,8 +1221,8 @@
           <div class="tier-card__tier" id="tier-name">Junior Varsity</div>
         </div>
         <div class="tier-card__meta">
-          <div class="tier-card__since" id="tier-since">Member since —</div>
-          <div class="tier-card__next" id="tier-next"><span>—</span> until Varsity</div>
+          <div class="tier-card__since" id="tier-since" style="visibility:hidden;">Member since —</div>
+          <div class="tier-card__next" id="tier-next" style="visibility:hidden;"><span>—</span> until Varsity</div>
         </div>
       </div>
 
@@ -1382,7 +1396,7 @@
           <div class="billing-card__action" id="billing-plan-action" onclick="openUpgradeFromDashboard()">Adjust</div>
         </div>
         <div class="billing-card__body" id="billing-plan-body">
-          <strong>The Daily (Free)</strong><br>
+          <strong>The Insider (Free)</strong><br>
           Daily BFF Brief + breaking news alerts. No payment method required.
         </div>
       </div>
@@ -1463,9 +1477,20 @@
   var mobile = document.getElementById('navMobile');
   var close = document.getElementById('navClose');
 
-  function openMenu() { mobile.classList.add('is-open'); document.body.style.overflow='hidden'; }
-  function closeMenu() { mobile.classList.remove('is-open'); document.body.style.overflow=''; }
-  if(hamburger) hamburger.addEventListener('click', openMenu);
+  function openMenu() {
+    mobile.classList.add('is-open');
+    if (hamburger) hamburger.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    mobile.classList.remove('is-open');
+    if (hamburger) hamburger.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  function toggleMenu() {
+    if (mobile.classList.contains('is-open')) closeMenu(); else openMenu();
+  }
+  if(hamburger) hamburger.addEventListener('click', toggleMenu);
   if(close) close.addEventListener('click', closeMenu);
   // Close when tapping a standard link in the overlay (Home, Contact, socials)
   mobile.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
@@ -2620,7 +2645,10 @@ function populateDashboard(member) {
   var signup = signupDate ? new Date(signupDate) : new Date();
   var MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   var sinceEl = document.getElementById('tier-since');
-  if (sinceEl) sinceEl.textContent = 'Member since ' + MONTH_NAMES[signup.getMonth()] + ' ' + signup.getFullYear();
+  if (sinceEl) {
+    sinceEl.textContent = 'Member since ' + MONTH_NAMES[signup.getMonth()] + ' ' + signup.getFullYear();
+    sinceEl.style.visibility = 'visible';
+  }
 
   // Months since signup
   var now = new Date();
@@ -2649,6 +2677,7 @@ function populateDashboard(member) {
 
   var nextEl = document.getElementById('tier-next');
   if (nextEl) {
+    nextEl.style.visibility = 'visible';
     if (!nextTierName) {
       nextEl.textContent = "You're at the top tier";
     } else {
