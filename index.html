@@ -808,21 +808,128 @@
     border: 1.5px solid var(--line); transition: all 0.2s;
   }
   .platform-pill:hover { border-color: var(--mandarin); color: var(--mandarin); }
-  .social-tracks {
-    display: flex; flex-direction: column; gap: 16px;
-    overflow: hidden; margin: 0 -40px;
+  /* Wrapper for the Elfsight Instagram widget */
+  .ig-feed-wrap {
+    margin: 0 -40px;
+    overflow: hidden;
+    position: relative;
   }
-  .social-track { display: flex; gap: 16px; width: max-content; animation: sl 40s linear infinite; }
-  .social-track--rev { animation: sl-rev 45s linear infinite; }
-  .social-post {
-    width: 280px; height: 350px;
-    border-radius: var(--radius); background: #D9D9D9;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    color: rgba(0,0,0,0.3); font-size: 12px;
+
+  /* ============================================
+     ELFSIGHT INSTAGRAM WIDGET — S*BFF style overrides
+     Elfsight classes are prefixed eapps-instagram-feed-*.
+     We target them broadly + use !important because their CSS
+     loads after ours via JS injection.
+     ============================================ */
+
+  /* Outer widget container — remove default padding, transparent bg */
+  .ig-feed-wrap .eapps-instagram-feed,
+  .ig-feed-wrap [class*="eapps-instagram-feed-container"] {
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
   }
-  @keyframes sl { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-  @keyframes sl-rev { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+
+  /* Hide "Powered by Elfsight" footer (may require paid plan to fully remove) */
+  .ig-feed-wrap [class*="eapps-link"],
+  .ig-feed-wrap [class*="powered-by"] {
+    display: none !important;
+  }
+
+  /* Each post tile — match S*BFF .social-post aesthetic */
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] {
+    border-radius: var(--radius) !important;
+    overflow: hidden !important;
+    background: #D9D9D9 !important;
+    aspect-ratio: 4 / 3 !important;   /* your preferred ratio */
+    transition: transform 0.2s ease !important;
+  }
+
+  /* Post image — fill the 4:3 tile */
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"] img,
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: var(--radius) !important;
+  }
+
+  /* Hover state — subtle lift, caption overlay visible on hover */
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"]:hover,
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"]:hover {
+    transform: translateY(-2px) !important;
+  }
+
+  /* Post caption overlay — dark-to-transparent gradient, mandarin accent on links */
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-text-wrapper"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-text-wrapper"] {
+    background: linear-gradient(
+      to top,
+      rgba(30, 28, 26, 0.85) 0%,
+      rgba(30, 28, 26, 0.6) 40%,
+      rgba(30, 28, 26, 0) 100%
+    ) !important;
+    padding: 40px 16px 16px !important;
+    opacity: 0 !important;
+    transition: opacity 0.25s ease !important;
+  }
+
+  /* Show caption on post hover */
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"]:hover [class*="eapps-instagram-feed-posts-item-text-wrapper"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"]:hover [class*="eapps-instagram-feed-slider-slide-text-wrapper"] {
+    opacity: 1 !important;
+  }
+
+  /* Caption text */
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-text"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-text"] {
+    color: #fff !important;
+    font-family: var(--font-sans) !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Slider navigation arrows — mandarin on charcoal, match pill style */
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-nav"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-slider-nav"] {
+    background: var(--charcoal) !important;
+    color: var(--mandarin) !important;
+    border: none !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 100px !important;
+  }
+
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-nav"]:hover,
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-slider-nav"]:hover {
+    background: var(--mandarin) !important;
+    color: #fff !important;
+  }
+
+  /* Slider navigation arrows — SVG icon color */
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-nav"] svg,
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-slider-nav"] svg {
+    fill: currentColor !important;
+    stroke: currentColor !important;
+  }
+
+  /* Slider dots (bottom pagination) — match S*BFF aesthetic */
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-pagination-dot"] {
+    background: rgba(30, 28, 26, 0.2) !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-pagination-dot"][class*="active"] {
+    background: var(--mandarin) !important;
+  }
+
+  /* Hover-to-pause: suspend the Elfsight slider animation when hovering */
+  .ig-feed-wrap:hover [class*="eapps-instagram-feed-posts-slider-slides"],
+  .ig-feed-wrap:hover [class*="eapps-instagram-feed-slider-slides"] {
+    animation-play-state: paused !important;
+  }
 
   /* ============================================
      CTA — dark, NO grid lines
@@ -1220,8 +1327,11 @@
       padding-left: 0 !important;
       padding-right: 16px !important;
     }
-    .social-post { width: 300px !important; height: 375px !important; min-width: 300px !important; border-radius: 18px !important; }
-    .social-tracks { gap: 14px !important; margin: 0 -32px !important; }
+    .ig-feed-wrap { margin: 0 -32px !important; }
+    .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"],
+    .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] {
+      border-radius: 18px !important;
+    }
 
     /* CTA */
     .cta { padding: 80px 0; }
@@ -1673,8 +1783,11 @@
       padding-left: 0 !important;
       padding-right: 8px !important;
     }
-    .social-post { width: 240px !important; height: 300px !important; min-width: 240px !important; border-radius: 16px !important; }
-    .social-tracks { gap: 12px !important; margin: 0 -24px !important; }
+    .ig-feed-wrap { margin: 0 -24px !important; }
+    .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"],
+    .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] {
+      border-radius: 16px !important;
+    }
 
     /* CTA — compact */
     .cta { padding: 56px 0; }
@@ -2054,15 +2167,10 @@
       </div>
     </div>
   </div>
-  <div class="social-tracks">
-    <div class="social-track">
-      <div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div>
-      <div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div>
-    </div>
-    <div class="social-track social-track--rev">
-      <div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div>
-      <div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div><div class="social-post">IG / TikTok</div>
-    </div>
+  <!-- Elfsight Instagram Feed -->
+  <div class="ig-feed-wrap">
+    <script src="https://elfsightcdn.com/platform.js" async></script>
+    <div class="elfsight-app-5e71ca8b-53ea-4591-9ae3-1649d7506be0" data-elfsight-app-lazy></div>
   </div>
 </section>
 
