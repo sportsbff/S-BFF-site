@@ -810,161 +810,34 @@
   .platform-pill:hover { border-color: var(--mandarin); color: var(--mandarin); }
   /* Wrapper for the Elfsight Instagram widget */
   .ig-feed-wrap {
-    margin: 0 -40px;
-    overflow: hidden;
     position: relative;
   }
 
   /* ============================================
-     ELFSIGHT INSTAGRAM WIDGET — S*BFF style overrides
-     Elfsight classes are prefixed eapps-instagram-feed-*.
-     We target them broadly + use !important because their CSS
-     loads after ours via JS injection.
+     ELFSIGHT INSTAGRAM WIDGET — MINIMAL overrides
+     Let Elfsight own the layout. We only:
+     1. Round the corners on slides
+     2. Hide their "Follow us on Instagram" header
+     3. Hide Test Mode / branding badges
      ============================================ */
 
-  /* Outer widget container — remove default padding, transparent bg */
-  .ig-feed-wrap .eapps-instagram-feed,
-  .ig-feed-wrap [class*="eapps-instagram-feed-container"] {
-    background: transparent !important;
-    padding: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
+  /* Round corners on each slide/post */
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] {
+    border-radius: var(--radius) !important;
+    overflow: hidden !important;
   }
 
-  /* Hide Elfsight-injected UI elements that duplicate or conflict with our design:
-     - "Follow us on Instagram" header (we have our own section header)
-     - "Powered by Elfsight" footer (branded link — free tier may still show)
-     - "Load more" blue button (doesn't match S*BFF aesthetic)
-     - "Test Mode" badge (shown on unpublished/demo widgets)
-     - Feed title / header section
-  */
-  .ig-feed-wrap [class*="eapps-link"],
-  .ig-feed-wrap [class*="powered-by"],
+  /* Hide Elfsight's auto-generated header, branding, and utility badges */
   .ig-feed-wrap [class*="eapps-instagram-feed-title"],
   .ig-feed-wrap [class*="eapps-instagram-feed-header"],
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-more"],
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-show-more"],
-  .ig-feed-wrap button[class*="eapps-instagram-feed"],
+  .ig-feed-wrap [class*="eapps-link"],
+  .ig-feed-wrap [class*="powered-by"],
   [class*="test-mode"],
   [class*="TestMode"],
   [class*="eapps-widget-badge"],
   [class*="eapps-widget-toolbar"] {
     display: none !important;
-  }
-
-  /* Slide wrapper — keep it styled, let Elfsight slider size it */
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"],
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] {
-    border-radius: var(--radius) !important;
-    overflow: hidden !important;
-    background: #D9D9D9 !important;
-    transition: transform 0.2s ease !important;
-    position: relative !important;
-  }
-
-  /* The inner media container inside each slide — force 3:4 portrait ratio here */
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-image"],
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-image"],
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-inner"],
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-inner"] {
-    aspect-ratio: 3 / 4 !important;
-    width: 100% !important;
-    overflow: hidden !important;
-    border-radius: var(--radius) !important;
-    position: relative !important;
-  }
-
-  /* Post image — fill the 3:4 container */
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"] img,
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    border-radius: var(--radius) !important;
-    position: absolute !important;
-    inset: 0 !important;
-  }
-
-  /* Hover state — subtle lift, caption overlay visible on hover */
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"]:hover,
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"]:hover {
-    transform: translateY(-2px) !important;
-  }
-
-  /* Post caption overlay — full-tile dark mandarin-tinted gradient on hover */
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-text-wrapper"],
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-text-wrapper"] {
-    position: absolute !important;
-    inset: 0 !important;
-    background: linear-gradient(
-      180deg,
-      rgba(30, 28, 26, 0.15) 0%,
-      rgba(30, 28, 26, 0.55) 50%,
-      rgba(254, 103, 53, 0.75) 100%
-    ) !important;
-    padding: 20px !important;
-    display: flex !important;
-    align-items: flex-end !important;
-    opacity: 0 !important;
-    transition: opacity 0.25s ease !important;
-    border-radius: var(--radius) !important;
-  }
-
-  /* Show caption on post hover */
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"]:hover [class*="eapps-instagram-feed-posts-item-text-wrapper"],
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"]:hover [class*="eapps-instagram-feed-slider-slide-text-wrapper"] {
-    opacity: 1 !important;
-  }
-
-  /* Caption text — white, readable */
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-text"],
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-text"],
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-text-wrapper"] *,
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-text-wrapper"] * {
-    color: #fff !important;
-    font-family: var(--font-sans) !important;
-    font-size: 13px !important;
-    line-height: 1.5 !important;
-  }
-
-  /* Slider navigation arrows — mandarin on charcoal, match pill style */
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-nav"],
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-slider-nav"] {
-    background: var(--charcoal) !important;
-    color: var(--mandarin) !important;
-    border: none !important;
-    width: 44px !important;
-    height: 44px !important;
-    border-radius: 100px !important;
-  }
-
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-nav"]:hover,
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-slider-nav"]:hover {
-    background: var(--mandarin) !important;
-    color: #fff !important;
-  }
-
-  /* Slider navigation arrows — SVG icon color */
-  .ig-feed-wrap [class*="eapps-instagram-feed-slider-nav"] svg,
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-slider-nav"] svg {
-    fill: currentColor !important;
-    stroke: currentColor !important;
-  }
-
-  /* Slider dots (bottom pagination) — match S*BFF aesthetic */
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-pagination-dot"] {
-    background: rgba(30, 28, 26, 0.2) !important;
-    width: 8px !important;
-    height: 8px !important;
-  }
-  .ig-feed-wrap [class*="eapps-instagram-feed-posts-pagination-dot"][class*="active"] {
-    background: var(--mandarin) !important;
-  }
-
-  /* Hover-to-pause: suspend the Elfsight slider animation when hovering */
-  .ig-feed-wrap:hover [class*="eapps-instagram-feed-posts-slider-slides"],
-  .ig-feed-wrap:hover [class*="eapps-instagram-feed-slider-slides"] {
-    animation-play-state: paused !important;
   }
 
   /* ============================================
@@ -1363,7 +1236,6 @@
       padding-left: 0 !important;
       padding-right: 16px !important;
     }
-    .ig-feed-wrap { margin: 0 -32px !important; }
     .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"],
     .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] {
       border-radius: 18px !important;
@@ -1819,7 +1691,6 @@
       padding-left: 0 !important;
       padding-right: 8px !important;
     }
-    .ig-feed-wrap { margin: 0 -24px !important; }
     .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"],
     .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] {
       border-radius: 16px !important;
