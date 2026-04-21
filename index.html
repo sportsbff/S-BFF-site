@@ -828,6 +828,15 @@
     overflow: hidden !important;
   }
 
+  /* Force each post's image container to 3:4 portrait ratio (taller than wide) */
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-image"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-image"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-template-tile-media"],
+  .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-template-tile-media"] {
+    aspect-ratio: 3 / 4 !important;
+    height: auto !important;
+  }
+
   /* Hide Elfsight's auto-generated header, branding, and utility badges */
   .ig-feed-wrap [class*="eapps-instagram-feed-title"],
   .ig-feed-wrap [class*="eapps-instagram-feed-header"],
