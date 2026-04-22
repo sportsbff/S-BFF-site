@@ -2191,6 +2191,19 @@
   // Close when tapping a link
   mobile.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 })();
+
+// ============================================
+// REFERRAL CAPTURE
+// If the user arrived via ?ref=xxx, save the code to sessionStorage
+// so it's available when they sign up on /account.
+// ============================================
+(function captureRef(){
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var ref = params.get('ref');
+    if (ref) sessionStorage.setItem('sbff_ref', ref);
+  } catch(e) {}
+})();
 </script>
 </body>
 </html>

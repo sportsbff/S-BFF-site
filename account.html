@@ -7,8 +7,6 @@
 <title>Account — Your Sports BFF</title>
 <!-- MemberStack -->
 <script data-memberstack-app="app_cmo6cthsj008h0sz33bk94pkc" src="https://static.memberstack.com/scripts/v2/memberstack.js" type="text/javascript"></script>
-<!-- Viral Loops SDK (v3.0) -->
-<script type="text/javascript" id="viral-loops-loader" data-campaign-id="jhk8cLABhj4fBoDUCKM9FFE0Ww8" src="https://app.viral-loops.com/widgetsV2/core/loader.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1253,20 +1251,20 @@
 
       <!-- Referral tracker -->
       <div class="referral-card">
-        <div class="referral-card__title">Referral Progress</div>
-        <div class="referral-bar"><div class="referral-bar__fill" id="referral-bar-fill" style="width: 0%;"></div></div>
-        <div class="referral-bar__text">
-          <span id="referral-progress-text">0 referrals</span>
-          <span id="referral-next-reward" style="color:var(--mandarin); font-weight:700;">Next: Free S*BFF Sticker Pack</span>
+        <div class="referral-card__title">Your Referrals</div>
+        <div style="padding: 8px 0;">
+          <div id="referral-progress-text" style="font-family: var(--font-display); font-size: 36px; font-weight: 600; color: var(--charcoal); line-height: 1;">0</div>
+          <div style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">friends have signed up from your link</div>
         </div>
-        <div id="referral-rewards-list" style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;">
+        <!-- Milestone rewards list — hidden for now, will re-enable once rewards are finalized -->
+        <div id="referral-rewards-list" style="display: none; margin-top: 16px; flex-direction: column; gap: 8px;">
           <div class="reward-row" data-threshold="5" style="display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--line);">
             <span><strong>5 referrals</strong></span>
             <span class="reward-label" style="color: var(--text-secondary);">Free Sticker Pack</span>
           </div>
           <div class="reward-row" data-threshold="10" style="display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--line);">
             <span><strong>10 referrals</strong></span>
-            <span class="reward-label" style="color: var(--text-secondary);">Free Month of Premium</span>
+            <span class="reward-label" style="color: var(--text-secondary);">Free Month of All-Access</span>
           </div>
           <div class="reward-row" data-threshold="25" style="display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--line);">
             <span><strong>25 referrals</strong></span>
@@ -1470,6 +1468,19 @@
 
 <script>
 // ============================================
+// REFERRAL CAPTURE
+// If the user arrived via a referral link (?ref=xxx), save it to sessionStorage
+// so signup can attach it as referred-by even if they browse around first.
+// ============================================
+(function captureRef(){
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var ref = params.get('ref');
+    if (ref) sessionStorage.setItem('sbff_ref', ref);
+  } catch(e) {}
+})();
+
+// ============================================
 // NAV — hamburger + mobile overlay + body state
 // ============================================
 (function(){
@@ -1661,6 +1672,7 @@ function saveVipPickAndContinue() {
     fields['delivery-sports'] = '';
   }
   fields['onboarding-complete'] = 'true';
+  fields['breaking-news-enabled'] = 'true';
 
   var memberstack = window.$memberstackDom;
   if (!memberstack) {
@@ -1674,7 +1686,7 @@ function saveVipPickAndContinue() {
       var member = result && result.data;
       _lastMember = member;
       populateWelcomePage(member);
-      kickOffViralLoops(member);
+      loadReferralData(member);
       goTo('page-referral');
     })
     .catch(function(err) {
@@ -1786,9 +1798,14 @@ function handleSignup(event) {
     return;
   }
 
-  // Capture referral code from URL if present (?ref=xxx)
+  // Get referral code — prefer sessionStorage (set when visitor first landed on site with ?ref=),
+  // fall back to URL param in case they landed directly on /account with ?ref=.
+  // We stored the code without the "mem_" prefix, so add it back to form the full MemberStack member ID.
   var urlParams = new URLSearchParams(window.location.search);
-  var referredBy = urlParams.get('ref') || '';
+  var refCode = '';
+  try { refCode = sessionStorage.getItem('sbff_ref') || ''; } catch(e) {}
+  if (!refCode) refCode = urlParams.get('ref') || '';
+  var referredBy = refCode ? ('mem_' + refCode) : '';
 
   // Store pending custom fields — we'll attach them at signup when the code is verified
   sessionStorage.setItem('sbff_pending_fields', JSON.stringify({
@@ -1999,17 +2016,20 @@ function routePostCheckout(member, memberstack) {
       _lastMember = m || member;
       goTo('page-dash');
       populateDashboard(m || member);
-      kickOffViralLoops(m || member);
+      loadReferralData(m || member);
     });
   }
 
   if (tier === 'All-Access') {
-    // Copy all interests into delivery prefs
+    // Copy all interests into delivery prefs, and auto-enable Breaking News
+    // (upgrading to a paid tier opts the user into the full service by default —
+    // they can toggle Breaking News off later on the dashboard if they want)
     memberstack.updateMember({
       customFields: {
         'delivery-sports': sportsStr,
         'delivery-cities': citiesStr,
-        'onboarding-complete': 'true'
+        'onboarding-complete': 'true',
+        'breaking-news-enabled': 'true'
       }
     }).then(function() { return memberstack.getCurrentMember(); })
       .then(function(result) {
@@ -2019,17 +2039,17 @@ function routePostCheckout(member, memberstack) {
           // Existing member upgrading — go straight to dashboard
           goTo('page-dash');
           populateDashboard(m || member);
-          kickOffViralLoops(m || member);
+          loadReferralData(m || member);
         } else {
           // New signup — welcome + referral flow
           populateWelcomePage(m || member);
-          kickOffViralLoops(m || member);
+          loadReferralData(m || member);
           goTo('page-referral');
         }
       })
       .catch(function() {
         populateWelcomePage(member);
-        kickOffViralLoops(member);
+        loadReferralData(member);
         goTo('page-referral');
       });
     return;
@@ -2039,7 +2059,10 @@ function routePostCheckout(member, memberstack) {
     // Existing member upgrading to VIP from something else — skip onboarding-style narrowing,
     // just run same auto-copy logic as All-Access if they have interests.
     if (wasOnboarded) {
-      var existingFields = { 'onboarding-complete': 'true' };
+      var existingFields = {
+        'onboarding-complete': 'true',
+        'breaking-news-enabled': 'true'
+      };
       // If exactly 1 interest total, auto-set it; otherwise leave existing delivery fields alone
       if (totalInterests === 1) {
         if (sportsArr.length === 1) {
@@ -2063,7 +2086,10 @@ function routePostCheckout(member, memberstack) {
     }
     if (totalInterests === 1) {
       // Auto-set the single interest as their delivery
-      var fields = { 'onboarding-complete': 'true' };
+      var fields = {
+        'onboarding-complete': 'true',
+        'breaking-news-enabled': 'true'
+      };
       if (sportsArr.length === 1) {
         fields['delivery-sports'] = sportsArr[0];
         fields['delivery-cities'] = '';
@@ -2077,19 +2103,19 @@ function routePostCheckout(member, memberstack) {
           var m = result && result.data;
           _lastMember = m || member;
           populateWelcomePage(m || member);
-          kickOffViralLoops(m || member);
+          loadReferralData(m || member);
           goTo('page-referral');
         })
         .catch(function() {
           populateWelcomePage(member);
-          kickOffViralLoops(member);
+          loadReferralData(member);
           goTo('page-referral');
         });
       return;
     }
     // VIP with 0 interests — just go to referral
     populateWelcomePage(member);
-    kickOffViralLoops(member);
+    loadReferralData(member);
     goTo('page-referral');
     return;
   }
@@ -2102,16 +2128,8 @@ function routePostCheckout(member, memberstack) {
   }
   // New Insider signup
   populateWelcomePage(member);
-  kickOffViralLoops(member);
+  loadReferralData(member);
   goTo('page-referral');
-}
-
-// Helper: fire VL identify early so the onboarding referral page has the link ready
-function kickOffViralLoops(member) {
-  if (!member || !member.auth || !member.auth.email) return;
-  _lastMember = member;
-  var cf = member.customFields || {};
-  loadViralLoopsData(cf['first-name'] || '', cf['last-name'] || '', member.auth.email);
 }
 
 // Final step after referral page → welcome
@@ -2139,13 +2157,7 @@ function handleFreePlan(event) {
     var member = result && result.data;
     _lastMember = member;
     populateWelcomePage(member);
-    if (member && member.auth && member.auth.email) {
-      loadViralLoopsData(
-        (member.customFields && member.customFields['first-name']) || '',
-        (member.customFields && member.customFields['last-name']) || '',
-        member.auth.email
-      );
-    }
+    loadReferralData(member);
     goTo('page-referral');
   }).catch(function(err) {
     console.error('Free plan attach failed:', err);
@@ -2634,11 +2646,8 @@ function populateDashboard(member) {
   var emailEl = document.querySelector('.dash-nav__email');
   if (emailEl && member.auth && member.auth.email) emailEl.textContent = member.auth.email;
 
-  // Referral link + count from Viral Loops
-  // (populateDashboard runs, VL lookup runs in parallel and updates the UI when ready)
-  if (member.auth && member.auth.email) {
-    loadViralLoopsData(firstName, lastName, member.auth.email);
-  }
+  // Referral link + count — built from member ID, count from referral-count custom field
+  loadReferralData(member);
 
   // ============================================
   // Member-since date + Loyalty tier (Junior Varsity → Varsity → All-Star)
@@ -2780,7 +2789,7 @@ function populateDashboard(member) {
     paymentCard.style.display = hasPaidPlan ? '' : 'none';
   }
 
-  // (Referral count and referral link are populated by Viral Loops via loadViralLoopsData)
+  // (Referral count and referral link are populated by loadReferralData above)
 
   // Sync toggles to the user's selections.
   // Paid users see delivery prefs (what they're actually getting).
@@ -2842,193 +2851,55 @@ function escapeHtml(str) {
 }
 
 // ============================================
-// VIRAL LOOPS INTEGRATION (v3.0 SDK)
-// Uses window.ViralLoops.getCampaign() with Promise-based API.
-// SDK is loaded via loader.js script with id="viral-loops-loader".
+// DIY REFERRAL SYSTEM
 // ============================================
-var VL_CAMPAIGN_ID = 'jhk8cLABhj4fBoDUCKM9FFE0Ww8';
-var VL_TIERS = [
-  { threshold: 5,  label: 'Free Sticker Pack' },
-  { threshold: 10, label: 'Free Month of Premium' },
-  { threshold: 25, label: 'Free S*BFF Tee' },
-  { threshold: 50, label: 'Free S*BFF Hoodie' }
-];
+// Each member gets a unique share URL built from their MemberStack member ID.
+// The "mem_" prefix is stripped for cleaner-looking URLs.
+//
+// Flow:
+//   1. User visits yoursportsbff.com/?ref=<code>
+//   2. Homepage script saves <code> to sessionStorage as "sbff_ref"
+//   3. When they sign up, "mem_" + <code> is saved to their "referred-by" custom field
+//   4. Zapier watches new members, increments the referrer's "referral-count" field
+//   5. Dashboard reads referral-count and displays it
+//
+// No third-party services. Everything in MemberStack + Zapier + Airtable.
 
-// Cache to avoid re-identifying on every page change
-var _vlCampaign = null;
-var _vlUser = null;
-var _vlReadyFired = false;
+var REFERRAL_BASE_URL = 'https://yoursportsbff.com';
 
-// Listen for the vlReady event — fires once when SDK is fully loaded
-window.addEventListener('vlReady', function() {
-  _vlReadyFired = true;
-  console.log('[VL] vlReady event fired');
-});
-
-function loadViralLoopsData(firstName, lastName, email) {
-  if (!email) {
-    console.warn('[VL] No email provided, skipping identify');
-    setReferralUIFallback();
-    return;
-  }
-  console.log('[VL] Starting identify for', email);
-
-  waitForViralLoops(function(VL) {
-    if (!VL) {
-      console.warn('[VL] ViralLoops global never loaded — check domain allowlist in Viral Loops campaign settings');
-      setReferralUIFallback();
-      return;
-    }
-
-    // v3 API: getCampaign returns a Promise
-    Promise.resolve(VL.getCampaign(VL_CAMPAIGN_ID))
-      .then(function(campaign) {
-        if (!campaign || typeof campaign.identify !== 'function') {
-          console.warn('[VL] Campaign not found:', VL_CAMPAIGN_ID);
-          setReferralUIFallback();
-          return null;
-        }
-        _vlCampaign = campaign;
-
-        var userObj = {
-          email: email,
-          firstname: firstName || '',
-          lastname: lastName || ''
-        };
-        console.log('[VL] Calling campaign.identify with', userObj);
-        return campaign.identify(userObj);
-      })
-      .then(function(response) {
-        if (!response) return;
-        console.log('[VL] identify response:', response);
-        _vlUser = response;
-
-        // Extract referral link from response.referralUrls
-        // Shape can be: string | array | object with { main, twitter, ... }
-        var referralLink = '';
-        if (response.referralUrls) {
-          if (typeof response.referralUrls === 'string') {
-            referralLink = response.referralUrls;
-          } else if (Array.isArray(response.referralUrls)) {
-            referralLink = response.referralUrls[0] || '';
-          } else if (typeof response.referralUrls === 'object') {
-            referralLink = response.referralUrls.main
-              || response.referralUrls.default
-              || response.referralUrls.home
-              || Object.values(response.referralUrls)[0]
-              || '';
-          }
-        }
-        // Fallback: construct from referralCode if no URL provided
-        if (!referralLink && response.referralCode) {
-          referralLink = 'https://yoursportsbff.com/?referralCode=' + response.referralCode;
-        }
-
-        // Get referral count via campaign.getRank()
-        if (_vlCampaign && typeof _vlCampaign.getRank === 'function') {
-          return Promise.resolve(_vlCampaign.getRank())
-            .then(function(rankData) {
-              console.log('[VL] rank data:', rankData);
-              var count = 0;
-              if (rankData && typeof rankData === 'object') {
-                count = rankData.referralCountTotal
-                  || rankData.referralsCount
-                  || rankData.referrals
-                  || rankData.count
-                  || 0;
-              } else if (typeof rankData === 'number') {
-                count = rankData;
-              }
-              updateReferralUI(referralLink, count);
-            })
-            .catch(function(err) {
-              console.warn('[VL] getRank failed, defaulting to 0:', err);
-              updateReferralUI(referralLink, 0);
-            });
-        } else {
-          // No getRank available — show link with 0 count
-          updateReferralUI(referralLink, 0);
-        }
-      })
-      .catch(function(err) {
-        console.error('[VL] Integration failed:', err);
-        setReferralUIFallback();
-      });
-  });
+// Build the share URL for a given member.
+// Strips the "mem_" prefix from the MemberStack member ID for a cleaner link.
+function buildReferralUrl(memberId) {
+  if (!memberId) return '';
+  var code = memberId.indexOf('mem_') === 0 ? memberId.substring(4) : memberId;
+  return REFERRAL_BASE_URL + '/?ref=' + code;
 }
 
-function waitForViralLoops(callback) {
-  // SDK exposes global as window.ViralLoops (capital V, capital L)
-  var attempts = 0;
-  (function check() {
-    if (window.ViralLoops && typeof window.ViralLoops.getCampaign === 'function') {
-      callback(window.ViralLoops);
-    } else if (attempts < 60) {  // Wait up to ~6 seconds (loader.js can be slow)
-      attempts++;
-      setTimeout(check, 100);
-    } else {
-      console.warn('[VL] Timed out waiting for window.ViralLoops after 6s');
-      callback(null);
-    }
-  })();
+// Main entry — called after a member is loaded.
+// Populates the share link UI and the referral count everywhere it appears.
+function loadReferralData(member) {
+  if (!member) return;
+
+  var shareUrl = buildReferralUrl(member.id);
+  var customFields = member.customFields || {};
+  var count = parseInt(customFields['referral-count'] || '0', 10);
+  if (isNaN(count) || count < 0) count = 0;
+
+  updateReferralUI(shareUrl, count);
 }
 
-function updateReferralUI(referralLink, referralCount) {
-  // 1. Update the referral link text in onboarding + dashboard
-  var displayLink = referralLink || 'Link unavailable — refresh the page';
+function updateReferralUI(shareUrl, referralCount) {
+  // Fill the link into both display spots (onboarding page + dashboard)
   ['referral-link-onboarding', 'referral-link-dash'].forEach(function(id) {
     var el = document.getElementById(id);
-    if (el) el.textContent = displayLink;
+    if (el) el.textContent = shareUrl;
   });
 
-  // 2. Update the referral count stat
-  var statEl = document.getElementById('stat-referrals');
-  if (statEl) statEl.textContent = String(referralCount);
+  // Update count display
+  var countEl = document.getElementById('referral-progress-text');
+  if (countEl) countEl.textContent = String(referralCount);
 
-  // 3. Update progress bar + next-reward label
-  var progressText = document.getElementById('referral-progress-text');
-  var nextRewardEl = document.getElementById('referral-next-reward');
-  var barFill = document.getElementById('referral-bar-fill');
-
-  // Find the next unearned tier
-  var nextTier = null;
-  for (var i = 0; i < VL_TIERS.length; i++) {
-    if (referralCount < VL_TIERS[i].threshold) {
-      nextTier = VL_TIERS[i];
-      break;
-    }
-  }
-
-  if (progressText) {
-    if (nextTier) {
-      progressText.textContent = referralCount + ' of ' + nextTier.threshold + ' referrals';
-    } else {
-      progressText.textContent = referralCount + ' referrals — you unlocked everything!';
-    }
-  }
-
-  if (nextRewardEl) {
-    nextRewardEl.textContent = nextTier ? ('Next: ' + nextTier.label) : 'All rewards unlocked 🎉';
-  }
-
-  if (barFill) {
-    var pct;
-    if (nextTier) {
-      var prevThreshold = 0;
-      for (var j = 0; j < VL_TIERS.length; j++) {
-        if (VL_TIERS[j].threshold === nextTier.threshold) break;
-        prevThreshold = VL_TIERS[j].threshold;
-      }
-      var span = nextTier.threshold - prevThreshold;
-      var progressInTier = referralCount - prevThreshold;
-      pct = Math.max(0, Math.min(100, (progressInTier / span) * 100));
-    } else {
-      pct = 100;
-    }
-    barFill.style.width = pct + '%';
-  }
-
-  // 4. Mark unlocked reward rows with a checkmark
+  // Unlock milestones (UI is hidden for now but keeps the class ready for when we re-enable)
   document.querySelectorAll('.reward-row').forEach(function(row) {
     var threshold = parseInt(row.getAttribute('data-threshold'), 10);
     if (!isNaN(threshold) && referralCount >= threshold) {
@@ -3036,14 +2907,6 @@ function updateReferralUI(referralLink, referralCount) {
     } else {
       row.classList.remove('is-unlocked');
     }
-  });
-}
-
-// Fallback when VL fails to load — show a friendly message rather than broken UI
-function setReferralUIFallback() {
-  ['referral-link-onboarding', 'referral-link-dash'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) el.textContent = 'Your link is being set up — refresh in a moment';
   });
 }
 
