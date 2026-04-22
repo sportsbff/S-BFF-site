@@ -1290,11 +1290,11 @@
         <div class="pref-section__title">Daily Brief</div>
         <div class="pref-row">
           <div><div class="pref-row__label">The Daily BFF Brief</div><div class="pref-row__sub">Mon–Fri morning sports text</div></div>
-          <div class="pref-toggle is-on" onclick="this.classList.toggle('is-on')"></div>
+          <div class="pref-toggle is-on" id="toggle-bff-brief" onclick="toggleBffBrief(this)"></div>
         </div>
         <div class="pref-row" data-sbff-tier="paid">
           <div><div class="pref-row__label">Breaking News Alerts</div><div class="pref-row__sub">Major, can't-miss updates on your sport or city</div></div>
-          <div class="pref-toggle is-on" onclick="this.classList.toggle('is-on')"></div>
+          <div class="pref-toggle is-on" id="toggle-breaking-news" onclick="toggleBreakingNews(this)"></div>
         </div>
       </div>
 
@@ -1796,7 +1796,9 @@ function handleSignup(event) {
     'last-name': lastName,
     'phone': phone,
     'referred-by': referredBy,
-    'sms-consent': (smsConsent && smsConsent.checked) ? 'true' : 'false'
+    'sms-consent': (smsConsent && smsConsent.checked) ? 'true' : 'false',
+    'bff-brief-enabled': 'true',
+    'breaking-news-enabled': 'true'
   }));
 
   var memberstack = window.$memberstackDom;
@@ -2794,6 +2796,29 @@ function populateDashboard(member) {
     toggle.classList.toggle('is-on', selectedCities.indexOf(toggle.getAttribute('data-city')) > -1);
   });
 
+  // Daily Brief toggles — BFF Brief and Breaking News.
+  // Default to 'true' if the custom field hasn't been set yet (legacy members + new signups).
+  // Only 'false' explicitly means the user opted out.
+  document.body.setAttribute('data-has-paid', hasPaidPlan ? 'true' : 'false');
+
+  var bffBriefEnabled = customFields['bff-brief-enabled'] !== 'false'; // default true
+  var breakingNewsEnabled = customFields['breaking-news-enabled'] !== 'false';
+
+  var bffToggle = document.getElementById('toggle-bff-brief');
+  if (bffToggle) {
+    bffToggle.classList.toggle('is-on', bffBriefEnabled);
+    // Free users can't change this — lock it on and gray it out
+    if (hasPaidPlan) bffToggle.classList.remove('is-disabled');
+    else bffToggle.classList.add('is-disabled');
+  }
+
+  var newsToggle = document.getElementById('toggle-breaking-news');
+  if (newsToggle) {
+    newsToggle.classList.toggle('is-on', breakingNewsEnabled);
+    if (hasPaidPlan) newsToggle.classList.remove('is-disabled');
+    else newsToggle.classList.add('is-disabled');
+  }
+
   // Onboarding nudge banner — only show if the user genuinely hasn't set preferences.
   // A paid user who already has delivery sports/cities shouldn't see this, even if
   // the onboarding-complete flag is missing (e.g., legacy accounts created before
@@ -3087,6 +3112,52 @@ function savePrefs() {
       'delivery-cities': cities.join(', ')
     }
   }).catch(function(err) { console.error('Failed to save prefs:', err); });
+}
+
+// ============================================
+// DAILY BRIEF TOGGLES — BFF Brief + Breaking News
+// These save to MemberStack custom fields that flow
+// through Zapier to Airtable, where SimpleTexting
+// uses them to decide which texts to send this member.
+// ============================================
+function toggleBffBrief(el) {
+  var gatedByFreeTier = el.classList.contains('is-disabled');
+  if (gatedByFreeTier) return; // Free users can't change delivery prefs
+
+  el.classList.toggle('is-on');
+  var enabled = el.classList.contains('is-on');
+
+  var memberstack = window.$memberstackDom;
+  if (!memberstack) return;
+  memberstack.updateMember({
+    customFields: { 'bff-brief-enabled': enabled ? 'true' : 'false' }
+  }).catch(function(err) {
+    console.error('Failed to save BFF Brief toggle:', err);
+    // Revert UI if save failed
+    el.classList.toggle('is-on');
+  });
+}
+
+function toggleBreakingNews(el) {
+  // Breaking News is paid-only. Free users shouldn't be able to toggle at all —
+  // the row is hidden via data-sbff-tier="paid" but we guard here too.
+  var row = el.closest('.pref-row');
+  if (row && row.getAttribute('data-sbff-tier') === 'paid') {
+    var paidUser = document.body.getAttribute('data-has-paid') === 'true';
+    if (!paidUser) return;
+  }
+
+  el.classList.toggle('is-on');
+  var enabled = el.classList.contains('is-on');
+
+  var memberstack = window.$memberstackDom;
+  if (!memberstack) return;
+  memberstack.updateMember({
+    customFields: { 'breaking-news-enabled': enabled ? 'true' : 'false' }
+  }).catch(function(err) {
+    console.error('Failed to save Breaking News toggle:', err);
+    el.classList.toggle('is-on');
+  });
 }
 
 // ============================================
