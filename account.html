@@ -819,6 +819,8 @@
     .nav__mobile-menu__primary a { font-size: 38px; padding: 18px 24px; }
   }
 </style>
+<!-- Vercel Analytics (privacy-friendly pageview tracking) -->
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -2837,14 +2839,14 @@ function populateDashboard(member) {
   var bffToggle = document.getElementById('toggle-bff-brief');
   if (bffToggle) {
     bffToggle.classList.toggle('is-on', bffBriefEnabled);
-    // Free users can't change this — lock it on and gray it out
-    if (hasPaidPlan) bffToggle.classList.remove('is-disabled');
-    else bffToggle.classList.add('is-disabled');
+    // Everyone (Insiders + paid) can pause/resume their BFF Brief
+    bffToggle.classList.remove('is-disabled');
   }
 
   var newsToggle = document.getElementById('toggle-breaking-news');
   if (newsToggle) {
     newsToggle.classList.toggle('is-on', breakingNewsEnabled);
+    // Breaking News stays paid-only — Insiders don't get alerts regardless
     if (hasPaidPlan) newsToggle.classList.remove('is-disabled');
     else newsToggle.classList.add('is-disabled');
   }
