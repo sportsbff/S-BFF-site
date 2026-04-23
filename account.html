@@ -821,6 +821,20 @@
 </style>
 <!-- Vercel Analytics (privacy-friendly pageview tracking) -->
 <script defer src="/_vercel/insights/script.js"></script>
+<!-- Open Graph / social sharing -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yoursportsbff.com/account">
+<meta property="og:title" content="Your Sports BFF — Account">
+<meta property="og:description" content="Sign in, sign up, or manage your BFF Brief subscription.">
+<meta property="og:image" content="https://yoursportsbff.com/sharing-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Your Sports BFF">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Your Sports BFF — Account">
+<meta name="twitter:description" content="Sign in, sign up, or manage your BFF Brief subscription.">
+<meta name="twitter:image" content="https://yoursportsbff.com/sharing-image.png">
+<link rel="canonical" href="https://yoursportsbff.com/account">
 </head>
 <body>
 
@@ -1717,7 +1731,7 @@ function textReferralLink(elementId) {
   var el = document.getElementById(elementId);
   if (!el) return;
   var url = el.textContent.startsWith('http') ? el.textContent : 'https://' + el.textContent;
-  var body = "Join me on Your Sports BFF — the daily sports text for the girls: " + url;
+  var body = "Found something you need in your life: it's called the BFF Brief \u2014 a daily text of sports news and culture, written by women, for women. I think you'd love it. " + url;
   window.location.href = 'sms:?&body=' + encodeURIComponent(body);
 }
 
