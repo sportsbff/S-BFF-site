@@ -1238,7 +1238,7 @@
         </div>
       </div>
 
-      <!-- Share link -->
+      <!-- Share link + referral count (merged into one block) -->
       <div class="referral-card">
         <div class="referral-card__title referral-card__title--display">The BFF Brief is better with <i>friends.</i></div>
         <div class="referral-card__sub">Invite your crew using the link below.</div>
@@ -1247,12 +1247,7 @@
           <button class="share-btn" onclick="copyReferralLink('referral-link-dash', this)">Copy</button>
           <button class="share-btn" onclick="textReferralLink('referral-link-dash')">Text</button>
         </div>
-      </div>
-
-      <!-- Referral tracker -->
-      <div class="referral-card">
-        <div class="referral-card__title">Your Referrals</div>
-        <div style="padding: 8px 0;">
+        <div style="padding: 20px 0 0; margin-top: 20px; border-top: 1px solid var(--line);">
           <div id="referral-progress-text" style="font-family: var(--font-display); font-size: 36px; font-weight: 600; color: var(--charcoal); line-height: 1;">0</div>
           <div style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">friends have signed up from your link</div>
         </div>
@@ -1275,6 +1270,12 @@
             <span class="reward-label" style="color: var(--text-secondary);">Free S*BFF Hoodie</span>
           </div>
         </div>
+      </div>
+
+      <!-- Partner perks teaser -->
+      <div class="referral-card">
+        <div class="referral-card__title referral-card__title--display">Partner perks <i>coming soon.</i></div>
+        <div class="referral-card__sub">Exclusive discounts and drops from the brands we love — just for S*BFF members.</div>
       </div>
     </div>
 
@@ -1815,7 +1816,8 @@ function handleSignup(event) {
     'referred-by': referredBy,
     'sms-consent': (smsConsent && smsConsent.checked) ? 'true' : 'false',
     'bff-brief-enabled': 'true',
-    'breaking-news-enabled': 'true'
+    'breaking-news-enabled': 'true',
+    'referral-count': '0'
   }));
 
   var memberstack = window.$memberstackDom;
@@ -1915,6 +1917,25 @@ function handleVerifyCode() {
       sessionStorage.removeItem('sbff_pending_fields');
       sessionStorage.removeItem('sbff_pending_email');
       sessionStorage.removeItem('sbff_pending_mode');
+
+      // Now that the member exists, fetch their ID and save their referral-code
+      // (short form of member ID, minus the "mem_" prefix) so it's available for
+      // downstream integrations like Klaviyo email templates.
+      return memberstack.getCurrentMember().then(function(result) {
+        var newMember = result && result.data;
+        if (newMember && newMember.id) {
+          var shortCode = newMember.id.indexOf('mem_') === 0
+            ? newMember.id.substring(4)
+            : newMember.id;
+          return memberstack.updateMember({
+            customFields: { 'referral-code': shortCode }
+          }).catch(function(err) {
+            // Non-fatal — referral still works, we just don't have it saved in the field
+            console.warn('Failed to save referral-code:', err);
+          });
+        }
+      }).catch(function() { /* non-fatal */ });
+    }).then(function() {
       // New signup → start onboarding
       goTo('page-sports');
     }).catch(function(err) {
