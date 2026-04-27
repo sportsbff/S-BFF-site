@@ -664,6 +664,18 @@
   .pref-row.is-locked {
     opacity: 0.55;
   }
+  .pref-select {
+    font-family: var(--font-sans); font-size: 14px; font-weight: 500;
+    padding: 8px 32px 8px 14px; border: 1.5px solid var(--line);
+    border-radius: 100px; background: #fff; color: var(--charcoal);
+    cursor: pointer; min-width: 180px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%2012%208%22%3E%3Cpath%20fill%3D%22%231E1C1A%22%20d%3D%22M6%208L0%200h12z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+  }
+  .pref-select:focus { outline: none; border-color: var(--mandarin); }
   .pref-locked {
     font-size: 11px; color: var(--text-secondary);
     background: rgba(30,28,26,0.04); padding: 4px 10px;
@@ -1302,6 +1314,21 @@
       </div>
 
       <div class="pref-section">
+        <div class="pref-section__title">Delivery Time</div>
+        <div class="pref-row">
+          <div><div class="pref-row__label">Set your time zone</div><div class="pref-row__sub">Your BFF Brief arrives weekday mornings around 7:30 AM</div></div>
+          <select class="pref-select" id="tz-select" onchange="saveTimezone(this.value)">
+            <option value="ET">Eastern (ET)</option>
+            <option value="CT">Central (CT)</option>
+            <option value="MT">Mountain (MT)</option>
+            <option value="PT">Pacific (PT)</option>
+            <option value="AKT">Alaska (AKT)</option>
+            <option value="HT">Hawaii (HT)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pref-section">
         <div class="pref-section__title">Daily Brief</div>
         <div class="pref-row">
           <div><div class="pref-row__label">The Daily BFF Brief</div><div class="pref-row__sub">Mon–Fri morning sports text</div></div>
@@ -1833,7 +1860,8 @@ function handleSignup(event) {
     'sms-consent': (smsConsent && smsConsent.checked) ? 'true' : 'false',
     'bff-brief-enabled': 'true',
     'breaking-news-enabled': 'true',
-    'referral-count': '0'
+    'referral-count': '0',
+    'time-zone': 'ET'
   }));
 
   var memberstack = window.$memberstackDom;
@@ -2847,6 +2875,11 @@ function populateDashboard(member) {
   // Only 'false' explicitly means the user opted out.
   document.body.setAttribute('data-has-paid', hasPaidPlan ? 'true' : 'false');
 
+  // Time zone dropdown — load saved value, default to ET if unset
+  var savedTz = customFields['time-zone'] || 'ET';
+  var tzSelect = document.getElementById('tz-select');
+  if (tzSelect) tzSelect.value = savedTz;
+
   var bffBriefEnabled = customFields['bff-brief-enabled'] !== 'false'; // default true
   var breakingNewsEnabled = customFields['breaking-news-enabled'] !== 'false';
 
@@ -3020,6 +3053,17 @@ function savePrefs() {
 // through Zapier to Airtable, where SimpleTexting
 // uses them to decide which texts to send this member.
 // ============================================
+function saveTimezone(tz) {
+  if (!tz) return;
+  var memberstack = window.$memberstackDom;
+  if (!memberstack) return;
+  memberstack.updateMember({
+    customFields: { 'time-zone': tz }
+  }).catch(function(err) {
+    console.error('Failed to save time zone:', err);
+  });
+}
+
 function toggleBffBrief(el) {
   var gatedByFreeTier = el.classList.contains('is-disabled');
   if (gatedByFreeTier) return; // Free users can't change delivery prefs
