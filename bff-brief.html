@@ -302,7 +302,7 @@
     letter-spacing: -0.03em;
     margin-bottom: 24px;
   }
-  .hero__headline i { font-style: italic; font-weight: 600; color: var(--mandarin); }
+  .hero__headline i { font-style: italic; font-weight: 600; color: var(--pink); }
   .hero__sub {
     font-size: 18px; line-height: 1.6; color: #fff;
     max-width: 480px; margin-bottom: 36px;
@@ -914,7 +914,12 @@
     }
     .hero__grid {
       gap: 40px;
+      display: flex !important;
+      flex-direction: column !important;
     }
+    /* Mobile: text bubbles render ABOVE the headline/buttons */
+    .hero__grid > div:first-child { order: 2 !important; }
+    .hero-bubbles { order: 1 !important; max-width: 100% !important; margin: 0 auto !important; }
     .hero__eyebrow {
       font-size: 12px !important;
       letter-spacing: 0.14em !important;
@@ -1249,7 +1254,7 @@
     <div class="hero__grid">
       <div>
         <div class="hero__eyebrow" style="padding-left: 10px;">The BFF Brief</div>
-        <h1 class="hero__headline" style="padding-left: 10px;">Your daily sports text from a friend who <i>actually gets it.</i></h1>
+        <h1 class="hero__headline" style="padding-left: 10px;">A daily sports text written <i>for the girls by the girls</i></h1>
         <p class="hero__sub">The sports news and culture headlines you need to feel confident and in the know — delivered straight to your phone. No app. No inbox clutter. Just the good stuff.</p>
         <div class="hero__buttons">
           <a href="/account" class="btn btn--mandarin">Get Started Free <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
@@ -1259,8 +1264,6 @@
         <div style="max-width: 95%; background: #E9E9EB; color: #000; padding: 9px 14px; font-family: -apple-system, SF Pro Text, Helvetica Neue, sans-serif; font-size: 14px; line-height: 1.38; letter-spacing: -0.01em; border-radius: 18px 18px 18px 4px;">🏀 A'ja Wilson is officially the highest-paid player in WNBA history. The four-time MVP re-signed with the Aces on a 3-year, $5M supermax — the largest deal the league has ever seen. For context: she made $200K last season. Now that's some girl math.</div>
         <div style="height: 12px;"></div>
         <div style="max-width: 88%; background: #E9E9EB; color: #000; padding: 9px 14px; font-family: -apple-system, SF Pro Text, Helvetica Neue, sans-serif; font-size: 14px; line-height: 1.38; letter-spacing: -0.01em; border-radius: 18px 18px 18px 4px;">🏒 NHL playoffs are officially set. Can the Colorado Avalanche beat the Presidents' Trophy curse and win both that and the Stanley Cup in the same year?</div>
-        <div style="height: 14px;"></div>
-        <div style="max-width: 84%; background: #E9E9EB; color: #000; padding: 9px 14px; font-family: -apple-system, SF Pro Text, Helvetica Neue, sans-serif; font-size: 14px; line-height: 1.38; letter-spacing: -0.01em; border-radius: 18px 18px 18px 4px;">🏈 NFL Draft kicks off Thursday night. The Raiders have the No. 1 pick and all signs point to Fernando Mendoza, the Indiana QB who's been the consensus top prospect all year.</div>
         <div style="height: 12px;"></div>
         <div style="max-width: 92%; background: #E9E9EB; color: #000; padding: 9px 14px; font-family: -apple-system, SF Pro Text, Helvetica Neue, sans-serif; font-size: 14px; line-height: 1.38; letter-spacing: -0.01em; border-radius: 18px 18px 18px 4px; position: relative;">⛳ The Schefflers welcomed baby boy Remy last week, and at nine days old he's already had his Masters debut.<span style="position: absolute; top: -10px; right: -6px; font-size: 15px; line-height: 1; background: #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.12);">❤️</span></div>
         <div style="height: 12px;"></div>
@@ -1320,6 +1323,74 @@
 
 
 <!-- TIERS -->
+<section class="hotline">
+  <div class="container">
+    <div class="hotline__inner">
+      <!-- iMessage chat on left -->
+      <div style="display:flex;justify-content:center;">
+        <div class="imessage">
+          <div class="im-row im-row--right">
+            <div class="im im--blue">I'm going on a date to a Cubs game tonight. What do I need to know?</div>
+          </div>
+
+          <div class="im__gap"></div>
+
+          <div class="im-row im-row--left">
+            <div class="im im--gray">You're gonna have so much fun! A Wrigley day date is always a fave. Here's what you can say to impress:<br><br>🔹 Pete Crow-Armstrong = the star. Say "that extension was massive."<br>🔹 Alex Bregman = new. Say "he's paying off already."<br>🔹 Watch for "Go Cubs Go" after a win. Everyone sings — you will too.</div>
+          </div>
+
+          <div class="im__gap"></div>
+
+          <div class="im-row im-row--right">
+            <div class="im im--blue">Wait — anything I should absolutely NOT say?</div>
+          </div>
+
+          <div class="im__gap"></div>
+
+          <div class="im-row im-row--left">
+            <div class="im im--gray">Don't call it Wrigley "Stadium" — it's Wrigley FIELD. And never put ketchup on a Chicago dog. That one's deadly serious. You've got this 💛</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right side -->
+      <div class="hotline__right">
+        <div class="hotline__brand-tag">Premium</div>
+        <h2 class="hotline__title">The Sports <i>Hotline</i></h2>
+        <div class="hotline__tagline">
+          Like having a BFF who's a sports expert in your back pocket, whenever you need her.
+        </div>
+        <div class="hotline__body">
+          Watch party with his friends. Work outing at the game. Group chat going crazy. Text us your questions and get answers like a friend would send them.
+        </div>
+        <div class="hotline__perks">
+          <div class="hotline__perk">
+            <div class="hotline__perk-check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+            <div class="hotline__perk-title">Real-Time</div>
+            <div class="hotline__perk-text">Answers when you need them, not after the game</div>
+          </div>
+          <div class="hotline__perk">
+            <div class="hotline__perk-check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+            <div class="hotline__perk-title">Personal</div>
+            <div class="hotline__perk-text">Tailored to your game, your team, your situation</div>
+          </div>
+          <div class="hotline__perk">
+            <div class="hotline__perk-check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+            <div class="hotline__perk-title">Judgment-Free</div>
+            <div class="hotline__perk-text">No dumb questions. Seriously. Ask anything.</div>
+          </div>
+        </div>
+        <a href="/account" class="btn btn--pink">
+          Upgrade to All-Access
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
 <section class="tiers">
   <div class="container">
     <div class="tiers__eyebrow" style="padding-left: 10px;">Pick Your Plan</div>
@@ -1427,75 +1498,6 @@
   </div>
 </section>
 
-<!-- SPORTS HOTLINE — homepage-aligned -->
-<section class="hotline">
-  <div class="container">
-    <div class="hotline__inner">
-      <!-- iMessage chat on left -->
-      <div style="display:flex;justify-content:center;">
-        <div class="imessage">
-          <div class="im-row im-row--right">
-            <div class="im im--blue">I'm going on a date to a Cubs game tonight. What do I need to know?</div>
-          </div>
-
-          <div class="im__gap"></div>
-
-          <div class="im-row im-row--left">
-            <div class="im im--gray">You're gonna have so much fun! A Wrigley day date is always a fave. Here's what you can say to impress:<br><br>🔹 Pete Crow-Armstrong = the star. Say "that extension was massive."<br>🔹 Alex Bregman = new. Say "he's paying off already."<br>🔹 Watch for "Go Cubs Go" after a win. Everyone sings — you will too.</div>
-          </div>
-
-          <div class="im__gap"></div>
-
-          <div class="im-row im-row--right">
-            <div class="im im--blue">Wait — anything I should absolutely NOT say?</div>
-          </div>
-
-          <div class="im__gap"></div>
-
-          <div class="im-row im-row--left">
-            <div class="im im--gray">Don't call it Wrigley "Stadium" — it's Wrigley FIELD. And never put ketchup on a Chicago dog. That one's deadly serious. You've got this 💛</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right side -->
-      <div class="hotline__right">
-        <div class="hotline__brand-tag">Premium</div>
-        <h2 class="hotline__title">The Sports <i>Hotline</i></h2>
-        <div class="hotline__tagline">
-          Like having a BFF who's a sports expert in your back pocket, whenever you need her.
-        </div>
-        <div class="hotline__body">
-          Watch party with his friends. Work outing at the game. Group chat going crazy. Text us your questions and get answers like a friend would send them.
-        </div>
-        <div class="hotline__perks">
-          <div class="hotline__perk">
-            <div class="hotline__perk-check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
-            <div class="hotline__perk-title">Real-Time</div>
-            <div class="hotline__perk-text">Answers when you need them, not after the game</div>
-          </div>
-          <div class="hotline__perk">
-            <div class="hotline__perk-check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
-            <div class="hotline__perk-title">Personal</div>
-            <div class="hotline__perk-text">Tailored to your game, your team, your situation</div>
-          </div>
-          <div class="hotline__perk">
-            <div class="hotline__perk-check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
-            <div class="hotline__perk-title">Judgment-Free</div>
-            <div class="hotline__perk-text">No dumb questions. Seriously. Ask anything.</div>
-          </div>
-        </div>
-        <a href="/account" class="btn btn--pink">
-          Upgrade to All-Access
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
 <!-- TESTIMONIALS — asymmetric 2x2 bento grid -->
 <section style="padding: 80px 0;">
   <div class="container">
@@ -1510,8 +1512,7 @@
       <!-- Top right: Mandarin 5.0 block — narrower -->
       <div style="background: var(--mandarin); border-radius: var(--radius); padding: 40px 36px; display: flex; flex-direction: column; justify-content: flex-end; min-height: 320px; position: relative; z-index: 2;">
         <div style="font-family: var(--font-display); font-size: 72px; font-weight: 700; color: #fff; line-height: 1; margin-bottom: 4px;">5.0</div>
-        <div style="font-size: 24px; letter-spacing: 4px; color: #fff; margin-bottom: 12px;">★★★★★</div>
-        <div style="font-family: var(--font-sans); font-size: 16px; font-weight: 600; color: #fff; line-height: 1.4;">We're almost embarrassed by our reviews. Almost.</div>
+        <div style="font-size: 24px; letter-spacing: 4px; color: #fff;">★★★★★</div>
       </div>
 
     </div>
@@ -1694,6 +1695,8 @@
     .img-slider-track:hover { animation-play-state: paused; }
   </style>
 </section>
+
+
 
 <!-- CTA -->
 <section class="cta">

@@ -348,30 +348,51 @@
     position: relative;
     z-index: 3;
   }
+  /* Marquee track: a long flex row that translates left forever.
+     We render the polaroid set TWICE so when the first set ends the
+     second is already in view, and we loop back seamlessly.
+     Animation uses a -50% translate so the second set lands exactly
+     where the first started — visually indistinguishable.
+     Negative gap creates the overlap; alternating Y shift adds dimension. */
   .polaroid-strip__track {
     display: flex;
     align-items: flex-start;
-    justify-content: center;
-    padding: 40px 0 20px;
-    margin: 0 -80px;
+    gap: 0;
+    padding: 50px 0 30px;
+    width: max-content;
+    animation: polaroid-marquee 50s linear infinite;
+  }
+  .polaroid-strip:hover .polaroid-strip__track { animation-play-state: paused; }
+  @keyframes polaroid-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  /* If the user prefers reduced motion, pause the animation */
+  @media (prefers-reduced-motion: reduce) {
+    .polaroid-strip__track { animation: none; }
   }
   .polaroid {
     flex-shrink: 0;
-    width: 380px;
+    width: 440px;
     background: var(--white);
     border-radius: 16px;
-    padding: 12px 12px 8px;
-    box-shadow: 0 6px 30px rgba(31,31,35,0.08);
+    padding: 16px 16px 12px;
+    box-shadow: 0 8px 32px rgba(31,31,35,0.10);
     position: relative;
-    margin-left: -50px;
+    /* Negative left margin creates overlap between cards.
+       Combined with alternating rotation + Y shift, polaroids feel layered. */
+    margin-left: -64px;
+    transform: rotate(var(--rot)) translateY(var(--shift, 0));
   }
   .polaroid:first-child { margin-left: 0; }
-  /* Alternating rotations */
-  .polaroid:nth-child(1) { transform: rotate(-5deg) translateY(20px); z-index: 1; }
-  .polaroid:nth-child(2) { transform: rotate(5deg) translateY(-10px); z-index: 2; }
-  .polaroid:nth-child(3) { transform: rotate(-5deg) translateY(20px); z-index: 3; }
-  .polaroid:nth-child(4) { transform: rotate(5deg) translateY(-10px); z-index: 4; }
-  .polaroid:nth-child(5) { transform: rotate(-5deg) translateY(20px); z-index: 5; }
+  /* Strict alternation: every odd polaroid tilts left, every even tilts right.
+     Y-shift varies slightly within each pattern slot for visual interest.
+     Pattern repeats every 5 so the duplicate marquee set (positions 6-10) matches the original. */
+  .polaroid:nth-child(5n+1) { --rot: -5deg; --shift: 22px; z-index: 2; }
+  .polaroid:nth-child(5n+2) { --rot:  5deg; --shift: -12px; z-index: 1; }
+  .polaroid:nth-child(5n+3) { --rot: -4deg; --shift: 16px; z-index: 2; }
+  .polaroid:nth-child(5n+4) { --rot:  6deg; --shift: -6px; z-index: 1; }
+  .polaroid:nth-child(5n+5) { --rot: -3deg; --shift: 24px; z-index: 2; }
 
   .polaroid__image {
     width: 100%;
@@ -400,8 +421,8 @@
     white-space: nowrap;
   }
 
-  /* Bigger version for 2nd strip */
-  .polaroid-strip--big .polaroid { width: 380px; margin-left: -50px; }
+  /* Bigger version for 2nd strip — same overlap behavior, larger card */
+  .polaroid-strip--big .polaroid { width: 480px; margin-left: -68px; }
   .polaroid-strip--big .polaroid:first-child { margin-left: 0; }
 
   /* ============================================
@@ -429,7 +450,7 @@
     font-family: var(--font-display); font-size: 56px; font-weight: 600;
     line-height: 1.15; margin-bottom: 18px; color: #fff;
   }
-  .bff-brief__headline i { font-style: italic; color: var(--mandarin); }
+  .bff-brief__headline i { font-style: italic; color: var(--pink); }
   .bff-brief__sub {
     font-size: 16px; line-height: 1.65;
     color: #fff; margin-bottom: 28px; max-width: 420px;
@@ -755,6 +776,7 @@
     border-right: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
     display: flex; flex-direction: column;
+    align-items: flex-start;
     justify-content: flex-start; gap: 14px;
   }
   .v-cell--no-right { border-right: none; }
@@ -773,6 +795,16 @@
     color: #fff; margin-bottom: 4px;
   }
   .v-cell__icon svg { width: 16px; height: 16px; }
+  /* When an emoji is the icon, drop the mandarin circle and let it breathe */
+  .v-cell__icon:has(.v-cell__emoji) {
+    background: transparent;
+    width: auto; height: auto;
+    border-radius: 0;
+  }
+  .v-cell__emoji {
+    font-size: 28px; line-height: 1;
+    display: inline-block;
+  }
   .v-cell__title { font-family: var(--font-display); font-size: 22px; font-weight: 400; font-style: normal; letter-spacing: -0.02em; line-height: 1.15; }
   .v-cell__body { font-size: 14px; line-height: 1.5; color: var(--text-secondary); }
   .v-image {
@@ -1060,12 +1092,21 @@
 
     /* Polaroids — tablet: 5 visible, medium-sized, overlapping */
     .polaroid-strip { padding: 24px 0 40px; }
-    .polaroid-strip__track { padding: 24px 0; margin: 0 -16px; }
-    .polaroid { width: 220px !important; margin-left: -28px !important; padding: 10px 10px 6px !important; border-radius: 12px !important; }
+    .polaroid-strip__track {
+      gap: 0 !important;
+      padding: 36px 0 24px !important;
+      animation-duration: 40s !important;
+    }
+    .polaroid {
+      width: 280px !important;
+      margin-left: -40px !important;
+      padding: 12px 12px 8px !important;
+      border-radius: 12px !important;
+    }
     .polaroid:first-child { margin-left: 0 !important; }
     .polaroid__image { border-radius: 7px !important; }
     .polaroid__label { padding: 10px 4px 4px !important; font-size: 11px !important; }
-    .polaroid-strip--big .polaroid { width: 260px !important; margin-left: -32px !important; }
+    .polaroid-strip--big .polaroid { width: 300px !important; margin-left: -44px !important; }
     .polaroid-strip--big .polaroid:first-child { margin-left: 0 !important; }
 
     /* BFF BRIEF — tablet: 2-col like desktop, text left, phone right */
@@ -1384,40 +1425,31 @@
     .manifesto__text .pill-img { width: 52px !important; height: 30px !important; border-radius: 16px !important; }
     .manifesto__text .pill-img--wide { width: 72px !important; }
 
-    /* POLAROIDS — 3 across, bigger with overlap, can bleed off edges */
+    /* POLAROIDS — auto-marquee, mobile sizing */
     .polaroid-strip { padding: 8px 0 32px; overflow: hidden; }
     .polaroid-strip__track {
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
       gap: 0 !important;
-      padding: 16px 0 !important;
-      margin: 0 -8px !important;
+      padding: 30px 0 20px !important;
+      animation-duration: 35s !important;
     }
-    .polaroid-strip__track .polaroid:nth-child(1),
-    .polaroid-strip__track .polaroid:nth-child(5) { display: none !important; }
     .polaroid {
-      flex: 0 0 38% !important;
-      width: 38% !important;
-      max-width: none !important;
-      margin-left: -3% !important;
-      padding: 6px 6px 4px !important;
-      border-radius: 8px !important;
+      flex: 0 0 auto !important;
+      width: 260px !important;
+      margin-left: -36px !important;
+      padding: 10px 10px 7px !important;
+      border-radius: 10px !important;
     }
-    .polaroid:nth-child(2) { margin-left: 0 !important; }
-    .polaroid:nth-child(2) { transform: rotate(-4deg) translateY(6px) !important; }
-    .polaroid:nth-child(3) { transform: rotate(3deg) translateY(-6px) !important; }
-    .polaroid:nth-child(4) { transform: rotate(-3deg) translateY(6px) !important; }
-    .polaroid__image { border-radius: 5px !important; }
+    .polaroid:first-child { margin-left: 0 !important; }
+    .polaroid__image { border-radius: 6px !important; }
     .polaroid__label {
-      padding: 6px 2px 2px !important;
-      font-size: 8px !important;
+      padding: 8px 2px 2px !important;
+      font-size: 10px !important;
       white-space: nowrap !important;
       overflow: hidden !important;
       text-overflow: ellipsis !important;
     }
-    /* Big variant (2nd strip) matches the same 3-across treatment */
-    .polaroid-strip--big .polaroid { width: 38% !important; margin-left: -3% !important; }
+    /* Big variant (2nd strip) — slightly larger on mobile */
+    .polaroid-strip--big .polaroid { width: 280px !important; margin-left: -40px !important; }
     .polaroid-strip--big .polaroid:first-child { margin-left: 0 !important; }
 
     /* BFF BRIEF — stacked, headline matches manifesto */
@@ -1427,6 +1459,9 @@
       gap: 24px !important;
       align-items: start !important;
     }
+    /* Mobile: phone/SMS bubbles render ABOVE the text content */
+    .bff-brief__inner > div:first-child { order: 2 !important; }
+    .bff-brief__phone-wrap { order: 1 !important; }
     /* Content block centered, text center-aligned */
     .bff-brief__inner > div:first-child {
       display: flex;
@@ -1664,7 +1699,11 @@
       gap: 16px !important;
       justify-content: flex-start !important;
     }
-    .v-cell:last-child { border-bottom: none !important; }
+    /* Border-bottom logic on mobile depends on VISUAL order (set via flex order),
+       not DOM order. Built by Her is order:2 (visually second), Full Coverage is
+       order:6 (visually last). Strip the border off the visually-last cell only. */
+    .v-cell:last-child { border-bottom: 1px solid var(--line) !important; }
+    .v-cell:nth-child(5) { border-bottom: none !important; } /* Full Coverage = visually last */
     .v-cell--wide, .v-cell--no-right, .v-cell--no-bottom {
       grid-column: auto !important;
     }
@@ -1677,6 +1716,14 @@
       margin-top: 2px !important;
     }
     .v-cell__icon svg { width: 18px !important; height: 18px !important; }
+    /* Emoji icons: skip the fixed sizing on mobile too */
+    .v-cell__icon:has(.v-cell__emoji) {
+      width: auto !important; height: auto !important;
+      background: transparent !important;
+      grid-row: 1 / 3 !important;
+      align-self: flex-start !important;
+    }
+    .v-cell__emoji { font-size: 28px !important; }
     .v-cell__title {
       font-size: 20px !important;
       line-height: 1.2 !important;
@@ -1689,7 +1736,7 @@
       margin: 0 !important;
       grid-column: 2 !important;
     }
-    /* Image — thinner horizontal band, slotted mid-stack via flex order */
+    /* Mobile order: image at top, "Built by Her for Her" second, then the rest */
     .v-image {
       grid-row: auto !important;
       grid-column: auto !important;
@@ -1699,13 +1746,13 @@
       border-right: 1px solid var(--line) !important;
       border-bottom: 1px solid var(--line) !important;
       background-image: url('values-tv-horizontal.png') !important;
-      order: 4 !important;
+      order: 1 !important;
     }
-    .v-cell:nth-child(1) { order: 1 !important; }
-    .v-cell:nth-child(3) { order: 2 !important; }
-    .v-cell:nth-child(4) { order: 3 !important; }
-    .v-cell:nth-child(5) { order: 5 !important; }
-    .v-cell:nth-child(6) { order: 6 !important; }
+    .v-cell:nth-child(6) { order: 2 !important; } /* Built by Her, for Her */
+    .v-cell:nth-child(1) { order: 3 !important; } /* No Gatekeeping */
+    .v-cell:nth-child(3) { order: 4 !important; } /* Competition & Culture */
+    .v-cell:nth-child(4) { order: 5 !important; } /* In Her Words */
+    .v-cell:nth-child(5) { order: 6 !important; } /* Full Coverage */
 
     /* SOCIAL — compact */
     .social-section { padding: 48px 0 36px; }
@@ -1728,6 +1775,27 @@
     .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"],
     .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide"] {
       border-radius: 16px !important;
+    }
+    /* Stack the IG feed vertically on mobile so it feels like scrolling Instagram itself.
+       Force the grid container to 1 column, and let the posts size to a single image per row. */
+    .ig-feed-wrap [class*="eapps-instagram-feed-posts"][class*="grid"],
+    .ig-feed-wrap [class*="eapps-instagram-feed-posts-list"] {
+      grid-template-columns: 1fr !important;
+      display: grid !important;
+      gap: 16px !important;
+    }
+    /* Each post fills the column width on mobile */
+    .ig-feed-wrap [class*="eapps-instagram-feed-posts-item"] {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+    /* Keep the original 3:4 portrait aspect ratio (matches desktop, fits Reels properly) */
+    .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-image"],
+    .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-image"],
+    .ig-feed-wrap [class*="eapps-instagram-feed-posts-item-template-tile-media"],
+    .ig-feed-wrap [class*="eapps-instagram-feed-slider-slide-template-tile-media"] {
+      aspect-ratio: 3 / 4 !important;
+      height: auto !important;
     }
 
     /* CTA — compact */
@@ -1825,7 +1893,7 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero__inner">
-    <h1 class="hero__headline">Her new home court <i>advantage.</i></h1>
+    <h1 class="hero__headline"><i>Her</i> new home court advantage.</h1>
     <p class="hero__sub">Takes, recaps, and community for the women who watch, the ones who want to, and everyone in between.</p>
     <div class="hero__buttons">
       <a href="/account" class="btn btn--mandarin">Get the BFF Brief <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
@@ -1859,7 +1927,7 @@
 <section class="manifesto">
   <div class="container">
     <div class="manifesto__eyebrow" style="padding-left: 10px;">Who We Are</div>
-    <p class="manifesto__text" style="padding-left: 10px;">We're building what should've existed all along: sports through <i>her lens.</i> <span class="pill-img" style="background-image: url('manifesto-1.avif');"></span> Content that covers the game <i>and</i> the culture. <span class="pill-img pill-img--wide" style="background-image: url('manifesto-2.avif');"></span> Community that doesn't question her fandom. Places that don't feel like a frat party. This one's <i>for the girls</i> <span class="pill-img" style="background-image: url('manifesto-3.avif');"></span> and we saved you a seat.</p>
+    <p class="manifesto__text" style="padding-left: 10px;">We're building what should've existed all along: sports through <i>her</i> lens. <span class="pill-img" style="background-image: url('manifesto-1.avif');"></span> Content that covers the game <i>and</i> the culture. <span class="pill-img pill-img--wide" style="background-image: url('manifesto-2.avif');"></span> Community that doesn't question <i>her</i> fandom. Places that don't feel like a frat party. This one's for <i>her</i> <span class="pill-img" style="background-image: url('manifesto-3.avif');"></span> and we saved you a seat.</p>
   </div>
 </section>
 
@@ -1889,6 +1957,27 @@
       <div class="polaroid__image" style="background-image: url('polaroid-1-5.png');"></div>
       <div class="polaroid__label">The Court Is Calling</div>
     </div>
+    <!-- Duplicate set for seamless infinite scroll -->
+    <div class="polaroid" aria-hidden="true">
+      <div class="polaroid__image" style="background-image: url('polaroid-1-1.png');"></div>
+      <div class="polaroid__label">The Game's On</div>
+    </div>
+    <div class="polaroid" aria-hidden="true">
+      <div class="polaroid__image" style="background-image: url('polaroid-1-2.png');"></div>
+      <div class="polaroid__label">Courtside Couture</div>
+    </div>
+    <div class="polaroid" aria-hidden="true">
+      <div class="polaroid__image" style="background-image: url('polaroid-1-3.png');"></div>
+      <div class="polaroid__label">Kiss Cam Ready</div>
+    </div>
+    <div class="polaroid" aria-hidden="true">
+      <div class="polaroid__image" style="background-image: url('polaroid-1-4.png');"></div>
+      <div class="polaroid__label">Save Me a Seat</div>
+    </div>
+    <div class="polaroid" aria-hidden="true">
+      <div class="polaroid__image" style="background-image: url('polaroid-1-5.png');"></div>
+      <div class="polaroid__label">The Court Is Calling</div>
+    </div>
   </div>
 </section>
 
@@ -1898,11 +1987,11 @@
     <div class="bff-brief__inner">
       <div>
         <div class="bff-brief__eyebrow" style="padding-left: 10px;">The BFF Brief</div>
-        <h2 class="bff-brief__headline" style="padding-left: 10px;">A daily sports text from the friend who's always <i>in the know</i></h2>
+        <h2 class="bff-brief__headline" style="padding-left: 10px;">A daily sports text written <i>for the girls by the girls</i></h2>
         <p class="bff-brief__sub" style="padding-left: 10px;">Everything you need to feel confident in the sports conversation — delivered to your phone every morning.</p>
         <div class="bff-brief__features">
           <div class="bff-brief__feature"><div class="check-dot"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>A daily text with the sports news that matters</div>
-          <div class="bff-brief__feature"><div class="check-dot"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>Written for the girls by the girls</div>
+          <div class="bff-brief__feature"><div class="check-dot"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>Like a friend who's always in the know</div>
           <div class="bff-brief__feature"><div class="check-dot"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>Context, storylines, culture — not just scores</div>
         </div>
         <div class="bff-brief__buttons" style="display: flex; gap: 12px; flex-wrap: wrap;">
@@ -1914,7 +2003,6 @@
         <div class="bff-sms">
           <div class="bff-sms__bubble">🏀 A'ja Wilson is officially the highest-paid player in WNBA history. The four-time MVP re-signed with the Aces on a 3-year, $5M supermax — the largest deal the league has ever seen. For context: she made $200K last season. Now that's some girl math.</div>
           <div class="bff-sms__bubble">🏒 NHL playoffs are officially set. Can the Colorado Avalanche beat the Presidents' Trophy curse and win both that and the Stanley Cup in the same year?</div>
-          <div class="bff-sms__bubble">🏈 NFL Draft kicks off Thursday night. The Raiders have the No. 1 pick and all signs point to Fernando Mendoza, the Indiana QB who's been the consensus top prospect all year.</div>
           <div class="bff-sms__bubble">⛳ The Schefflers welcomed baby boy Remy last week, and at nine days old he's already had his Masters debut.<span class="bff-sms__reaction">❤️</span></div>
           <div class="bff-sms__bubble bff-sms__bubble--signature">xx Your Sports BFF</div>
         </div>
@@ -2047,7 +2135,7 @@
     <div class="values__grid">
       <!-- Row 1, Col 1 -->
       <div class="v-cell">
-        <div class="v-cell__icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
+        <div class="v-cell__icon"><span class="v-cell__emoji">🔓</span></div>
         <div class="v-cell__title">No Gatekeeping</div>
         <div class="v-cell__body">Content that doesn't assume an expert level of knowledge.</div>
       </div>
@@ -2055,26 +2143,26 @@
       <div class="v-image"></div>
       <!-- Row 1, Col 3 -->
       <div class="v-cell">
-        <div class="v-cell__icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg></div>
+        <div class="v-cell__icon"><span class="v-cell__emoji">💅</span></div>
         <div class="v-cell__title">Competition &amp; Culture</div>
         <div class="v-cell__body">The personalities, the fashion, the drama. Not just the scoreboard.</div>
       </div>
       <!-- Row 1, Col 4 -->
       <div class="v-cell v-cell--no-right">
-        <div class="v-cell__icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
+        <div class="v-cell__icon"><span class="v-cell__emoji">💬</span></div>
         <div class="v-cell__title">In Her Words</div>
         <div class="v-cell__body">Takes, tone, and perspective that finally sound like hers.</div>
       </div>
       <!-- Row 2, Col 1 -->
       <div class="v-cell v-cell--no-bottom">
-        <div class="v-cell__icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+        <div class="v-cell__icon"><span class="v-cell__emoji">📺</span></div>
         <div class="v-cell__title">Full Coverage</div>
         <div class="v-cell__body">Men's and women's sports. She watches it all.</div>
       </div>
       <!-- Image spans here (col 2) -->
       <!-- Row 2, Col 3-4: wide merged cell -->
       <div class="v-cell v-cell--wide v-cell--no-right v-cell--no-bottom">
-        <div class="v-cell__icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+        <div class="v-cell__icon"><span class="v-cell__emoji">💁‍♀️</span></div>
         <div class="v-cell__title">Built by Her, for Her</div>
         <div class="v-cell__body">We're the users. Every decision comes from lived experience. We're building what we wished had always existed.</div>
       </div>
@@ -2087,23 +2175,44 @@
 <!-- POLAROID CARD STRIP #2 — bigger -->
 <section class="polaroid-strip polaroid-strip--big">
   <div class="polaroid-strip__track">
-    <div class="polaroid" style="--rot:-4deg;">
+    <div class="polaroid">
       <div class="polaroid__image" style="background-image: url('polaroid-2-1.png');"></div>
       <div class="polaroid__label">Tunnel Walk Ready</div>
     </div>
-    <div class="polaroid" style="--rot:3deg;">
+    <div class="polaroid">
       <div class="polaroid__image" style="background-image: url('polaroid-2-2.png');"></div>
       <div class="polaroid__label">Eyes on the Prize</div>
     </div>
-    <div class="polaroid" style="--rot:-1.5deg;">
+    <div class="polaroid">
       <div class="polaroid__image" style="background-image: url('polaroid-2-3.png');"></div>
       <div class="polaroid__label">Game Face On</div>
     </div>
-    <div class="polaroid" style="--rot:4deg;">
+    <div class="polaroid">
       <div class="polaroid__image" style="background-image: url('polaroid-2-4.png');"></div>
       <div class="polaroid__label">Sideline Icon</div>
     </div>
-    <div class="polaroid" style="--rot:-3deg;">
+    <div class="polaroid">
+      <div class="polaroid__image" style="background-image: url('polaroid-2-5.png');"></div>
+      <div class="polaroid__label">She's on the Clock</div>
+    </div>
+    <!-- Duplicate set for seamless infinite scroll -->
+    <div class="polaroid" aria-hidden="true">
+      <div class="polaroid__image" style="background-image: url('polaroid-2-1.png');"></div>
+      <div class="polaroid__label">Tunnel Walk Ready</div>
+    </div>
+    <div class="polaroid" aria-hidden="true">
+      <div class="polaroid__image" style="background-image: url('polaroid-2-2.png');"></div>
+      <div class="polaroid__label">Eyes on the Prize</div>
+    </div>
+    <div class="polaroid" aria-hidden="true">
+      <div class="polaroid__image" style="background-image: url('polaroid-2-3.png');"></div>
+      <div class="polaroid__label">Game Face On</div>
+    </div>
+    <div class="polaroid" aria-hidden="true">
+      <div class="polaroid__image" style="background-image: url('polaroid-2-4.png');"></div>
+      <div class="polaroid__label">Sideline Icon</div>
+    </div>
+    <div class="polaroid" aria-hidden="true">
       <div class="polaroid__image" style="background-image: url('polaroid-2-5.png');"></div>
       <div class="polaroid__label">She's on the Clock</div>
     </div>

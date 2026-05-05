@@ -899,12 +899,12 @@
   <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
   <div class="auth-card">
     <div class="auth-tabs">
-      <button class="auth-tab is-active" onclick="showTab('login')">Log In</button>
-      <button class="auth-tab" onclick="showTab('signup')">Sign Up</button>
+      <button class="auth-tab" onclick="showTab('login')">Log In</button>
+      <button class="auth-tab is-active" onclick="showTab('signup')">Sign Up</button>
     </div>
 
     <!-- Login form -->
-    <form id="tab-login" data-ms-form="passwordless-login" onsubmit="handleLogin(event)">
+    <form id="tab-login" data-ms-form="passwordless-login" style="display:none;" onsubmit="handleLogin(event)">
       <div class="form-group">
         <label class="form-label">Email</label>
         <input class="form-input" type="email" data-ms-member="email" placeholder="you@email.com" required>
@@ -914,7 +914,7 @@
     </form>
 
     <!-- Signup form -->
-    <form id="tab-signup" data-ms-form="passwordless-signup" style="display:none;" onsubmit="handleSignup(event)">
+    <form id="tab-signup" data-ms-form="passwordless-signup" onsubmit="handleSignup(event)">
       <div class="form-group">
         <label class="form-label">First Name</label>
         <input class="form-input" type="text" data-ms-member="first-name" placeholder="Heather" required>
@@ -932,11 +932,14 @@
         <input class="form-input" type="email" data-ms-member="email" placeholder="you@email.com" required>
       </div>
 
-      <!-- Consent checkboxes (Terms required, SMS optional) -->
+      <!-- Consent checkboxes (both required — without SMS consent we can't deliver the BFF Brief) -->
       <label class="consent-row">
-        <input type="checkbox" id="consent-sms">
-        <span class="consent-text">I agree to receive text messages from Your Sports BFF at the phone number provided. Msg &amp; data rates may apply. Reply HELP for help, STOP to cancel.</span>
+        <input type="checkbox" id="consent-sms" required>
+        <span class="consent-text"><span class="consent-required">*</span>I agree to receive text messages from Your Sports BFF at the phone number provided. Msg &amp; data rates may apply. Reply HELP for help, STOP to cancel.</span>
       </label>
+      <div style="font-size: 12px; color: var(--text-secondary); margin: -4px 0 12px 28px; line-height: 1.4;">
+        Required &mdash; the BFF Brief is a text. Without this, we can't send it.
+      </div>
       <label class="consent-row">
         <input type="checkbox" id="consent-terms" required>
         <span class="consent-text"><span class="consent-required">*</span>I agree to the <a href="/terms" target="_blank">Terms of Service</a> &amp; <a href="/privacy" target="_blank">Privacy Policy</a>.</span>
@@ -1098,7 +1101,8 @@
         <button class="auth-btn" onclick="handlePaidPlan('prc_the-all-access-7-day-trial-jp40a7z', this)">Start Free Trial</button>
       </div>
     </div>
-    <div class="skip-link" style="margin-top: 24px;" onclick="handleFreePlan(event)">No thanks, I'll stick with the free daily brief</div>
+    <button class="auth-btn auth-btn--outline" style="margin: 24px auto 0; max-width: 480px; display: block;" onclick="handleFreePlan(event)">Continue with the free Daily Brief</button>
+    <div style="text-align: center; font-size: 12px; color: var(--text-secondary); margin-top: 10px;">You can upgrade anytime from your account.</div>
   </div>
   <div class="auth-back" onclick="goTo('page-cities')">← Back</div>
 </div>
@@ -1833,9 +1837,15 @@ function handleSignup(event) {
     return;
   }
 
-  // Consent validation — Terms required, SMS optional
+  // Consent validation — both SMS and Terms are required.
+  // SMS is required because the BFF Brief is a text; without consent the account is dead weight.
   var smsConsent = document.getElementById('consent-sms');
   var termsConsent = document.getElementById('consent-terms');
+  if (!smsConsent || !smsConsent.checked) {
+    errorDiv.textContent = 'Please agree to receive text messages \u2014 the BFF Brief is a text, so this is required.';
+    errorDiv.style.display = 'block';
+    return;
+  }
   if (!termsConsent || !termsConsent.checked) {
     errorDiv.textContent = 'Please accept the Terms & Privacy Policy to continue.';
     errorDiv.style.display = 'block';
@@ -1859,7 +1869,7 @@ function handleSignup(event) {
     'referred-by': referredBy,
     'sms-consent': (smsConsent && smsConsent.checked) ? 'true' : 'false',
     'bff-brief-enabled': 'true',
-    'breaking-news-enabled': 'true',
+    'breaking-news-enabled': 'false',
     'referral-count': '0',
     'time-zone': 'ET'
   }));
