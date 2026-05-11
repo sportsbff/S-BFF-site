@@ -942,10 +942,6 @@
       <div style="font-size: 12px; color: var(--text-secondary); margin: -4px 0 12px 28px; line-height: 1.4;">
         Required &mdash; the BFF Brief is a text. Without this, we can't send it.
       </div>
-      <label class="consent-row">
-        <input type="checkbox" id="consent-terms" required>
-        <span class="consent-text"><span class="consent-required">*</span>I agree to the <a href="/terms" target="_blank">Terms of Service</a> &amp; <a href="/privacy" target="_blank">Privacy Policy</a>.</span>
-      </label>
 
       <button type="submit" class="auth-btn">Create Account</button>
       <div class="auth-error" id="signup-error" style="display:none; color: var(--mandarin); font-size: 13px; margin-top: 12px; text-align: center;"></div>
@@ -1839,17 +1835,12 @@ function handleSignup(event) {
     return;
   }
 
-  // Consent validation — both SMS and Terms are required.
-  // SMS is required because the BFF Brief is a text; without consent the account is dead weight.
+  // Consent validation — SMS consent is the single required checkbox.
+  // It covers both SMS opt-in AND Terms/Privacy agreement (links embedded).
+  // Without SMS consent the account is dead weight — we can't deliver the BFF Brief.
   var smsConsent = document.getElementById('consent-sms');
-  var termsConsent = document.getElementById('consent-terms');
   if (!smsConsent || !smsConsent.checked) {
     errorDiv.textContent = 'Please agree to receive text messages \u2014 the BFF Brief is a text, so this is required.';
-    errorDiv.style.display = 'block';
-    return;
-  }
-  if (!termsConsent || !termsConsent.checked) {
-    errorDiv.textContent = 'Please accept the Terms & Privacy Policy to continue.';
     errorDiv.style.display = 'block';
     return;
   }
