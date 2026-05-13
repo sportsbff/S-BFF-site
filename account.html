@@ -2150,15 +2150,36 @@ function routePostCheckout(member, memberstack) {
   goTo('page-referral');
 }
 
-// Final step after referral page → land directly on BFF Brief Preferences tab
-// (not the old welcome page; not the home dashboard tab).
-// We want new signups to immediately customize their delivery preferences.
+// Final step after referral page → land directly on BFF Brief Preferences tab.
+// The dashboard's page ID is "page-dash" (not page-dashboard).
+// We also need to populate the dashboard from the current member before showing it
+// so the prefs panel has accurate toggle states.
 function finishOnboardingToWelcome() {
-  goTo('page-dashboard');
-  // After page is shown, switch the active panel to BFF Brief Preferences
-  setTimeout(function() {
-    if (typeof showDash === 'function') showDash('dash-prefs');
-  }, 50);
+  var memberstack = window.$memberstackDom;
+  if (memberstack && typeof memberstack.getCurrentMember === 'function') {
+    memberstack.getCurrentMember().then(function(result) {
+      var member = result && result.data;
+      if (member && typeof populateDashboard === 'function') {
+        populateDashboard(member);
+      }
+      goTo('page-dash');
+      // After page is shown, switch the active panel to BFF Brief Preferences
+      setTimeout(function() {
+        if (typeof showDash === 'function') showDash('dash-prefs');
+      }, 50);
+    }).catch(function() {
+      // Fallback if getCurrentMember fails — just route to the dashboard anyway
+      goTo('page-dash');
+      setTimeout(function() {
+        if (typeof showDash === 'function') showDash('dash-prefs');
+      }, 50);
+    });
+  } else {
+    goTo('page-dash');
+    setTimeout(function() {
+      if (typeof showDash === 'function') showDash('dash-prefs');
+    }, 50);
+  }
 }
 
 // Handle Insider (free) plan selection
