@@ -632,18 +632,25 @@
   }
 
   /* Preferences panel */
-  .pref-section { margin-bottom: 32px; }
+  .pref-section {
+    margin-bottom: 40px;
+    padding-bottom: 8px;
+  }
+  .pref-section + .pref-section {
+    border-top: 1px solid var(--line);
+    padding-top: 32px;
+  }
   .pref-section__title {
-    font-family: var(--font-sans); font-size: 14px; font-weight: 700;
+    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.08em;
-    color: var(--text-secondary); margin-bottom: 16px;
+    color: var(--charcoal); margin-bottom: 16px;
   }
   .pref-row {
     display: flex; justify-content: space-between; align-items: center;
     padding: 16px 0; border-bottom: 1px solid var(--line);
   }
   .pref-row:last-child { border-bottom: none; }
-  .pref-row__label { font-size: 15px; font-weight: 600; }
+  .pref-row__label { font-size: 15px; font-weight: 600; color: var(--charcoal); }
   .pref-row__sub { font-size: 13px; color: var(--text-secondary); }
   .pref-toggle {
     width: 44px; height: 24px; border-radius: 12px;
@@ -1320,7 +1327,7 @@
           <div class="pref-toggle is-on" id="toggle-bff-brief" onclick="toggleBffBrief(this)"></div>
         </div>
         <div class="pref-row">
-          <div><div class="pref-row__label">Breaking News Alerts</div><div class="pref-row__sub">Major can&rsquo;t-miss updates &mdash; applies to all your selected sports and cities below. Off by default.</div></div>
+          <div><div class="pref-row__label">Breaking News Alerts</div><div class="pref-row__sub">Major can&rsquo;t-miss updates &mdash; applies to all your selected sports and cities below.</div></div>
           <div class="pref-toggle" id="toggle-breaking-news" onclick="toggleBreakingNews(this)"></div>
         </div>
       </div>
@@ -2771,17 +2778,12 @@ function populateDashboard(member) {
     freeBanner.style.display = hasPaidPlan ? 'none' : 'flex';
   }
 
-  // Apply disabled/locked styling to preference toggles for free users
+  // Preference toggles are open to everyone now (paid tiers killed).
+  // Make sure no toggle is left in a stale disabled/locked state from older code paths.
   var prefToggles = document.querySelectorAll('#prefs-sports-section .pref-toggle, #prefs-cities-section .pref-toggle');
   var prefRows = document.querySelectorAll('#prefs-sports-section .pref-row, #prefs-cities-section .pref-row');
-  prefToggles.forEach(function(t) {
-    if (hasPaidPlan) t.classList.remove('is-disabled');
-    else t.classList.add('is-disabled');
-  });
-  prefRows.forEach(function(r) {
-    if (hasPaidPlan) r.classList.remove('is-locked');
-    else r.classList.add('is-locked');
-  });
+  prefToggles.forEach(function(t) { t.classList.remove('is-disabled'); });
+  prefRows.forEach(function(r) { r.classList.remove('is-locked'); });
 
   // Current plan label — prefer highest paid tier when user has multiple active plans
   var planLabel = 'Free';
@@ -2834,10 +2836,9 @@ function populateDashboard(member) {
   // (Referral count and referral link are populated by loadReferralData above)
 
   // Sync toggles to the user's selections.
-  // Paid users see delivery prefs (what they're actually getting).
-  // Free users see their interest picks (grayed out, non-interactive).
-  var sportsSource = hasPaidPlan ? deliverySportsStr : interestsSportsStr;
-  var citiesSource = hasPaidPlan ? deliveryCitiesStr : interestsCitiesStr;
+  // Everyone reads from delivery prefs (interests-vs-delivery split was a paid-tier thing).
+  var sportsSource = deliverySportsStr || interestsSportsStr;
+  var citiesSource = deliveryCitiesStr || interestsCitiesStr;
   var selectedSports = sportsSource.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
   document.querySelectorAll('[data-sport]').forEach(function(toggle) {
     toggle.classList.toggle('is-on', selectedSports.indexOf(toggle.getAttribute('data-sport')) > -1);
@@ -2973,24 +2974,9 @@ function toggleCityPref(el) {
   el.classList.toggle('is-on');
   schedulePrefsSave();
 }
-// VIP members can only have ONE delivery selection total (one sport OR one city).
-// Return false + show upgrade nudge if they'd be adding a 2nd.
+// No tier limits anymore — anyone can pick unlimited sports/cities.
+// Function kept (rather than inlined) in case we re-introduce per-tier limits later.
 function canActivateToggle(el) {
-  // Allow turning OFF anytime
-  if (el.classList.contains('is-on')) return true;
-
-  var tier = getCurrentTier();
-  if (tier !== 'VIP') return true;  // All-Access has no cap; free is already blocked
-
-  // Count currently active toggles
-  var activeCount = document.querySelectorAll(
-    '#prefs-sports-section [data-sport].is-on, #prefs-cities-section [data-city].is-on'
-  ).length;
-
-  if (activeCount >= 1) {
-    showVipLockMessage();
-    return false;
-  }
   return true;
 }
 function showVipLockMessage() {
