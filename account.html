@@ -387,22 +387,6 @@
   .onboard-dot.is-active { background: var(--mandarin); }
   .onboard-dot.is-done { background: var(--charcoal); }
 
-  /* Sport/City checkboxes */
-  .check-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-    margin-bottom: 28px;
-  }
-  .check-item {
-    padding: 14px 16px; border: 1.5px solid var(--line);
-    border-radius: var(--radius); cursor: pointer;
-    font-family: var(--font-sans); font-size: 14px; font-weight: 600;
-    transition: all 0.2s; text-align: center; user-select: none;
-  }
-  .check-item:hover { border-color: var(--charcoal); }
-  .check-item.is-selected {
-    background: var(--charcoal); color: #fff; border-color: var(--charcoal);
-  }
-  .city-grid { grid-template-columns: repeat(2, 1fr); }
   .skip-link {
     display: block; text-align: center; margin-top: 16px;
     font-size: 13px; color: var(--text-secondary); cursor: pointer;
@@ -428,56 +412,6 @@
     cursor: pointer; transition: all 0.2s;
   }
   .share-btn:hover { border-color: var(--mandarin); color: var(--mandarin); }
-
-  /* Upsell cards */
-  .upsell-cards { display: flex; gap: 16px; margin-bottom: 28px; align-items: stretch; }
-  .upsell-card {
-    flex: 1 1 0; min-width: 0; padding: 32px 20px; border: 1.5px solid var(--line);
-    border-radius: var(--radius); text-align: center;
-    transition: all 0.2s; position: relative;
-    display: flex; flex-direction: column;
-  }
-  .upsell-card:hover { border-color: var(--charcoal); }
-  .upsell-card.is-featured {
-    border-color: var(--mandarin); border-width: 2px;
-  }
-  .upsell-card__tag {
-    font-family: var(--font-sans); font-size: 10px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.1em;
-    background: var(--mandarin); color: #fff;
-    padding: 5px 14px; border-radius: 100px;
-    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
-    white-space: nowrap;
-  }
-  .upsell-card__name {
-    font-family: var(--font-display); font-size: 24px; font-weight: 600;
-    margin-bottom: 6px;
-  }
-  .upsell-card__price {
-    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
-    color: var(--mandarin); margin-bottom: 16px;
-  }
-  .upsell-card__trial-note {
-    font-family: var(--font-sans); font-size: 12px; font-weight: 500;
-    color: var(--mandarin); margin-top: -12px; margin-bottom: 16px;
-    letter-spacing: 0.01em;
-  }
-  .upsell-card__features {
-    font-size: 13px; line-height: 1.8; color: var(--text-secondary);
-    text-align: center; margin-bottom: 20px; flex: 1;
-  }
-  .upsell-card__body {
-    font-size: 13px; line-height: 1.5; color: var(--text-secondary);
-    margin-bottom: 20px; flex: 1;
-  }
-  .upsell-card .auth-btn {
-    width: 100%; padding: 14px 12px; font-size: 13px;
-    white-space: normal; word-break: keep-all; line-height: 1.2;
-    min-height: 46px;
-    margin-top: auto;
-  }
-  /* Expand onboard-card to fit 3 plans comfortably on desktop */
-  #page-upsell .onboard-card { max-width: 880px; }
 
   /* ============================================
      DASHBOARD — sidebar + main
@@ -610,26 +544,6 @@
     font-size: 14px; color: var(--text-secondary);
     line-height: 1.5; margin-bottom: 16px;
   }
-  .referral-bar {
-    height: 8px; background: var(--line); border-radius: 4px;
-    overflow: hidden; margin-bottom: 8px;
-  }
-  .referral-bar__fill {
-    height: 100%; background: var(--mandarin);
-    border-radius: 4px; width: 40%;
-    transition: width 0.5s ease-out;
-  }
-  .referral-bar__text {
-    font-size: 12px; color: var(--text-secondary);
-    display: flex; justify-content: space-between;
-  }
-  .reward-row.is-unlocked .reward-label {
-    color: var(--mandarin) !important;
-    font-weight: 600;
-  }
-  .reward-row.is-unlocked .reward-label::after {
-    content: " ✓";
-  }
 
   /* Preferences panel */
   .pref-section {
@@ -665,12 +579,6 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
   }
   .pref-toggle.is-on::after { transform: translateX(20px); }
-  .pref-toggle.is-disabled {
-    opacity: 0.4; cursor: not-allowed; pointer-events: none;
-  }
-  .pref-row.is-locked {
-    opacity: 0.55;
-  }
   .pref-select {
     font-family: var(--font-sans); font-size: 14px; font-weight: 500;
     padding: 8px 32px 8px 14px; border: 1.5px solid var(--line);
@@ -683,11 +591,6 @@
     background-position: right 14px center;
   }
   .pref-select:focus { outline: none; border-color: var(--mandarin); }
-  .pref-locked {
-    font-size: 11px; color: var(--text-secondary);
-    background: rgba(30,28,26,0.04); padding: 4px 10px;
-    border-radius: 100px;
-  }
 
   /* Billing */
   .billing-card {
@@ -814,9 +717,6 @@
     .auth-card, .onboard-card { padding: 32px 24px; margin: 0; }
     .auth-card__title { font-size: 26px; }
     .code-input { width: 44px; height: 52px; font-size: 24px; }
-    .check-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .check-item { font-size: 13px; padding: 12px; }
-    .upsell-cards { flex-direction: column; }
 
     /* Dashboard mobile */
     .dash-main { padding: 90px 20px 40px; }
@@ -978,64 +878,7 @@
   <div class="auth-back" onclick="goTo('page-login')">Back</div>
 </div>
 
-<!-- ============================================
-     PAGE 3: SPORTS INTERESTS
-     ============================================ -->
-<div class="page auth-page" id="page-sports">
-  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
-  <div class="onboard-card">
-    <div class="onboard-progress">
-      <div class="onboard-dot is-active"></div>
-      <div class="onboard-dot"></div>
-      <div class="onboard-dot"></div>
-      <div class="onboard-dot"></div>
-    </div>
-    <div class="auth-card__title">What sports are you <i>into?</i></div>
-    <div class="auth-card__sub">Select all that apply — this helps us understand our community.</div>
-    <div class="check-grid">
-      <div class="check-item" data-value="Football" onclick="this.classList.toggle('is-selected')">Football</div>
-      <div class="check-item" data-value="Basketball" onclick="this.classList.toggle('is-selected')">Basketball</div>
-      <div class="check-item" data-value="Baseball" onclick="this.classList.toggle('is-selected')">Baseball</div>
-      <div class="check-item" data-value="Hockey" onclick="this.classList.toggle('is-selected')">Hockey</div>
-      <div class="check-item" data-value="Soccer" onclick="this.classList.toggle('is-selected')">Soccer</div>
-      <div class="check-item" data-value="F1" onclick="this.classList.toggle('is-selected')">F1</div>
 
-    </div>
-    <button class="auth-btn" onclick="saveSportsAndContinue()">Continue</button>
-    <div class="skip-link" onclick="goTo('page-cities')">Skip for now</div>
-  </div>
-</div>
-
-<!-- ============================================
-     PAGE 4: CITY SELECTION
-     ============================================ -->
-<div class="page auth-page" id="page-cities">
-  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
-  <div class="onboard-card">
-    <div class="onboard-progress">
-      <div class="onboard-dot is-done"></div>
-      <div class="onboard-dot is-active"></div>
-      <div class="onboard-dot"></div>
-      <div class="onboard-dot"></div>
-    </div>
-    <div class="auth-card__title">Do you live in any of these <i>cities?</i></div>
-    <div class="auth-card__sub">Select all that apply — this helps us understand our community.</div>
-    <div class="check-grid city-grid">
-      <div class="check-item" data-value="Chicago" onclick="this.classList.toggle('is-selected')">Chicago</div>
-      <div class="check-item" data-value="New York" onclick="this.classList.toggle('is-selected')">New York</div>
-      <div class="check-item" data-value="Los Angeles" onclick="this.classList.toggle('is-selected')">Los Angeles</div>
-      <div class="check-item" data-value="San Francisco" onclick="this.classList.toggle('is-selected')">San Francisco</div>
-      <div class="check-item" data-value="Seattle" onclick="this.classList.toggle('is-selected')">Seattle</div>
-    </div>
-    <div class="form-group" style="margin-top: 16px;">
-      <label class="form-label">Don't see your city?</label>
-      <input class="form-input" type="text" id="other-city-input" placeholder="Type your city...">
-    </div>
-    <button class="auth-btn" style="margin-top: 24px;" onclick="saveCitiesAndContinue()">Continue</button>
-    <div class="skip-link" onclick="goTo('page-upsell')">Skip for now</div>
-  </div>
-  <div class="auth-back" onclick="goTo('page-sports')">← Back</div>
-</div>
 
 <div class="page auth-page" id="page-referral">
   <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
@@ -1060,142 +903,12 @@
   </div>
 </div>
 
-<!-- ============================================
-     PAGE 6: PLAN SELECTION
-     ============================================ -->
-<div class="page auth-page" id="page-upsell">
-  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
-  <div class="onboard-card">
-    <div class="onboard-progress">
-      <div class="onboard-dot is-done"></div>
-      <div class="onboard-dot is-done"></div>
-      <div class="onboard-dot is-done"></div>
-      <div class="onboard-dot is-active"></div>
-    </div>
-    <div class="auth-card__title">Pick your <i>plan.</i></div>
-    <div class="auth-card__sub">Upgrade or cancel anytime.</div>
-    <div id="plan-upsell-banner" style="display: none; background: var(--pink, #FFE1EE); border: 1.5px solid var(--mandarin); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; line-height: 1.5; color: var(--charcoal); text-align: left;"></div>
-    <div class="upsell-cards">
-      <div class="upsell-card">
-        <div class="upsell-card__name">The VIP</div>
-        <div class="upsell-card__price">$4.99/mo</div>
-        <div class="upsell-card__features">
-          Everything in Insider<br>
-          Your sport or city<br>
-          Weekly deep-dives<br>
-          Breaking news alerts
-        </div>
-        <button class="auth-btn auth-btn--outline" onclick="handlePaidPlan('prc_the-vip-1zh30etf', this)">Get The VIP</button>
-      </div>
-      <div class="upsell-card is-featured">
-        <div class="upsell-card__tag">Best Value</div>
-        <div class="upsell-card__name">The All-Access</div>
-        <div class="upsell-card__price">$9.99/mo</div>
-        <div class="upsell-card__trial-note">First 7 days free</div>
-        <div class="upsell-card__features">
-          All sports &amp; cities<br>
-          Sports Hotline access<br>
-          Partner discounts<br>
-          Early event access
-        </div>
-        <button class="auth-btn" onclick="handlePaidPlan('prc_the-all-access-7-day-trial-jp40a7z', this)">Start Free Trial</button>
-      </div>
-    </div>
-    <button class="auth-btn auth-btn--outline" style="margin: 24px auto 0; max-width: 480px; display: block;" onclick="handleFreePlan(event)">Continue with the free Daily Brief</button>
-    <div style="text-align: center; font-size: 12px; color: var(--text-secondary); margin-top: 10px;">You can upgrade anytime from your account.</div>
-  </div>
-  <div class="auth-back" onclick="goTo('page-cities')">← Back</div>
-</div>
 
 <!-- ============================================
      PAGE 6B: WELCOME — shown after plan selection
      ============================================ -->
-<!-- ============================================
-     PAGE 6.5: VIP NARROW-DOWN
-     Only shown to VIP members who picked 2+ interests.
-     They pick the ONE sport or city their text focuses on.
-     ============================================ -->
-<div class="page auth-page" id="page-vip-pick">
-  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
-  <div class="auth-card">
-    <div class="auth-card__title">Pick <i>one.</i></div>
-    <div class="auth-card__sub" style="margin-bottom: 20px;">VIP includes deep coverage on one sport OR one city. Choose what you want your texts focused on — you can change it anytime.</div>
-    <div class="check-grid" id="vip-pick-grid" style="margin-bottom: 20px;">
-      <!-- Options injected by JS based on interests -->
-    </div>
-    <button class="auth-btn" id="vip-pick-continue" onclick="saveVipPickAndContinue()" disabled style="opacity:0.5;">Continue</button>
-  </div>
-</div>
 
-<!-- ============================================
-     PAGE: ADJUST PLAN (for existing logged-in members)
-     Identical layout to page-upsell but on the dashboard's light background
-     and with a back button to dashboard instead of onboarding.
-     ============================================ -->
-<div class="page" id="page-adjust-plan" style="background: var(--stone); min-height: 100vh; padding: 40px 20px;">
-  <div style="max-width: 1100px; margin: 0 auto;">
-    <div style="display:flex; align-items:center; gap:16px; margin-bottom: 32px;">
-      <button onclick="goTo('page-dash'); populateDashboardFromMemory();" style="background: none; border: none; color: var(--charcoal); cursor: pointer; font-family: var(--font-sans); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; padding: 8px 0;">
-        ← Back to Account
-      </button>
-    </div>
-    <div style="text-align:center; margin-bottom: 40px;">
-      <h1 style="font-family: var(--font-display); font-size: 56px; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 12px; color: var(--charcoal);">Adjust your <i style="color: var(--mandarin);">plan.</i></h1>
-      <p style="font-family: var(--font-sans); font-size: 15px; color: var(--text-secondary);" id="adjust-plan-subtitle">Upgrade, downgrade, or cancel anytime.</p>
-    </div>
 
-    <div class="upsell-cards" style="max-width: 1200px; margin: 0 auto;">
-      <div class="upsell-card" style="background: #fff;">
-        <div class="upsell-card__name">The Insider</div>
-        <div class="upsell-card__price">Free</div>
-        <div class="upsell-card__features">
-          Weekday sports texts<br>
-          Top headlines &amp; culture<br>
-          &nbsp;<br>
-          &nbsp;
-        </div>
-        <button class="auth-btn auth-btn--outline" id="adjust-btn-insider" onclick="handleAdjustToInsider(event, this)">Choose Insider</button>
-      </div>
-      <div class="upsell-card" style="background: #fff;">
-        <div class="upsell-card__name">The VIP</div>
-        <div class="upsell-card__price">$4.99<span style="font-size:14px; font-weight:400;">/mo</span></div>
-        <div class="upsell-card__features">
-          Everything in Insider<br>
-          One sport OR one city<br>
-          Weekly deep-dives<br>
-          Breaking news alerts
-        </div>
-        <button class="auth-btn auth-btn--outline" id="adjust-btn-vip" onclick="handleAdjustToPaid('prc_the-vip-1zh30etf', this)">Choose VIP</button>
-      </div>
-      <div class="upsell-card" style="background: #fff;">
-        <div class="upsell-card__name">All-Access</div>
-        <div class="upsell-card__price">$9.99<span style="font-size:14px; font-weight:400;">/mo</span></div>
-        <div class="upsell-card__trial-note">First 7 days free</div>
-        <div class="upsell-card__features">
-          Everything in VIP<br>
-          All sports &amp; all cities<br>
-          Sports Hotline access<br>
-          Partner perks &amp; early access
-        </div>
-        <button class="auth-btn" id="adjust-btn-all" onclick="handleAdjustToPaid('prc_the-all-access-7-day-trial-jp40a7z', this)">Choose All-Access</button>
-      </div>
-    </div>
-
-    <div style="text-align:center; margin-top: 32px; font-size: 13px; color: var(--text-secondary);">
-      Billing changes are handled securely through Stripe.
-    </div>
-  </div>
-</div>
-
-<div class="page auth-page" id="page-welcome">
-  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
-  <div class="auth-card">
-    <div class="auth-card__title" id="welcome-title">Welcome to <i>S*BFF.</i></div>
-    <div class="auth-card__sub" id="welcome-sub-1" style="margin-bottom: 24px;">Your first BFF Brief arrives next weekday morning.</div>
-    <div class="auth-card__sub" id="welcome-sub-2" style="margin-bottom: 32px;">Visit your member settings anytime to update your plan, sports, or cities.</div>
-    <button class="auth-btn" onclick="goTo('page-dash'); populateDashboardFromMemory();">Continue to Account</button>
-  </div>
-</div>
 
 <!-- ============================================
      PAGE 7: DASHBOARD — Account Home
@@ -1234,15 +947,6 @@
         <h1 class="dash-title">Welcome back, <i>Heather.</i></h1>
       </div>
 
-      <!-- Onboarding nudge (shown if onboarding incomplete) -->
-      <div id="onboarding-nudge" style="display:none; background: var(--mandarin); color: #fff; padding: 16px 20px; border-radius: var(--radius); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
-        <div>
-          <div style="font-weight: 700; font-size: 15px; margin-bottom: 2px;">Finish setting up your BFF Brief</div>
-          <div style="font-size: 13px; opacity: 0.9;">Tell us your sports and cities so we can personalize your texts.</div>
-        </div>
-        <button class="share-btn" style="background: #fff; color: var(--charcoal); border-color: #fff;" onclick="goTo('page-sports')">Continue</button>
-      </div>
-
       <!-- Tier card — image inside on left -->
       <div class="tier-card" style="display: flex; align-items: center; gap: 20px; padding: 20px;">
         <div style="width: 140px; height: 140px; background: #D9D9D9; border-radius: var(--radius); flex-shrink: 0; overflow: hidden;"><img src="couch.png" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;"></div>
@@ -1270,25 +974,6 @@
         <div style="padding: 20px 0 0; margin-top: 20px; border-top: 1px solid var(--line);">
           <div id="referral-progress-text" style="font-family: var(--font-display); font-size: 36px; font-weight: 600; color: var(--charcoal); line-height: 1;">0</div>
           <div style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">friends have signed up from your link</div>
-        </div>
-        <!-- Milestone rewards list — hidden for now, will re-enable once rewards are finalized -->
-        <div id="referral-rewards-list" style="display: none; margin-top: 16px; flex-direction: column; gap: 8px;">
-          <div class="reward-row" data-threshold="5" style="display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--line);">
-            <span><strong>5 referrals</strong></span>
-            <span class="reward-label" style="color: var(--text-secondary);">Free Sticker Pack</span>
-          </div>
-          <div class="reward-row" data-threshold="10" style="display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--line);">
-            <span><strong>10 referrals</strong></span>
-            <span class="reward-label" style="color: var(--text-secondary);">Free Month of All-Access</span>
-          </div>
-          <div class="reward-row" data-threshold="25" style="display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--line);">
-            <span><strong>25 referrals</strong></span>
-            <span class="reward-label" style="color: var(--text-secondary);">Free S*BFF Tee</span>
-          </div>
-          <div class="reward-row" data-threshold="50" style="display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0;">
-            <span><strong>50 referrals</strong></span>
-            <span class="reward-label" style="color: var(--text-secondary);">Free S*BFF Hoodie</span>
-          </div>
         </div>
       </div>
 
@@ -1526,164 +1211,6 @@
   if (initial) window.applyBodyState(initial.id);
 })();
 
-// ============================================
-// ONBOARDING SAVE HELPERS
-// ============================================
-function saveSportsAndContinue() {
-  var selected = Array.from(document.querySelectorAll('#page-sports .check-item.is-selected'))
-    .map(function(el) { return el.getAttribute('data-value'); });
-
-  var memberstack = window.$memberstackDom;
-  if (memberstack && selected.length) {
-    memberstack.updateMember({
-      customFields: { 'interests-sports': selected.join(', ') }
-    }).then(function() { goTo('page-cities'); })
-      .catch(function() { goTo('page-cities'); });
-  } else {
-    goTo('page-cities');
-  }
-}
-
-function saveCitiesAndContinue() {
-  var selected = Array.from(document.querySelectorAll('#page-cities .check-item.is-selected'))
-    .map(function(el) { return el.getAttribute('data-value'); });
-  var otherInput = document.getElementById('other-city-input');
-  if (otherInput && otherInput.value.trim()) {
-    selected.push(otherInput.value.trim());
-  }
-
-  var memberstack = window.$memberstackDom;
-  if (memberstack && selected.length) {
-    memberstack.updateMember({
-      customFields: { 'interests-cities': selected.join(', ') }
-    }).then(function() {
-      refreshPlanUpsellCopy();
-      goTo('page-upsell');
-    }).catch(function() {
-      refreshPlanUpsellCopy();
-      goTo('page-upsell');
-    });
-  } else {
-    refreshPlanUpsellCopy();
-    goTo('page-upsell');
-  }
-}
-
-// Dynamic upsell copy on plan page based on what user picked in interests
-function refreshPlanUpsellCopy() {
-  var sportsEls = document.querySelectorAll('#page-sports .check-item.is-selected');
-  var citiesEls = document.querySelectorAll('#page-cities .check-item.is-selected');
-  var otherCityInput = document.getElementById('other-city-input');
-  var sportsCount = sportsEls.length;
-  var citiesCount = citiesEls.length;
-  if (otherCityInput && otherCityInput.value.trim()) citiesCount++;
-  var total = sportsCount + citiesCount;
-
-  var banner = document.getElementById('plan-upsell-banner');
-  if (!banner) return;
-
-  if (total >= 2) {
-    banner.style.display = 'block';
-    banner.innerHTML = "You picked <strong>" + sportsCount + " sport" + (sportsCount === 1 ? "" : "s") +
-      "</strong> and <strong>" + citiesCount + " cit" + (citiesCount === 1 ? "y" : "ies") +
-      "</strong>. To get texts on <em>all</em> of them, go <strong>All-Access</strong>. VIP covers one of your picks.";
-  } else if (total === 1) {
-    banner.style.display = 'block';
-    banner.innerHTML = "You picked 1 interest. <strong>VIP</strong> gives you text updates on it. <strong>All-Access</strong> unlocks everything.";
-  } else {
-    banner.style.display = 'none';
-  }
-}
-
-// ============================================
-// VIP NARROW-DOWN: read interests, render one-pick grid
-// ============================================
-function populateVipPickGrid(member) {
-  if (!member) return;
-  var customFields = member.customFields || {};
-  var sportsStr = customFields['interests-sports'] || '';
-  var citiesStr = customFields['interests-cities'] || '';
-  var sports = sportsStr ? sportsStr.split(',').map(function(s) { return s.trim(); }).filter(Boolean) : [];
-  var cities = citiesStr ? citiesStr.split(',').map(function(s) { return s.trim(); }).filter(Boolean) : [];
-
-  var grid = document.getElementById('vip-pick-grid');
-  if (!grid) return;
-  grid.innerHTML = '';
-
-  sports.forEach(function(sport) {
-    var el = document.createElement('div');
-    el.className = 'check-item';
-    el.setAttribute('data-type', 'sport');
-    el.setAttribute('data-value', sport);
-    el.textContent = sport;
-    el.onclick = function() { handleVipPickClick(el); };
-    grid.appendChild(el);
-  });
-
-  cities.forEach(function(city) {
-    var el = document.createElement('div');
-    el.className = 'check-item';
-    el.setAttribute('data-type', 'city');
-    el.setAttribute('data-value', city);
-    el.textContent = city;
-    el.onclick = function() { handleVipPickClick(el); };
-    grid.appendChild(el);
-  });
-}
-
-// Single-select behavior — clicking one deselects all others
-function handleVipPickClick(clickedEl) {
-  var allItems = document.querySelectorAll('#vip-pick-grid .check-item');
-  allItems.forEach(function(item) { item.classList.remove('is-selected'); });
-  clickedEl.classList.add('is-selected');
-
-  var btn = document.getElementById('vip-pick-continue');
-  if (btn) {
-    btn.disabled = false;
-    btn.style.opacity = '1';
-  }
-}
-
-function saveVipPickAndContinue() {
-  var selected = document.querySelector('#vip-pick-grid .check-item.is-selected');
-  if (!selected) return;
-
-  var type = selected.getAttribute('data-type'); // "sport" or "city"
-  var value = selected.getAttribute('data-value');
-  var fields = {};
-
-  // Set the chosen delivery field, blank out the other one
-  if (type === 'sport') {
-    fields['delivery-sports'] = value;
-    fields['delivery-cities'] = '';
-  } else {
-    fields['delivery-cities'] = value;
-    fields['delivery-sports'] = '';
-  }
-  fields['onboarding-complete'] = 'true';
-  fields['breaking-news-enabled'] = 'true';
-
-  var memberstack = window.$memberstackDom;
-  if (!memberstack) {
-    goTo('page-referral');
-    return;
-  }
-
-  memberstack.updateMember({ customFields: fields })
-    .then(function() { return memberstack.getCurrentMember(); })
-    .then(function(result) {
-      var member = result && result.data;
-      _lastMember = member;
-      populateWelcomePage(member);
-      loadReferralData(member);
-      goTo('page-referral');
-    })
-    .catch(function(err) {
-      console.error('VIP pick save failed:', err);
-      goTo('page-referral');
-    });
-}
-
 function copyReferralLink(elementId, buttonEl) {
   var el = document.getElementById(elementId);
   if (!el) return;
@@ -1715,10 +1242,6 @@ function goTo(id) {
   document.getElementById(id).classList.add('is-active');
   window.scrollTo(0, 0);
   if (window.applyBodyState) window.applyBodyState(id);
-  // Whenever user lands on the plan page, refresh upsell copy based on their picks
-  if (id === 'page-upsell' && typeof refreshPlanUpsellCopy === 'function') {
-    refreshPlanUpsellCopy();
-  }
 }
 
 // Auth tabs (login/signup)
@@ -1740,21 +1263,6 @@ function showDash(panel) {
     b.classList.toggle('is-active', b.getAttribute('data-dash') === panel);
   });
 }
-
-// Show "Other" city input when Other is selected
-document.querySelectorAll('#page-cities .check-item').forEach(function(item) {
-  item.addEventListener('click', function() {
-    if (item.textContent.trim() === 'Other') {
-      var otherInput = document.querySelector('.other-city-input');
-      if (item.classList.contains('is-selected')) {
-        otherInput.style.display = 'block';
-        otherInput.querySelector('input').focus();
-      } else {
-        otherInput.style.display = 'none';
-      }
-    }
-  });
-});
 
 // ============================================
 // MEMBERSTACK INTEGRATION
@@ -1937,7 +1445,6 @@ function handleVerifyCode() {
       }).then(function(result) {
         if (result && result.data) {
           _lastMember = result.data;
-          populateWelcomePage(result.data);
           loadReferralData(result.data);
         }
         goTo('page-referral');
@@ -2001,162 +1508,6 @@ function applyPendingCustomFields() {
   return Promise.resolve();
 }
 
-// ============================================
-// POST-CHECKOUT ROUTING
-// After Stripe return, decide what the user sees based on tier + interests
-// - All-Access: copy interests → delivery prefs, go to welcome
-// - VIP with 2+ interests: send to narrow-down page
-// - VIP with 1 interest: auto-set as delivery, go to welcome
-// - VIP with 0 interests: go straight to welcome (they can set prefs in dashboard)
-// ============================================
-function routePostCheckout(member, memberstack) {
-  if (!member) { goTo('page-referral'); return; }
-
-  var customFields = member.customFields || {};
-  var planConnections = member.planConnections || [];
-  var wasOnboarded = customFields['onboarding-complete'] === 'true';
-
-  // Detect tier from active plans — PREFER highest paid tier when user has multiple.
-  var tier = 'Insider';
-  var allAccess = planConnections.find(function(pc) {
-    return isPlanActive(pc) && pc.planId && pc.planId.indexOf('all-access') > -1;
-  });
-  var vipPlan = planConnections.find(function(pc) {
-    return isPlanActive(pc) && pc.planId && pc.planId.indexOf('vip') > -1;
-  });
-  if (allAccess) tier = 'All-Access';
-  else if (vipPlan) tier = 'VIP';
-  console.log('[Route] Tier detected:', tier);
-
-  var sportsStr = customFields['interests-sports'] || '';
-  var citiesStr = customFields['interests-cities'] || '';
-  var sportsArr = sportsStr ? sportsStr.split(',').map(function(s) { return s.trim(); }).filter(Boolean) : [];
-  var citiesArr = citiesStr ? citiesStr.split(',').map(function(s) { return s.trim(); }).filter(Boolean) : [];
-  var totalInterests = sportsArr.length + citiesArr.length;
-
-  // Helper: after a tier change for an already-onboarded user, just refresh dashboard
-  function finishForExistingMember() {
-    memberstack.getCurrentMember().then(function(result) {
-      var m = result && result.data;
-      _lastMember = m || member;
-      goTo('page-dash');
-      populateDashboard(m || member);
-      loadReferralData(m || member);
-    });
-  }
-
-  if (tier === 'All-Access') {
-    // Copy all interests into delivery prefs, and auto-enable Breaking News
-    // (upgrading to a paid tier opts the user into the full service by default —
-    // they can toggle Breaking News off later on the dashboard if they want)
-    memberstack.updateMember({
-      customFields: {
-        'delivery-sports': sportsStr,
-        'delivery-cities': citiesStr,
-        'onboarding-complete': 'true',
-        'breaking-news-enabled': 'true'
-      }
-    }).then(function() { return memberstack.getCurrentMember(); })
-      .then(function(result) {
-        var m = result && result.data;
-        _lastMember = m || member;
-        if (wasOnboarded) {
-          // Existing member upgrading — go straight to dashboard
-          goTo('page-dash');
-          populateDashboard(m || member);
-          loadReferralData(m || member);
-        } else {
-          // New signup — welcome + referral flow
-          populateWelcomePage(m || member);
-          loadReferralData(m || member);
-          goTo('page-referral');
-        }
-      })
-      .catch(function() {
-        populateWelcomePage(member);
-        loadReferralData(member);
-        goTo('page-referral');
-      });
-    return;
-  }
-
-  if (tier === 'VIP') {
-    // Existing member upgrading to VIP from something else — skip onboarding-style narrowing,
-    // just run same auto-copy logic as All-Access if they have interests.
-    if (wasOnboarded) {
-      var existingFields = {
-        'onboarding-complete': 'true',
-        'breaking-news-enabled': 'true'
-      };
-      // If exactly 1 interest total, auto-set it; otherwise leave existing delivery fields alone
-      if (totalInterests === 1) {
-        if (sportsArr.length === 1) {
-          existingFields['delivery-sports'] = sportsArr[0];
-          existingFields['delivery-cities'] = '';
-        } else {
-          existingFields['delivery-cities'] = citiesArr[0];
-          existingFields['delivery-sports'] = '';
-        }
-      }
-      memberstack.updateMember({ customFields: existingFields })
-        .then(finishForExistingMember)
-        .catch(function() { finishForExistingMember(); });
-      return;
-    }
-    if (totalInterests >= 2) {
-      // Show narrow-down page — referral step comes AFTER VIP narrows down
-      populateVipPickGrid(member);
-      goTo('page-vip-pick');
-      return;
-    }
-    if (totalInterests === 1) {
-      // Auto-set the single interest as their delivery
-      var fields = {
-        'onboarding-complete': 'true',
-        'breaking-news-enabled': 'true'
-      };
-      if (sportsArr.length === 1) {
-        fields['delivery-sports'] = sportsArr[0];
-        fields['delivery-cities'] = '';
-      } else {
-        fields['delivery-cities'] = citiesArr[0];
-        fields['delivery-sports'] = '';
-      }
-      memberstack.updateMember({ customFields: fields })
-        .then(function() { return memberstack.getCurrentMember(); })
-        .then(function(result) {
-          var m = result && result.data;
-          _lastMember = m || member;
-          populateWelcomePage(m || member);
-          loadReferralData(m || member);
-          goTo('page-referral');
-        })
-        .catch(function() {
-          populateWelcomePage(member);
-          loadReferralData(member);
-          goTo('page-referral');
-        });
-      return;
-    }
-    // VIP with 0 interests — just go to referral
-    populateWelcomePage(member);
-    loadReferralData(member);
-    goTo('page-referral');
-    return;
-  }
-
-  // Insider or unknown tier
-  if (wasOnboarded) {
-    // Existing member downgraded to Insider — just go to dashboard
-    finishForExistingMember();
-    return;
-  }
-  // New Insider signup
-  populateWelcomePage(member);
-  loadReferralData(member);
-  goTo('page-referral');
-}
-
 // Final step after referral page → land directly on BFF Brief Preferences tab.
 // The dashboard's page ID is "page-dash" (not page-dashboard).
 // We also need to populate the dashboard from the current member before showing it
@@ -2205,7 +1556,6 @@ function handleFreePlan(event) {
   }).then(function(result) {
     var member = result && result.data;
     _lastMember = member;
-    populateWelcomePage(member);
     loadReferralData(member);
     goTo('page-referral');
   }).catch(function(err) {
@@ -2214,127 +1564,11 @@ function handleFreePlan(event) {
   });
 }
 
-// Handle paid plan (VIP / All-Access) — launches Stripe checkout
-function handlePaidPlan(priceId, buttonEl) {
-  var memberstack = window.$memberstackDom;
-  if (!memberstack) {
-    alert('Checkout is loading — please try again in a moment.');
-    return;
-  }
-
-  // Disable button + show loading state
-  if (buttonEl) {
-    buttonEl.disabled = true;
-    buttonEl.dataset.originalText = buttonEl.textContent;
-    buttonEl.textContent = 'Loading...';
-  }
-
-  var successUrl = window.location.origin + '/account?welcome=true';
-  var cancelUrl = window.location.origin + '/account?onboarding=true';
-
-  memberstack.purchasePlansWithCheckout({
-    priceId: priceId,
-    successUrl: successUrl,
-    cancelUrl: cancelUrl
-  }).catch(function(err) {
-    console.error('Checkout failed:', err);
-    alert('Sorry, checkout could not start. Please try again or contact hello@yoursportsbff.com.');
-    if (buttonEl) {
-      buttonEl.disabled = false;
-      buttonEl.textContent = buttonEl.dataset.originalText || 'Try again';
-    }
-  });
-}
-
-// ============================================
-// DASHBOARD → ADJUST PLAN FLOW
-// When an existing logged-in member wants to change plans
-// ============================================
-function openUpgradeFromDashboard() {
-  // Update subtitle based on current tier
-  var sub = document.getElementById('adjust-plan-subtitle');
-  var currentTier = getCurrentTier();
-  if (sub) {
-    if (currentTier === 'All-Access') {
-      sub.textContent = "You're on All-Access — our top tier. Downgrade or cancel anytime.";
-    } else if (currentTier === 'VIP') {
-      sub.textContent = "You're on VIP. Upgrade to All-Access or downgrade anytime.";
-    } else {
-      sub.textContent = "Upgrade, downgrade, or cancel anytime.";
-    }
-  }
-
-  // Hide the button for whichever plan the user already has
-  var insiderBtn = document.getElementById('adjust-btn-insider');
-  var vipBtn = document.getElementById('adjust-btn-vip');
-  var allBtn = document.getElementById('adjust-btn-all');
-  if (insiderBtn) insiderBtn.style.display = (currentTier === 'Insider' || currentTier === 'Free') ? 'none' : '';
-  if (vipBtn) vipBtn.style.display = currentTier === 'VIP' ? 'none' : '';
-  if (allBtn) allBtn.style.display = currentTier === 'All-Access' ? 'none' : '';
-
-  goTo('page-adjust-plan');
-}
-
-// Helper: determine current tier from cached member
-function getCurrentTier() {
-  if (!_lastMember) return 'Free';
-  var planConnections = _lastMember.planConnections || [];
-  var allAccess = planConnections.find(function(pc) {
-    return isPlanActive(pc) && pc.planId && pc.planId.indexOf('all-access') > -1;
-  });
-  if (allAccess) return 'All-Access';
-  var vip = planConnections.find(function(pc) {
-    return isPlanActive(pc) && pc.planId && pc.planId.indexOf('vip') > -1;
-  });
-  if (vip) return 'VIP';
-  var insider = planConnections.find(function(pc) {
-    return isPlanActive(pc) && pc.planId;
-  });
-  if (insider) return 'Insider';
-  return 'Free';
-}
-
-// Switch to Insider (free) — remove paid plans
-function handleAdjustToInsider(event, buttonEl) {
-  if (event) event.preventDefault();
-  var confirmed = window.confirm(
-    "Switch to the free Insider plan? You'll lose personalized texts and premium features at the end of your current billing period."
-  );
-  if (!confirmed) return;
-
-  var memberstack = window.$memberstackDom;
-  if (!memberstack) {
-    alert('Please try again in a moment.');
-    return;
-  }
-
-  if (buttonEl) {
-    buttonEl.disabled = true;
-    buttonEl.dataset.originalText = buttonEl.textContent;
-    buttonEl.textContent = 'Processing...';
-  }
-
-  // MemberStack's downgrade flow: open Stripe Customer Portal so user can cancel
-  // paid subscription. The Insider plan stays attached (or we can add it if missing).
-  // For simplicity, route to Stripe Customer Portal via MemberStack's built-in.
-  memberstack.launchStripeCustomerPortal({
-    returnUrl: window.location.origin + '/account'
-  }).catch(function(err) {
-    console.error('Customer portal failed:', err);
-    alert('Could not open billing portal. Please contact hello@yoursportsbff.com.');
-    if (buttonEl) {
-      buttonEl.disabled = false;
-      buttonEl.textContent = buttonEl.dataset.originalText || 'Choose Insider';
-    }
-  });
-}
-
 // ===========================================================
 // ACCOUNT EDIT MODAL — writes to MemberStack (source of truth)
 // ===========================================================
 // MemberStack holds: email, first-name, last-name, phone.
 // These feed Airtable → Zapier → SimpleTexting for SMS delivery.
-// Stripe holds: card/payment method only (edited via launchStripeCustomerPortal).
 
 function openAccountEditModal() {
   var modal = document.getElementById('accountEditModal');
@@ -2479,71 +1713,14 @@ function submitAccountEdit(event) {
   });
 }
 
-// Open Stripe Customer Portal for payment method / card updates.
-// Stripe handles card updates itself — no MemberStack sync needed since
-// MemberStack ↔ Stripe is already linked via customer ID.
-function openStripePortal() {
-  var memberstack = window.$memberstackDom;
-  if (!memberstack) {
-    alert('Please try again in a moment.');
-    return;
-  }
-  memberstack.launchStripeCustomerPortal({
-    returnUrl: window.location.origin + '/account'
-  }).catch(function(err) {
-    console.error('Customer portal failed:', err);
-    alert('Could not open billing portal. Please contact hello@yoursportsbff.com.');
-  });
-}
-
-// Cancel membership entirely (route to Stripe Customer Portal for paid users,
-// or route free users to support email since there's no Stripe subscription to cancel).
+// Cancel membership: everyone is on the free Insider plan, so cancellation = email.
 function handleCancelMembership() {
-  var tier = getCurrentTier();
-  if (tier === 'Free' || tier === 'Insider') {
-    var confirmFree = window.confirm(
-      "You're currently on the free Insider plan. To fully cancel your account and stop receiving texts, email hello@yoursportsbff.com. Want to do that now?"
-    );
-    if (confirmFree) {
-      window.location.href = 'mailto:hello@yoursportsbff.com?subject=Cancel%20my%20S*BFF%20account';
-    }
-    return;
+  var confirmFree = window.confirm(
+    "To fully cancel your account and stop receiving texts, email hello@yoursportsbff.com. Want to do that now?"
+  );
+  if (confirmFree) {
+    window.location.href = 'mailto:hello@yoursportsbff.com?subject=Cancel%20my%20S*BFF%20account';
   }
-  openStripePortal();
-}
-
-// Switch to or upgrade to a paid plan — Stripe checkout
-function handleAdjustToPaid(priceId, buttonEl) {
-  var memberstack = window.$memberstackDom;
-  if (!memberstack) {
-    alert('Checkout is loading — please try again in a moment.');
-    return;
-  }
-
-  if (buttonEl) {
-    buttonEl.disabled = true;
-    buttonEl.dataset.originalText = buttonEl.textContent;
-    buttonEl.textContent = 'Loading...';
-  }
-
-  // Use ?welcome=true so post-checkout routing re-syncs delivery prefs for the new tier.
-  // (routePostCheckout handles this safely — for already-onboarded users it still updates
-  // delivery fields and lands them on dashboard.)
-  var successUrl = window.location.origin + '/account?welcome=true';
-  var cancelUrl = window.location.origin + '/account';
-
-  memberstack.purchasePlansWithCheckout({
-    priceId: priceId,
-    successUrl: successUrl,
-    cancelUrl: cancelUrl
-  }).catch(function(err) {
-    console.error('Adjust checkout failed:', err);
-    alert('Sorry, checkout could not start. Please try again or contact hello@yoursportsbff.com.');
-    if (buttonEl) {
-      buttonEl.disabled = false;
-      buttonEl.textContent = buttonEl.dataset.originalText || 'Try again';
-    }
-  });
 }
 
 // ============================================
@@ -2559,7 +1736,6 @@ function handleAdjustToPaid(priceId, buttonEl) {
     var memberstack = window.$memberstackDom;
     var urlParams = new URLSearchParams(window.location.search);
     var isOnboarding = urlParams.get('onboarding') === 'true';
-    var isWelcome = urlParams.get('welcome') === 'true';
 
     memberstack.getCurrentMember().then(function(result) {
       var member = result && result.data;
@@ -2577,25 +1753,10 @@ function handleAdjustToPaid(priceId, buttonEl) {
         var member = result && result.data;
         var customFields = (member && member.customFields) || {};
         var onboardingComplete = customFields['onboarding-complete'] === 'true';
-        var planConnections = (member && member.planConnections) || [];
-        var hasPlan = planConnections.some(function(pc) { return isPlanActive(pc); });
 
-        // Detect post-checkout state BEFORE we mutate onboarding-complete.
-        // A user just returned from Stripe if they have a plan but haven't completed onboarding.
-        var justReturnedFromCheckout = hasPlan && !onboardingComplete;
-
-        if (isWelcome || justReturnedFromCheckout) {
-          console.log('[Route] Post-checkout detected. isWelcome=', isWelcome, 'justReturned=', justReturnedFromCheckout, 'planConnections=', planConnections);
-          // Coming back from Stripe checkout — route based on tier + interests
-          // (routePostCheckout will set onboarding-complete after handling delivery prefs)
-          routePostCheckout(member, memberstack);
-          // Clean the URL so refresh doesn't loop them back here
-          if (window.history && window.history.replaceState) {
-            window.history.replaceState({}, '', '/account');
-          }
-        } else if (isOnboarding && !onboardingComplete) {
-          // New signup flow — start at sports
-          goTo('page-sports');
+        if (isOnboarding && !onboardingComplete) {
+          // Legacy onboarding URL — route to referral page (signup → consent → referral → dashboard)
+          goTo('page-referral');
         } else {
           // Returning user OR completed onboarding — go to dashboard
           goTo('page-dash');
@@ -2614,59 +1775,8 @@ function handleAdjustToPaid(priceId, buttonEl) {
 // re-populate the dashboard without a second MemberStack call
 var _lastMember = null;
 
-// ============================================
-// Plan-status helper — treat TRIALING as active.
-// MemberStack marks trialing subscriptions with active: false because no
-// payment has been collected yet, but the user has been granted access to
-// the plan. All of our tier-detection logic uses this helper so trial users
-// see the correct tier (All-Access, not Insider).
-// ============================================
-function isPlanActive(pc) {
-  if (!pc) return false;
-  if (pc.active === true) return true;
-  // TRIALING status means the user has plan access during their free trial
-  if (pc.status === 'TRIALING') return true;
-  return false;
-}
-
 function populateDashboardFromMemory() {
   if (_lastMember) populateDashboard(_lastMember);
-}
-
-function populateWelcomePage(member) {
-  if (!member) return;
-  _lastMember = member;
-  var customFields = member.customFields || {};
-  var firstName = customFields['first-name'] || 'there';
-  var planConnections = member.planConnections || [];
-
-  // Determine which paid plan they're on (if any)
-  var planLabel = 'Insider';
-  var active = planConnections.find(function(pc) { return isPlanActive(pc); });
-  if (active) {
-    var planId = active.planId || '';
-    if (planId.indexOf('vip') > -1) planLabel = 'VIP';
-    else if (planId.indexOf('all-access') > -1) planLabel = 'All-Access';
-  }
-
-  var titleEl = document.getElementById('welcome-title');
-  var sub1El = document.getElementById('welcome-sub-1');
-  var sub2El = document.getElementById('welcome-sub-2');
-
-  if (titleEl) {
-    titleEl.innerHTML = "You're in, <i>" + escapeHtml(firstName) + ".</i>";
-  }
-
-  if (planLabel === 'Insider') {
-    if (sub1El) sub1El.textContent = "Welcome to the Insider tier. Your first BFF Brief arrives next weekday morning with top sports headlines and culture.";
-    if (sub2El) sub2El.innerHTML = "Visit your <a href='#' onclick=\"goTo('page-dash'); populateDashboardFromMemory(); return false;\" style='color: var(--mandarin); text-decoration: underline;'>member settings</a> anytime to update your preferences or upgrade your plan.";
-  } else if (planLabel === 'VIP') {
-    if (sub1El) sub1El.textContent = "You're officially VIP. Your first BFF Brief arrives next weekday morning, plus weekly deep-dives and breaking news alerts on your sport or city.";
-    if (sub2El) sub2El.textContent = "Head to your account to confirm your sport or city selection, and update preferences anytime.";
-  } else if (planLabel === 'All-Access') {
-    if (sub1El) sub1El.textContent = "You're All-Access. Your first BFF Brief arrives next weekday morning — plus deep-dives, breaking alerts, Sports Hotline access, and partner perks.";
-    if (sub2El) sub2El.textContent = "Head to your account to set your sports and cities, and explore everything included in your tier.";
-  }
 }
 
 function populateDashboard(member) {
@@ -2676,10 +1786,7 @@ function populateDashboard(member) {
   var firstName = customFields['first-name'] || 'there';
   var lastName = customFields['last-name'] || '';
   var referralCode = customFields['referral-code'] || '';
-  // Free tier shows interests (read-only + upgrade CTA)
-  // Paid tier shows delivery prefs (editable)
-  var interestsSportsStr = customFields['interests-sports'] || customFields['sports'] || '';
-  var interestsCitiesStr = customFields['interests-cities'] || customFields['cities'] || '';
+  // Delivery prefs — what sports/cities the user toggles in their dashboard.
   var deliverySportsStr = customFields['delivery-sports'] || '';
   var deliveryCitiesStr = customFields['delivery-cities'] || '';
 
@@ -2754,68 +1861,6 @@ function populateDashboard(member) {
     }
   }
 
-  // Tier gating — check if user has a paid plan attached
-  var planConnections = member.planConnections || [];
-  var hasPaidPlan = planConnections.some(function(pc) {
-    return isPlanActive(pc) && pc.planId && pc.planId !== 'pln_the-insider-jbbd0e0g';
-  });
-
-  document.querySelectorAll('[data-sbff-tier="free"]').forEach(function(el) {
-    el.style.display = hasPaidPlan ? 'none' : '';
-  });
-  document.querySelectorAll('[data-sbff-tier="paid"]').forEach(function(el) {
-    el.style.display = hasPaidPlan ? '' : 'none';
-  });
-
-  // VIP lock banner: only EVER shown programmatically when a VIP tries to pick a 2nd item.
-  // Keep it hidden by default on every dashboard load.
-  var vipBanner = document.getElementById('vip-lock-banner');
-  if (vipBanner) vipBanner.style.display = 'none';
-
-  // Show the upgrade banner in preferences panel for free users
-  var freeBanner = document.getElementById('prefs-free-banner');
-  if (freeBanner) {
-    freeBanner.style.display = hasPaidPlan ? 'none' : 'flex';
-  }
-
-  // Preference toggles are open to everyone now (paid tiers killed).
-  // Make sure no toggle is left in a stale disabled/locked state from older code paths.
-  var prefToggles = document.querySelectorAll('#prefs-sports-section .pref-toggle, #prefs-cities-section .pref-toggle');
-  var prefRows = document.querySelectorAll('#prefs-sports-section .pref-row, #prefs-cities-section .pref-row');
-  prefToggles.forEach(function(t) { t.classList.remove('is-disabled'); });
-  prefRows.forEach(function(r) { r.classList.remove('is-locked'); });
-
-  // Current plan label — prefer highest paid tier when user has multiple active plans
-  var planLabel = 'Free';
-  if (hasPaidPlan) {
-    var allAccessPlan = planConnections.find(function(pc) {
-      return isPlanActive(pc) && pc.planId && pc.planId.indexOf('all-access') > -1;
-    });
-    var vipPlan = planConnections.find(function(pc) {
-      return isPlanActive(pc) && pc.planId && pc.planId.indexOf('vip') > -1;
-    });
-    if (allAccessPlan) planLabel = 'All-Access';
-    else if (vipPlan) planLabel = 'VIP';
-  }
-  var planEl = document.getElementById('stat-plan');
-  if (planEl) planEl.textContent = planLabel;
-
-  // Billing panel: update Current Plan card body
-  var billingBody = document.getElementById('billing-plan-body');
-  var billingAction = document.getElementById('billing-plan-action');
-  if (billingBody) {
-    if (planLabel === 'All-Access') {
-      billingBody.innerHTML = '<strong>All-Access — $9.99/month</strong><br>Full access: all sports, all cities, Sports Hotline, partner perks.';
-    } else if (planLabel === 'VIP') {
-      billingBody.innerHTML = '<strong>VIP — $4.99/month</strong><br>Personalized texts on your chosen sport or city, plus weekly deep-dives and breaking alerts.';
-    } else {
-      billingBody.innerHTML = '<strong>The Insider (Free)</strong><br>Daily BFF Brief + breaking news alerts. No payment method required.';
-    }
-  }
-  if (billingAction) {
-    billingAction.textContent = (planLabel === 'Free' || planLabel === 'Insider') ? 'Upgrade' : 'Adjust';
-  }
-
   // Account details card: pull name, email, phone from live member data
   var accountBody = document.getElementById('billing-account-body');
   if (accountBody) {
@@ -2827,18 +1872,11 @@ function populateDashboard(member) {
     accountBody.innerHTML = escapeHtml(fullName) + '<br>' + escapeHtml(email) + '<br>' + escapeHtml(phone);
   }
 
-  // Payment Method card only shows for paid users (Insider has no card on file)
-  var paymentCard = document.getElementById('billing-payment-card');
-  if (paymentCard) {
-    paymentCard.style.display = hasPaidPlan ? '' : 'none';
-  }
-
   // (Referral count and referral link are populated by loadReferralData above)
 
   // Sync toggles to the user's selections.
-  // Everyone reads from delivery prefs (interests-vs-delivery split was a paid-tier thing).
-  var sportsSource = deliverySportsStr || interestsSportsStr;
-  var citiesSource = deliveryCitiesStr || interestsCitiesStr;
+  var sportsSource = deliverySportsStr;
+  var citiesSource = deliveryCitiesStr;
   var selectedSports = sportsSource.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
   document.querySelectorAll('[data-sport]').forEach(function(toggle) {
     toggle.classList.toggle('is-on', selectedSports.indexOf(toggle.getAttribute('data-sport')) > -1);
@@ -2847,11 +1885,6 @@ function populateDashboard(member) {
   document.querySelectorAll('[data-city]').forEach(function(toggle) {
     toggle.classList.toggle('is-on', selectedCities.indexOf(toggle.getAttribute('data-city')) > -1);
   });
-
-  // Daily Brief toggles — BFF Brief and Breaking News.
-  // Default to 'true' if the custom field hasn't been set yet (legacy members + new signups).
-  // Only 'false' explicitly means the user opted out.
-  document.body.setAttribute('data-has-paid', hasPaidPlan ? 'true' : 'false');
 
   // Time zone dropdown — load saved value, default to ET if unset
   var savedTz = customFields['time-zone'] || 'ET';
@@ -2871,25 +1904,8 @@ function populateDashboard(member) {
   var newsToggle = document.getElementById('toggle-breaking-news');
   if (newsToggle) {
     newsToggle.classList.toggle('is-on', breakingNewsEnabled);
-    // Breaking News stays paid-only — Insiders don't get alerts regardless
-    if (hasPaidPlan) newsToggle.classList.remove('is-disabled');
-    else newsToggle.classList.add('is-disabled');
   }
 
-  // Onboarding nudge banner — only show if the user genuinely hasn't set preferences.
-  // A paid user who already has delivery sports/cities shouldn't see this, even if
-  // the onboarding-complete flag is missing (e.g., legacy accounts created before
-  // this flag existed, or accounts edited in the MemberStack dashboard).
-  var onboardingComplete = customFields['onboarding-complete'] === 'true';
-  var hasAnyPrefs = (
-    (interestsSportsStr && interestsSportsStr.length > 0) ||
-    (interestsCitiesStr && interestsCitiesStr.length > 0) ||
-    (deliverySportsStr && deliverySportsStr.length > 0) ||
-    (deliveryCitiesStr && deliveryCitiesStr.length > 0)
-  );
-  var showNudge = !onboardingComplete && !hasAnyPrefs;
-  var nudge = document.getElementById('onboarding-nudge');
-  if (nudge) nudge.style.display = showNudge ? 'flex' : 'none';
 }
 
 function escapeHtml(str) {
@@ -2946,48 +1962,21 @@ function updateReferralUI(shareUrl, referralCount) {
   // Update count display
   var countEl = document.getElementById('referral-progress-text');
   if (countEl) countEl.textContent = String(referralCount);
-
-  // Unlock milestones (UI is hidden for now but keeps the class ready for when we re-enable)
-  document.querySelectorAll('.reward-row').forEach(function(row) {
-    var threshold = parseInt(row.getAttribute('data-threshold'), 10);
-    if (!isNaN(threshold) && referralCount >= threshold) {
-      row.classList.add('is-unlocked');
-    } else {
-      row.classList.remove('is-unlocked');
-    }
-  });
 }
 
 // ============================================
-// PAID-TIER PREFERENCE TOGGLES
+// PREFERENCE TOGGLES — sports + cities
 // ============================================
 var _prefsSaveTimer = null;
 function toggleSportPref(el) {
-  if (!el || el.classList.contains('is-disabled')) return;
-  if (!canActivateToggle(el)) return;
+  if (!el) return;
   el.classList.toggle('is-on');
   schedulePrefsSave();
 }
 function toggleCityPref(el) {
-  if (!el || el.classList.contains('is-disabled')) return;
-  if (!canActivateToggle(el)) return;
+  if (!el) return;
   el.classList.toggle('is-on');
   schedulePrefsSave();
-}
-// No tier limits anymore — anyone can pick unlimited sports/cities.
-// Function kept (rather than inlined) in case we re-introduce per-tier limits later.
-function canActivateToggle(el) {
-  return true;
-}
-function showVipLockMessage() {
-  var banner = document.getElementById('vip-lock-banner');
-  if (!banner) return;
-  banner.style.display = 'flex';
-  // Auto-hide after 6 seconds
-  clearTimeout(window._vipLockTimer);
-  window._vipLockTimer = setTimeout(function() {
-    banner.style.display = 'none';
-  }, 6000);
 }
 function schedulePrefsSave() {
   // Debounce: only save 500ms after user stops toggling
@@ -3028,9 +2017,6 @@ function saveTimezone(tz) {
 }
 
 function toggleBffBrief(el) {
-  var gatedByFreeTier = el.classList.contains('is-disabled');
-  if (gatedByFreeTier) return; // Free users can't change delivery prefs
-
   el.classList.toggle('is-on');
   var enabled = el.classList.contains('is-on');
 
@@ -3046,14 +2032,6 @@ function toggleBffBrief(el) {
 }
 
 function toggleBreakingNews(el) {
-  // Breaking News is paid-only. Free users shouldn't be able to toggle at all —
-  // the row is hidden via data-sbff-tier="paid" but we guard here too.
-  var row = el.closest('.pref-row');
-  if (row && row.getAttribute('data-sbff-tier') === 'paid') {
-    var paidUser = document.body.getAttribute('data-has-paid') === 'true';
-    if (!paidUser) return;
-  }
-
   el.classList.toggle('is-on');
   var enabled = el.classList.contains('is-on');
 
