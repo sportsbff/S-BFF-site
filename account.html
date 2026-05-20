@@ -306,6 +306,31 @@
   .form-input:focus { border-color: var(--mandarin); }
   .form-input::placeholder { color: rgba(30,28,26,0.3); }
 
+  /* Phone group: country code select + phone number side by side */
+  .phone-group {
+    display: flex; gap: 8px;
+  }
+  .phone-group__cc {
+    flex: 0 0 auto; width: 130px;
+    padding: 14px 32px 14px 14px;
+    border: 1.5px solid var(--line); border-radius: var(--radius);
+    font-family: var(--font-body); font-size: 15px;
+    background: #fff; color: var(--charcoal);
+    cursor: pointer; outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%2012%208%22%3E%3Cpath%20fill%3D%22%231E1C1A%22%20d%3D%22M6%208L0%200h12z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  .phone-group__cc:focus { border-color: var(--mandarin); }
+  .phone-group__number { flex: 1; min-width: 0; }
+  .phone-group__hint {
+    font-size: 12px; color: var(--text-secondary);
+    margin-top: 6px; line-height: 1.45;
+  }
+
   /* Consent checkboxes (SMS + Terms on signup) */
   .consent-row {
     display: flex; align-items: flex-start; gap: 10px;
@@ -579,6 +604,36 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
   }
   .pref-toggle.is-on::after { transform: translateX(20px); }
+
+  /* Region-locked state — applied when user's region = 'intl' (outside U.S./Canada).
+     The Daily BFF Brief still works (email delivery), but SMS-only features
+     (weekly sports, weekly cities, breaking news) are visually disabled. */
+  .pref-row.is-region-locked {
+    opacity: 0.5; pointer-events: none;
+  }
+  .pref-row.is-region-locked .pref-toggle {
+    cursor: not-allowed;
+  }
+  .pref-row__region-tag {
+    display: inline-block;
+    font-family: var(--font-sans); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--mandarin);
+    background: rgba(254,103,53,0.08);
+    padding: 3px 8px; border-radius: 100px;
+    margin-left: 8px; vertical-align: middle;
+    white-space: nowrap;
+  }
+  .pref-section__region-notice {
+    display: none;
+    font-size: 12px; color: var(--text-secondary);
+    background: rgba(30,28,26,0.04);
+    border-radius: var(--radius);
+    padding: 10px 14px; margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .pref-section__region-notice.is-visible { display: block; }
+
   .pref-select {
     font-family: var(--font-sans); font-size: 14px; font-weight: 500;
     padding: 8px 32px 8px 14px; border: 1.5px solid var(--line);
@@ -832,7 +887,14 @@
       </div>
       <div class="form-group">
         <label class="form-label">Phone Number</label>
-        <input class="form-input" type="tel" data-ms-member="phone" placeholder="(555) 123-4567" required>
+        <div class="phone-group">
+          <select class="phone-group__cc" id="signup-country-code" aria-label="Country">
+            <option value="+1" selected>🇺🇸🇨🇦 +1</option>
+            <option value="other">🌍 Other</option>
+          </select>
+          <input class="form-input phone-group__number" type="tel" data-ms-member="phone" placeholder="(555) 123-4567" required>
+        </div>
+        <div class="phone-group__hint" id="signup-cc-hint" style="display:none;">Outside the U.S. and Canada? We'll send the Daily Brief by email instead of text.</div>
       </div>
       <div class="form-group">
         <label class="form-label">Email</label>
@@ -1011,8 +1073,8 @@
           <div><div class="pref-row__label">The Daily BFF Brief</div><div class="pref-row__sub">Mon&ndash;Fri morning sports text</div></div>
           <div class="pref-toggle is-on" id="toggle-bff-brief" onclick="toggleBffBrief(this)"></div>
         </div>
-        <div class="pref-row">
-          <div><div class="pref-row__label">Breaking News Alerts</div><div class="pref-row__sub">Major can&rsquo;t-miss updates &mdash; applies to all your selected sports and cities below.</div></div>
+        <div class="pref-row" id="row-breaking-news">
+          <div><div class="pref-row__label">Breaking News Alerts<span class="pref-row__region-tag" style="display:none;">U.S. &amp; Canada only</span></div><div class="pref-row__sub">Major can&rsquo;t-miss updates &mdash; applies to all your selected sports and cities below.</div></div>
           <div class="pref-toggle" id="toggle-breaking-news" onclick="toggleBreakingNews(this)"></div>
         </div>
       </div>
@@ -1020,6 +1082,7 @@
       <!-- SPORT toggles — pick one or more; sent during each sport's season -->
       <div class="pref-section" id="prefs-sports-section">
         <div class="pref-section__title">Sport-Specific Weekly Texts</div>
+        <div class="pref-section__region-notice" id="sports-region-notice">Weekly texts are SMS only and currently available in the U.S. and Canada.</div>
         <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5;">Pick the sports you care about and get a weekly text during each sport&rsquo;s season. Off-season, no weekly text &mdash; but if Breaking News is on, you&rsquo;ll still hear about major moments year-round.</div>
         <div class="pref-row">
           <div><div class="pref-row__label">Football</div><div class="pref-row__sub">NFL, college, and more</div></div>
@@ -1050,6 +1113,7 @@
       <!-- CITY toggles — weekly, year-round -->
       <div class="pref-section" id="prefs-cities-section">
         <div class="pref-section__title">City Weekly Texts</div>
+        <div class="pref-section__region-notice" id="cities-region-notice">Weekly texts are SMS only and currently available in the U.S. and Canada.</div>
         <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5;">Pick your cities and get a weekly text covering all the teams in town &mdash; year-round, across every sport.</div>
         <div class="pref-row">
           <div><div class="pref-row__label">Chicago</div><div class="pref-row__sub">Bears, Bulls, Cubs, Sox, Blackhawks, Sky, Red Stars, Fire, Bandits</div></div>
@@ -1280,6 +1344,13 @@ function handleSignup(event) {
   var phone = form.querySelector('[data-ms-member="phone"]').value.trim();
   var email = form.querySelector('[data-ms-member="email"]').value.trim();
 
+  // Country code: '+1' (US/Canada) or 'other'.
+  // 'other' flags the account as email-only — they get the Daily Brief via email (Substack)
+  // and are excluded from SMS-only weekly/breaking news lists.
+  var ccEl = document.getElementById('signup-country-code');
+  var countryCode = ccEl ? ccEl.value : '+1';
+  var region = (countryCode === '+1') ? 'us-ca' : 'intl';
+
   if (!firstName || !lastName || !phone || !email) {
     errorDiv.textContent = 'Please fill out all fields.';
     errorDiv.style.display = 'block';
@@ -1305,11 +1376,19 @@ function handleSignup(event) {
   if (!refCode) refCode = urlParams.get('ref') || '';
   var referredBy = refCode ? ('mem_' + refCode) : '';
 
+  // Store the phone with the country code prefix so SimpleTexting / Twilio can route it properly.
+  // For +1 (US/CA), prefix is implicit but we store it explicitly for consistency.
+  // For 'other', we still store the number but won't enroll them in SMS lists.
+  var phoneWithCC = (countryCode === '+1')
+    ? ('+1' + phone.replace(/[^0-9]/g, ''))
+    : phone;
+
   // Store pending custom fields — we'll attach them at signup when the code is verified
   sessionStorage.setItem('sbff_pending_fields', JSON.stringify({
     'first-name': firstName,
     'last-name': lastName,
-    'phone': phone,
+    'phone': phoneWithCC,
+    'region': region,
     'referred-by': referredBy,
     'sms-consent': (smsConsent && smsConsent.checked) ? 'true' : 'false',
     'bff-brief-enabled': 'true',
@@ -1500,6 +1579,17 @@ function handleVerifyCode() {
       var nextEmpty = Array.from(inputs).findIndex(function(i) { return !i.value; });
       (nextEmpty === -1 ? inputs[inputs.length - 1] : inputs[nextEmpty]).focus();
     });
+  });
+})();
+
+// Country code dropdown on signup: when user picks "Other" (anywhere outside US/Canada),
+// show a small note explaining they'll receive the Daily Brief by email instead of SMS.
+(function() {
+  var ccEl = document.getElementById('signup-country-code');
+  var hint = document.getElementById('signup-cc-hint');
+  if (!ccEl || !hint) return;
+  ccEl.addEventListener('change', function() {
+    hint.style.display = (ccEl.value === '+1') ? 'none' : 'block';
   });
 })();
 
@@ -1906,6 +1996,31 @@ function populateDashboard(member) {
     newsToggle.classList.toggle('is-on', breakingNewsEnabled);
   }
 
+  // Region gating — users outside U.S./Canada (region = 'intl') get the Daily Brief by
+  // email (via Substack) but can't receive SMS-only weekly/breaking news texts.
+  // Gray out those sections in the dashboard but keep them visible so users know
+  // the features exist and can expect them when international SMS is supported.
+  var region = customFields['region'] || 'us-ca'; // default to us-ca for legacy members
+  var isIntl = (region === 'intl');
+
+  // Gray out Breaking News row
+  var breakingNewsRow = document.getElementById('row-breaking-news');
+  if (breakingNewsRow) {
+    breakingNewsRow.classList.toggle('is-region-locked', isIntl);
+    var bnTag = breakingNewsRow.querySelector('.pref-row__region-tag');
+    if (bnTag) bnTag.style.display = isIntl ? 'inline-block' : 'none';
+  }
+
+  // Show region notices above the weekly sections
+  var sportsNotice = document.getElementById('sports-region-notice');
+  if (sportsNotice) sportsNotice.classList.toggle('is-visible', isIntl);
+  var citiesNotice = document.getElementById('cities-region-notice');
+  if (citiesNotice) citiesNotice.classList.toggle('is-visible', isIntl);
+
+  // Gray out all sport + city pref rows
+  document.querySelectorAll('#prefs-sports-section .pref-row, #prefs-cities-section .pref-row').forEach(function(row) {
+    row.classList.toggle('is-region-locked', isIntl);
+  });
 }
 
 function escapeHtml(str) {
@@ -1970,11 +2085,15 @@ function updateReferralUI(shareUrl, referralCount) {
 var _prefsSaveTimer = null;
 function toggleSportPref(el) {
   if (!el) return;
+  var row = el.closest('.pref-row');
+  if (row && row.classList.contains('is-region-locked')) return;
   el.classList.toggle('is-on');
   schedulePrefsSave();
 }
 function toggleCityPref(el) {
   if (!el) return;
+  var row = el.closest('.pref-row');
+  if (row && row.classList.contains('is-region-locked')) return;
   el.classList.toggle('is-on');
   schedulePrefsSave();
 }
@@ -2032,6 +2151,9 @@ function toggleBffBrief(el) {
 }
 
 function toggleBreakingNews(el) {
+  if (!el) return;
+  var row = el.closest('.pref-row');
+  if (row && row.classList.contains('is-region-locked')) return;
   el.classList.toggle('is-on');
   var enabled = el.classList.contains('is-on');
 
