@@ -1717,7 +1717,7 @@ function handleGoogleAuth() {
   if (!refCode) refCode = urlParams.get('ref') || '';
   var referredBy = refCode ? ('mem_' + refCode) : '';
 
-  // Stash defaults in sessionStorage — the post-Google redirect handler applies
+  // Stash defaults in sessionStorage — the post-Google page-load handler applies
   // them once we know whether this Google auth created a new member or logged in an existing one.
   sessionStorage.setItem('sbff_google_pending_fields', JSON.stringify({
     'referred-by': referredBy,
@@ -1729,12 +1729,79 @@ function handleGoogleAuth() {
     'time-zone': 'ET'
   }));
 
+  // Opens a popup. Promise resolves when the popup closes with successful auth.
   memberstack.loginWithProvider({
     provider: 'google',
     allowSignup: true
+  }).then(function(result) {
+    // Auth succeeded — we now have a valid session.
+    // Fetch the member and route: new members → referral flow, existing → dashboard.
+    return memberstack.getCurrentMember();
+  }).then(function(result) {
+    var member = result && result.data;
+    if (!member) {
+      // Weird edge case — reload to let normal routing take over
+      window.location.reload();
+      return;
+    }
+    var customFields = member.customFields || {};
+    var onboardingComplete = customFields['onboarding-complete'] === 'true';
+    var planConnections = (member.planConnections || []);
+    var hasInsiderPlan = planConnections.some(function(pc) {
+      return pc.planId === 'pln_the-insider-jbbd0e0g' && pc.status !== 'CANCELED';
+    });
+
+    // New member via Google — attach the free Insider plan + backfill default custom fields.
+    if (!onboardingComplete && !hasInsiderPlan) {
+      var pending = {};
+      try {
+        var raw = sessionStorage.getItem('sbff_google_pending_fields');
+        if (raw) pending = JSON.parse(raw);
+      } catch (e) {}
+      var shortCode = member.id.indexOf('mem_') === 0 ? member.id.substring(4) : member.id;
+      pending['referral-code'] = shortCode;
+      pending['onboarding-complete'] = 'true';
+
+      memberstack.addPlan({ planId: 'pln_the-insider-jbbd0e0g' })
+        .then(function() {
+          return memberstack.updateMember({ customFields: pending });
+        })
+        .then(function() {
+          sessionStorage.removeItem('sbff_google_pending_fields');
+          return memberstack.getCurrentMember();
+        })
+        .then(function(result) {
+          if (result && result.data) {
+            _lastMember = result.data;
+            loadReferralData(result.data);
+          }
+          goTo('page-referral');
+        })
+        .catch(function(err) {
+          console.error('Google new-member setup failed:', err);
+          goTo('page-dash');
+          populateDashboard(member);
+        });
+    } else {
+      // Existing member — go to dashboard
+      sessionStorage.removeItem('sbff_google_pending_fields');
+      _lastMember = member;
+      goTo('page-dash');
+      populateDashboard(member);
+    }
   }).catch(function(err) {
     // User closed the Google popup or something went wrong
     console.warn('Google auth cancelled or failed:', err);
+    // Only show an error if it looks like an actual failure (not a popup close)
+    if (err && err.message && !/closed|cancel|popup/i.test(err.message)) {
+      var loginError = document.getElementById('login-error');
+      var signupError = document.getElementById('signup-error');
+      var errorDiv = (document.getElementById('tab-signup').style.display !== 'none') ? signupError : loginError;
+      if (errorDiv) {
+        errorDiv.textContent = 'Google sign-in failed. Please try again or use email.';
+        errorDiv.style.display = 'block';
+      }
+    }
   });
 }
 
