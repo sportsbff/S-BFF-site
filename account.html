@@ -993,17 +993,6 @@
         <input class="form-input" type="text" id="signup-last-name" placeholder="Melcer" autocomplete="family-name" required>
       </div>
       <div class="form-group">
-        <label class="form-label">Phone Number</label>
-        <div class="phone-group">
-          <select class="phone-group__cc" id="signup-country-code" aria-label="Country">
-            <option value="+1" selected>🇺🇸🇨🇦 +1</option>
-            <option value="other">🌍 Other</option>
-          </select>
-          <input class="form-input phone-group__number" type="tel" id="signup-phone" placeholder="(555) 123-4567" autocomplete="tel" required>
-        </div>
-        <div class="phone-group__hint" id="signup-cc-hint" style="display:none;">Outside the U.S. and Canada? We'll send the Daily Brief by email instead of text.</div>
-      </div>
-      <div class="form-group">
         <label class="form-label">Email</label>
         <input class="form-input" type="email" id="signup-email" placeholder="you@email.com" autocomplete="email" required>
       </div>
@@ -1011,14 +1000,6 @@
         <label class="form-label">Password</label>
         <input class="form-input" type="password" id="signup-password" placeholder="At least 8 characters" autocomplete="new-password" minlength="8" required>
       </div>
-
-      <!-- SMS Consent: TCPA/CTIA compliant. Required for BFF Brief delivery.
-           Required disclosures: brand, promotional nature, autodialer, not a condition
-           of purchase, frequency, msg/data rates, opt-out, help, links to Terms + Privacy. -->
-      <label class="consent-row">
-        <input type="checkbox" id="consent-sms" required>
-        <span class="consent-text"><span class="consent-required">*</span>I agree to receive promotional messages from Your Sports BFF sent via an autodialer, and this agreement isn't a condition of any purchase. I also agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>. Msg frequency varies (typically 5&ndash;20 msgs/month). Msg &amp; data rates may apply. Text STOP to opt out anytime. Text HELP for more information.</span>
-      </label>
 
       <button type="submit" class="auth-btn">Create Account</button>
       <div class="auth-error" id="signup-error" style="display:none; color: var(--mandarin); font-size: 13px; margin-top: 12px; text-align: center;"></div>
@@ -1052,8 +1033,39 @@
 </div>
 
 <!-- ============================================
-     PAGE 2b: FORGOT PASSWORD — enter email to get reset code
+     PAGE 1b: PHONE STEP — collected after account creation (email/password OR Google)
+     Existing members who log in skip this page entirely.
      ============================================ -->
+<div class="page auth-page" id="page-phone">
+  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
+  <div class="auth-card">
+    <div class="auth-card__title">Where should we send the <i>BFF Brief?</i></div>
+    <div class="auth-card__sub">The BFF Brief is a text &mdash; drop your number and we'll get you set up.</div>
+    <form onsubmit="handlePhoneStepSubmit(event)">
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <div class="phone-group">
+          <select class="phone-group__cc" id="phone-step-country-code" aria-label="Country">
+            <option value="+1" selected>🇺🇸🇨🇦 +1</option>
+            <option value="other">🌍 Other</option>
+          </select>
+          <input class="form-input phone-group__number" type="tel" id="phone-step-phone" placeholder="(555) 123-4567" autocomplete="tel" required>
+        </div>
+        <div class="phone-group__hint" id="phone-step-cc-hint" style="display:none;">Outside the U.S. and Canada? We'll send the Daily Brief by email instead of text.</div>
+      </div>
+
+      <!-- SMS Consent: TCPA/CTIA compliant. Required for BFF Brief delivery. -->
+      <label class="consent-row">
+        <input type="checkbox" id="phone-step-consent" required>
+        <span class="consent-text"><span class="consent-required">*</span>I agree to receive promotional messages from Your Sports BFF sent via an autodialer, and this agreement isn't a condition of any purchase. I also agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>. Msg frequency varies (typically 5&ndash;20 msgs/month). Msg &amp; data rates may apply. Text STOP to opt out anytime. Text HELP for more information.</span>
+      </label>
+
+      <button type="submit" class="auth-btn">Continue</button>
+      <div class="auth-error" id="phone-step-error" style="display:none; color: var(--mandarin); font-size: 13px; margin-top: 12px; text-align: center;"></div>
+      <div style="text-align: center; font-size: 12px; color: var(--text-secondary); margin-top: 16px; line-height: 1.45;">You can adjust these settings anytime in your account dashboard.</div>
+    </form>
+  </div>
+</div>
 <div class="page auth-page" id="page-forgot-password">
   <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
   <div class="auth-card">
@@ -1564,18 +1576,10 @@ function handleSignup(event) {
 
   var firstName = document.getElementById('signup-first-name').value.trim();
   var lastName = document.getElementById('signup-last-name').value.trim();
-  var phone = document.getElementById('signup-phone').value.trim();
   var email = document.getElementById('signup-email').value.trim();
   var password = document.getElementById('signup-password').value;
 
-  // Country code: '+1' (US/Canada) or 'other'.
-  // 'other' flags the account as email-only — they get the Daily Brief via email (Substack)
-  // and are excluded from SMS-only weekly/breaking news lists.
-  var ccEl = document.getElementById('signup-country-code');
-  var countryCode = ccEl ? ccEl.value : '+1';
-  var region = (countryCode === '+1') ? 'us-ca' : 'intl';
-
-  if (!firstName || !lastName || !phone || !email || !password) {
+  if (!firstName || !lastName || !email || !password) {
     errorDiv.textContent = 'Please fill out all fields.';
     errorDiv.style.display = 'block';
     return;
@@ -1583,15 +1587,6 @@ function handleSignup(event) {
 
   if (password.length < 8) {
     errorDiv.textContent = 'Password must be at least 8 characters.';
-    errorDiv.style.display = 'block';
-    return;
-  }
-
-  // Consent validation — SMS consent is the single required checkbox.
-  // Without SMS consent the account is dead weight — we can't deliver the BFF Brief.
-  var smsConsent = document.getElementById('consent-sms');
-  if (!smsConsent || !smsConsent.checked) {
-    errorDiv.textContent = 'Please agree to receive text messages \u2014 the BFF Brief is a text, so this is required.';
     errorDiv.style.display = 'block';
     return;
   }
@@ -1604,18 +1599,13 @@ function handleSignup(event) {
   if (!refCode) refCode = urlParams.get('ref') || '';
   var referredBy = refCode ? ('mem_' + refCode) : '';
 
-  // Store the phone with country code prefix for SimpleTexting / Twilio routing.
-  var phoneWithCC = (countryCode === '+1')
-    ? ('+1' + phone.replace(/[^0-9]/g, ''))
-    : phone;
-
+  // Step 1 fields: name + email + password. Phone + consent + region are collected
+  // on the next page (page-phone). onboarding-complete stays FALSE until that step
+  // is done, so bailed-out signups get routed back on next login.
   var customFields = {
     'first-name': firstName,
     'last-name': lastName,
-    'phone': phoneWithCC,
-    'region': region,
     'referred-by': referredBy,
-    'sms-consent': 'true',
     'bff-brief-enabled': 'true',
     'breaking-news-enabled': 'false',
     'referral-count': '0',
@@ -1630,17 +1620,63 @@ function handleSignup(event) {
     plans: [{ planId: 'pln_the-insider-jbbd0e0g' }]
   }).then(function(result) {
     var newMember = result && result.data && result.data.member;
-    // Save referral-code (short form of member ID) for downstream integrations
     if (newMember && newMember.id) {
       var shortCode = newMember.id.indexOf('mem_') === 0
         ? newMember.id.substring(4)
         : newMember.id;
       return memberstack.updateMember({
-        customFields: {
-          'referral-code': shortCode,
-          'onboarding-complete': 'true'
-        }
+        customFields: { 'referral-code': shortCode }
       });
+    }
+  }).then(function() {
+    // Route to phone step (Step 2). onboarding-complete gets set there.
+    goTo('page-phone');
+  }).catch(function(err) {
+    var msg = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
+    if (/already|exist|taken/i.test(msg)) {
+      msg = 'An account with that email already exists. Log in with an email or reset your password if needed.';
+    }
+    errorDiv.textContent = msg;
+    errorDiv.style.display = 'block';
+  });
+}
+
+// ============================================
+// PHONE STEP (Step 2) — required for both email/password and Google signups
+// ============================================
+function handlePhoneStepSubmit(event) {
+  event.preventDefault();
+  var errorDiv = document.getElementById('phone-step-error');
+  errorDiv.style.display = 'none';
+
+  var phone = document.getElementById('phone-step-phone').value.trim();
+  var ccEl = document.getElementById('phone-step-country-code');
+  var countryCode = ccEl ? ccEl.value : '+1';
+  var region = (countryCode === '+1') ? 'us-ca' : 'intl';
+  var consent = document.getElementById('phone-step-consent');
+
+  if (!phone) {
+    errorDiv.textContent = 'Please enter your phone number.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  if (!consent || !consent.checked) {
+    errorDiv.textContent = 'Please agree to receive text messages \u2014 the BFF Brief is a text, so this is required.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+
+  var phoneWithCC = (countryCode === '+1')
+    ? ('+1' + phone.replace(/[^0-9]/g, ''))
+    : phone;
+
+  var memberstack = window.$memberstackDom;
+  memberstack.updateMember({
+    customFields: {
+      'phone': phoneWithCC,
+      'region': region,
+      'sms-consent': 'true',
+      'onboarding-complete': 'true'
     }
   }).then(function() {
     return memberstack.getCurrentMember();
@@ -1651,12 +1687,7 @@ function handleSignup(event) {
     }
     goTo('page-referral');
   }).catch(function(err) {
-    var msg = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
-    // Friendlier message for the most common cause
-    if (/already|exist|taken/i.test(msg)) {
-      msg = 'An account with that email already exists. Try logging in instead.';
-    }
-    errorDiv.textContent = msg;
+    errorDiv.textContent = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
     errorDiv.style.display = 'block';
   });
 }
@@ -1717,12 +1748,10 @@ function handleGoogleAuth() {
   if (!refCode) refCode = urlParams.get('ref') || '';
   var referredBy = refCode ? ('mem_' + refCode) : '';
 
-  // Stash defaults in sessionStorage — the post-Google page-load handler applies
-  // them once we know whether this Google auth created a new member or logged in an existing one.
+  // Stash defaults in sessionStorage — applied to the new member after Google auth completes.
+  // sms-consent, phone, and region are NOT included here — they're collected on the phone step.
   sessionStorage.setItem('sbff_google_pending_fields', JSON.stringify({
     'referred-by': referredBy,
-    'sms-consent': 'false',
-    'region': 'us-ca',
     'bff-brief-enabled': 'true',
     'breaking-news-enabled': 'false',
     'referral-count': '0',
@@ -1751,8 +1780,9 @@ function handleGoogleAuth() {
       return pc.planId === 'pln_the-insider-jbbd0e0g' && pc.status !== 'CANCELED';
     });
 
-    // New member via Google — attach the free Insider plan + backfill default custom fields.
-    if (!onboardingComplete && !hasInsiderPlan) {
+    // New Google member: attach the Insider plan + set default fields.
+    // Note: onboarding-complete is NOT set here — it gets set on the phone step.
+    if (!hasInsiderPlan) {
       var pending = {};
       try {
         var raw = sessionStorage.getItem('sbff_google_pending_fields');
@@ -1760,7 +1790,7 @@ function handleGoogleAuth() {
       } catch (e) {}
       var shortCode = member.id.indexOf('mem_') === 0 ? member.id.substring(4) : member.id;
       pending['referral-code'] = shortCode;
-      pending['onboarding-complete'] = 'true';
+      // Don't set onboarding-complete here — that happens on the phone step
 
       memberstack.addPlan({ planId: 'pln_the-insider-jbbd0e0g' })
         .then(function() {
@@ -1768,40 +1798,50 @@ function handleGoogleAuth() {
         })
         .then(function() {
           sessionStorage.removeItem('sbff_google_pending_fields');
-          return memberstack.getCurrentMember();
-        })
-        .then(function(result) {
-          if (result && result.data) {
-            _lastMember = result.data;
-            loadReferralData(result.data);
-          }
-          goTo('page-referral');
         })
         .catch(function(err) {
           console.error('Google new-member setup failed:', err);
-          goTo('page-dash');
-          populateDashboard(member);
+        })
+        .then(function() {
+          _lastMember = member;
+          goTo('page-phone');
         });
+    } else if (!onboardingComplete) {
+      // Member has the plan but hasn't finished the phone step yet (bailed on Step 2)
+      sessionStorage.removeItem('sbff_google_pending_fields');
+      _lastMember = member;
+      goTo('page-phone');
     } else {
-      // Existing member — go to dashboard
+      // Existing fully-onboarded member — go to dashboard
       sessionStorage.removeItem('sbff_google_pending_fields');
       _lastMember = member;
       goTo('page-dash');
       populateDashboard(member);
     }
   }).catch(function(err) {
-    // User closed the Google popup or something went wrong
+    // User closed the Google popup or auth was rejected
     console.warn('Google auth cancelled or failed:', err);
-    // Only show an error if it looks like an actual failure (not a popup close)
-    if (err && err.message && !/closed|cancel|popup/i.test(err.message)) {
-      var loginError = document.getElementById('login-error');
-      var signupError = document.getElementById('signup-error');
-      var errorDiv = (document.getElementById('tab-signup').style.display !== 'none') ? signupError : loginError;
-      if (errorDiv) {
-        errorDiv.textContent = 'Google sign-in failed. Please try again or use email.';
-        errorDiv.style.display = 'block';
-      }
+
+    var msg = err && err.message ? err.message : '';
+
+    // Ignore popup-close (not an actual error)
+    if (/closed|cancel|popup.*block/i.test(msg)) return;
+
+    // Figure out which form is visible so we show the error in the right place
+    var signupVisible = document.getElementById('tab-signup').style.display !== 'none';
+    var errorDiv = signupVisible
+      ? document.getElementById('signup-error')
+      : document.getElementById('login-error');
+    if (!errorDiv) return;
+
+    // Existing member without Google linked — MemberStack refuses to auto-link
+    // for security reasons. Guide them through the correct flow.
+    if (/please\s*login\s*with\s*your\s*email/i.test(msg) || /exist|already/i.test(msg)) {
+      errorDiv.textContent = 'An account with that email already exists. Log in with an email or reset your password if needed.';
+    } else {
+      errorDiv.textContent = msg || 'Google sign-in failed. Please try again or use email.';
     }
+    errorDiv.style.display = 'block';
   });
 }
 
@@ -2021,11 +2061,11 @@ function handleVerifyCode() {
   });
 })();
 
-// Country code dropdown on signup: when user picks "Other" (anywhere outside US/Canada),
-// show a small note explaining they'll receive the Daily Brief by email instead of SMS.
+// Country code dropdown on the phone step: when user picks "Other", show a small note
+// explaining they'll receive the Daily Brief by email instead of SMS.
 (function() {
-  var ccEl = document.getElementById('signup-country-code');
-  var hint = document.getElementById('signup-cc-hint');
+  var ccEl = document.getElementById('phone-step-country-code');
+  var hint = document.getElementById('phone-step-cc-hint');
   if (!ccEl || !hint) return;
   ccEl.addEventListener('change', function() {
     hint.style.display = (ccEl.value === '+1') ? 'none' : 'block';
@@ -2431,8 +2471,6 @@ function renderSigninMethods(member) {
 
   waitForMemberstack(function() {
     var memberstack = window.$memberstackDom;
-    var urlParams = new URLSearchParams(window.location.search);
-    var isOnboarding = urlParams.get('onboarding') === 'true';
 
     memberstack.getCurrentMember().then(function(result) {
       var member = result && result.data;
@@ -2444,52 +2482,16 @@ function renderSigninMethods(member) {
 
       var customFields = (member && member.customFields) || {};
       var onboardingComplete = customFields['onboarding-complete'] === 'true';
-      var planConnections = (member && member.planConnections) || [];
-      var hasInsiderPlan = planConnections.some(function(pc) {
-        return pc.planId === 'pln_the-insider-jbbd0e0g' && pc.status !== 'CANCELED';
-      });
+      var hasPhone = !!(customFields['phone'] && customFields['phone'].trim());
+      _lastMember = member;
 
-      // Post-Google-auth NEW member: they have a MemberStack account but no plan
-      // and no onboarding-complete flag. Attach the Insider plan + default fields.
-      if (!onboardingComplete && !hasInsiderPlan) {
-        var pendingGoogleFields = {};
-        try {
-          var raw = sessionStorage.getItem('sbff_google_pending_fields');
-          if (raw) pendingGoogleFields = JSON.parse(raw);
-        } catch (e) {}
-
-        // Derive referral code from their member ID
-        var shortCode = member.id.indexOf('mem_') === 0 ? member.id.substring(4) : member.id;
-        pendingGoogleFields['referral-code'] = shortCode;
-        pendingGoogleFields['onboarding-complete'] = 'true';
-
-        memberstack.addPlan({ planId: 'pln_the-insider-jbbd0e0g' })
-          .then(function() {
-            return memberstack.updateMember({ customFields: pendingGoogleFields });
-          })
-          .then(function() {
-            sessionStorage.removeItem('sbff_google_pending_fields');
-            return memberstack.getCurrentMember();
-          })
-          .then(function(result) {
-            if (result && result.data) {
-              _lastMember = result.data;
-              loadReferralData(result.data);
-            }
-            goTo('page-referral');
-          })
-          .catch(function(err) {
-            console.error('Google new-member setup failed:', err);
-            goTo('page-dash');
-            populateDashboard(member);
-          });
-        return;
-      }
-
-      // Existing / already-onboarded member: go to dashboard
-      if (isOnboarding && !onboardingComplete) {
-        goTo('page-referral');
+      if (!onboardingComplete && !hasPhone) {
+        // Brand-new member from either email/password signup OR Google —
+        // they haven't done Step 2 (phone) yet. Route to phone step.
+        goTo('page-phone');
       } else {
+        // Treat any member with a phone as fully onboarded even if the flag is missing
+        // (safety net for legacy members who signed up before the flag existed).
         goTo('page-dash');
         populateDashboard(member);
       }
