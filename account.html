@@ -376,6 +376,92 @@
   }
   .auth-back:hover { color: #fff; }
 
+  /* Google Sign-In button — white background, Google multi-color G icon */
+  .auth-google-btn {
+    width: 100%; padding: 14px 16px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: #fff; color: var(--charcoal);
+    border: 1.5px solid var(--line); border-radius: 100px;
+    font-family: var(--font-sans); font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    margin-bottom: 20px;
+    text-decoration: none;
+  }
+  .auth-google-btn:hover {
+    background: #f8f8f8;
+    border-color: var(--charcoal);
+  }
+  .auth-google-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+  /* Divider between Google and email/password */
+  .auth-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 4px 0 20px;
+    font-family: var(--font-sans); font-size: 11px; font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .auth-divider::before,
+  .auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* Small utility link (forgot password, email me a code instead) */
+  .auth-small-link {
+    display: block; text-align: center;
+    margin-top: 14px;
+    font-size: 13px; color: var(--mandarin);
+    font-weight: 700; cursor: pointer;
+    background: none; border: none; padding: 6px;
+    font-family: var(--font-sans);
+    text-decoration: none;
+  }
+  .auth-small-link:hover { color: var(--mandarin-dark); text-decoration: underline; }
+  .auth-small-link + .auth-small-link { margin-top: 2px; }
+
+  /* Sign-in Methods panel on the account/settings tab */
+  .signin-method-card {
+    background: #fff; border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .signin-method-card__info { flex: 1; min-width: 200px; }
+  .signin-method-card__title {
+    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
+    color: var(--charcoal); margin-bottom: 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .signin-method-card__sub {
+    font-size: 13px; color: var(--text-secondary); line-height: 1.45;
+  }
+  .signin-method-card__badge {
+    display: inline-block;
+    font-family: var(--font-sans); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 3px 10px; border-radius: 100px;
+    background: rgba(30,28,26,0.06); color: var(--text-secondary);
+  }
+  .signin-method-card__badge.is-connected {
+    background: rgba(254,103,53,0.1); color: var(--mandarin);
+  }
+  .signin-method-card__action {
+    padding: 10px 20px; border-radius: 100px;
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    background: transparent; color: var(--charcoal);
+    border: 1.5px solid var(--line);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .signin-method-card__action:hover {
+    background: var(--charcoal); border-color: var(--charcoal); color: #fff;
+  }
+  .signin-method-card__action--danger { color: #b3261e; border-color: rgba(179,38,30,0.3); }
+  .signin-method-card__action--danger:hover { background: #b3261e; border-color: #b3261e; color: #fff; }
+
   /* ============================================
      VERIFY CODE — code input boxes
      ============================================ */
@@ -866,24 +952,45 @@
     </div>
 
     <!-- Login form -->
-    <form id="tab-login" data-ms-form="passwordless-login" style="display:none;" onsubmit="handleLogin(event)">
+    <form id="tab-login" style="display:none;" onsubmit="handleLogin(event)">
+      <!-- Google Sign-In (top) -->
+      <button type="button" class="auth-google-btn" onclick="handleGoogleAuth()">
+        <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google
+      </button>
+      <div class="auth-divider">or log in with email</div>
+
       <div class="form-group">
         <label class="form-label">Email</label>
-        <input class="form-input" type="email" data-ms-member="email" placeholder="you@email.com" required>
+        <input class="form-input" type="email" id="login-email" placeholder="you@email.com" autocomplete="email" required>
       </div>
-      <button type="submit" class="auth-btn">Send Login Code</button>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="login-password" placeholder="Your password" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="auth-btn">Log In</button>
       <div class="auth-error" id="login-error" style="display:none; color: var(--mandarin); font-size: 13px; margin-top: 12px; text-align: center;"></div>
+
+      <button type="button" class="auth-small-link" onclick="goToForgotPassword()">Forgot password?</button>
+      <button type="button" class="auth-small-link" onclick="goToEmailCodeLogin()">Email me a code instead</button>
     </form>
 
     <!-- Signup form -->
-    <form id="tab-signup" data-ms-form="passwordless-signup" onsubmit="handleSignup(event)">
+    <form id="tab-signup" onsubmit="handleSignup(event)">
+      <!-- Google Sign-In (top) -->
+      <button type="button" class="auth-google-btn" onclick="handleGoogleAuth()">
+        <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google
+      </button>
+      <div class="auth-divider">or sign up with email</div>
+
       <div class="form-group">
         <label class="form-label">First Name</label>
-        <input class="form-input" type="text" data-ms-member="first-name" placeholder="Heather" required>
+        <input class="form-input" type="text" id="signup-first-name" placeholder="Heather" autocomplete="given-name" required>
       </div>
       <div class="form-group">
         <label class="form-label">Last Name</label>
-        <input class="form-input" type="text" data-ms-member="last-name" placeholder="Melcer" required>
+        <input class="form-input" type="text" id="signup-last-name" placeholder="Melcer" autocomplete="family-name" required>
       </div>
       <div class="form-group">
         <label class="form-label">Phone Number</label>
@@ -892,13 +999,17 @@
             <option value="+1" selected>🇺🇸🇨🇦 +1</option>
             <option value="other">🌍 Other</option>
           </select>
-          <input class="form-input phone-group__number" type="tel" data-ms-member="phone" placeholder="(555) 123-4567" required>
+          <input class="form-input phone-group__number" type="tel" id="signup-phone" placeholder="(555) 123-4567" autocomplete="tel" required>
         </div>
         <div class="phone-group__hint" id="signup-cc-hint" style="display:none;">Outside the U.S. and Canada? We'll send the Daily Brief by email instead of text.</div>
       </div>
       <div class="form-group">
         <label class="form-label">Email</label>
-        <input class="form-input" type="email" data-ms-member="email" placeholder="you@email.com" required>
+        <input class="form-input" type="email" id="signup-email" placeholder="you@email.com" autocomplete="email" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="signup-password" placeholder="At least 8 characters" autocomplete="new-password" minlength="8" required>
       </div>
 
       <!-- SMS Consent: TCPA/CTIA compliant. Required for BFF Brief delivery.
@@ -938,6 +1049,72 @@
     <div class="auth-resend" id="resend-confirmation" style="display:none; margin-top: 12px; color: var(--mandarin);">Code resent! Check your inbox.</div>
   </div>
   <div class="auth-back" onclick="goTo('page-login')">Back</div>
+</div>
+
+<!-- ============================================
+     PAGE 2b: FORGOT PASSWORD — enter email to get reset code
+     ============================================ -->
+<div class="page auth-page" id="page-forgot-password">
+  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
+  <div class="auth-card">
+    <div class="auth-card__title">Reset your <i>password.</i></div>
+    <div class="auth-card__sub">Enter your email and we'll send you a 6-digit code to reset your password.</div>
+    <form onsubmit="handleForgotPasswordSubmit(event)">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="forgot-email" placeholder="you@email.com" autocomplete="email" required>
+      </div>
+      <button type="submit" class="auth-btn">Send Reset Code</button>
+      <div class="auth-error" id="forgot-error" style="display:none; color: var(--mandarin); font-size: 13px; margin-top: 12px; text-align: center;"></div>
+    </form>
+  </div>
+  <div class="auth-back" onclick="goTo('page-login')">Back to login</div>
+</div>
+
+<!-- ============================================
+     PAGE 2c: RESET PASSWORD — enter code + new password
+     ============================================ -->
+<div class="page auth-page" id="page-reset-password">
+  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
+  <div class="auth-card">
+    <div class="auth-card__title">Set your new <i>password.</i></div>
+    <div class="auth-card__sub">We sent a 6-digit code to your email. Enter it and choose a new password.<br><span style="display: inline-block; margin-top: 8px; font-size: 13px;">Don't see it? Check your spam folder.</span></div>
+    <form onsubmit="handleResetPasswordSubmit(event)">
+      <div class="form-group">
+        <label class="form-label">Reset code</label>
+        <input class="form-input" type="text" id="reset-code" placeholder="123456" inputmode="numeric" maxlength="6" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">New password</label>
+        <input class="form-input" type="password" id="reset-new-password" placeholder="At least 8 characters" autocomplete="new-password" minlength="8" required>
+      </div>
+      <button type="submit" class="auth-btn">Reset Password</button>
+      <div class="auth-error" id="reset-error" style="display:none; color: var(--mandarin); font-size: 13px; margin-top: 12px; text-align: center;"></div>
+      <div class="auth-resend" style="margin-top: 24px;">Didn't get it? <a onclick="handleResendResetCode()" style="cursor:pointer;">Resend code</a></div>
+      <div class="auth-resend" id="reset-resend-confirmation" style="display:none; margin-top: 12px; color: var(--mandarin);">Code resent! Check your inbox.</div>
+    </form>
+  </div>
+  <div class="auth-back" onclick="goTo('page-login')">Back to login</div>
+</div>
+
+<!-- ============================================
+     PAGE 2d: EMAIL CODE LOGIN — fallback for existing members without passwords
+     ============================================ -->
+<div class="page auth-page" id="page-email-code-login">
+  <div class="auth-logo"><img src="logo.svg" alt="Your Sports BFF"></div>
+  <div class="auth-card">
+    <div class="auth-card__title">Email me a <i>code.</i></div>
+    <div class="auth-card__sub">Enter your email and we'll send you a 6-digit login code.</div>
+    <form onsubmit="handleEmailCodeLoginSubmit(event)">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="email-code-login-email" placeholder="you@email.com" autocomplete="email" required>
+      </div>
+      <button type="submit" class="auth-btn">Send Login Code</button>
+      <div class="auth-error" id="email-code-login-error" style="display:none; color: var(--mandarin); font-size: 13px; margin-top: 12px; text-align: center;"></div>
+    </form>
+  </div>
+  <div class="auth-back" onclick="goTo('page-login')">Back to login</div>
 </div>
 
 
@@ -1157,11 +1334,58 @@
         </div>
       </div>
 
+      <!-- Sign-in Methods -->
+      <div style="margin-top: 32px; margin-bottom: 12px;">
+        <h2 style="font-family: var(--font-sans); font-size: 15px; font-weight: 700; color: var(--charcoal); text-transform: uppercase; letter-spacing: 0.08em; margin: 0;">Sign-in Methods</h2>
+      </div>
+
+      <div class="signin-method-card">
+        <div class="signin-method-card__info">
+          <div class="signin-method-card__title">Password <span class="signin-method-card__badge" id="password-status-badge">Not set</span></div>
+          <div class="signin-method-card__sub" id="password-status-sub">Log in with your email and password.</div>
+        </div>
+        <button class="signin-method-card__action" onclick="openPasswordModal()" id="password-action-btn">Set password</button>
+      </div>
+
+      <div class="signin-method-card">
+        <div class="signin-method-card__info">
+          <div class="signin-method-card__title">
+            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;vertical-align:middle;" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            Google <span class="signin-method-card__badge" id="google-status-badge">Not connected</span>
+          </div>
+          <div class="signin-method-card__sub" id="google-status-sub">Sign in with one tap using your Google account.</div>
+        </div>
+        <button class="signin-method-card__action" onclick="handleGoogleConnect()" id="google-action-btn">Connect</button>
+      </div>
+
       <div style="margin-top:24px;">
         <div class="billing-card__action" style="color:var(--text-secondary);" onclick="handleCancelMembership()">Cancel Membership</div>
       </div>
     </div>
+  </div>
+</div>
 
+<!-- Change/Set Password Modal -->
+<div class="account-modal" id="passwordModal" style="display:none;">
+  <div class="account-modal__backdrop" onclick="closePasswordModal()"></div>
+  <div class="account-modal__card" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
+    <button class="account-modal__close" onclick="closePasswordModal()" aria-label="Close">&times;</button>
+    <h2 class="account-modal__title" id="passwordModalTitle">Change password</h2>
+    <form id="passwordForm" onsubmit="submitPasswordChange(event)">
+      <div class="form-group" id="password-current-group">
+        <label class="form-label">Current password</label>
+        <input class="form-input" type="password" id="password-current" autocomplete="current-password">
+      </div>
+      <div class="form-group">
+        <label class="form-label">New password</label>
+        <input class="form-input" type="password" id="password-new" placeholder="At least 8 characters" autocomplete="new-password" minlength="8" required>
+      </div>
+      <div class="account-modal__error" id="password-error" style="display:none;color:var(--mandarin);font-size:13px;margin-bottom:12px;"></div>
+      <div class="account-modal__actions">
+        <button type="button" class="auth-btn auth-btn--outline" onclick="closePasswordModal()">Cancel</button>
+        <button type="submit" class="auth-btn">Save</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -1335,14 +1559,14 @@ function showDash(panel) {
 // Store signup data in sessionStorage so custom fields can be saved after magic link click
 function handleSignup(event) {
   event.preventDefault();
-  var form = event.target;
   var errorDiv = document.getElementById('signup-error');
   errorDiv.style.display = 'none';
 
-  var firstName = form.querySelector('[data-ms-member="first-name"]').value.trim();
-  var lastName = form.querySelector('[data-ms-member="last-name"]').value.trim();
-  var phone = form.querySelector('[data-ms-member="phone"]').value.trim();
-  var email = form.querySelector('[data-ms-member="email"]').value.trim();
+  var firstName = document.getElementById('signup-first-name').value.trim();
+  var lastName = document.getElementById('signup-last-name').value.trim();
+  var phone = document.getElementById('signup-phone').value.trim();
+  var email = document.getElementById('signup-email').value.trim();
+  var password = document.getElementById('signup-password').value;
 
   // Country code: '+1' (US/Canada) or 'other'.
   // 'other' flags the account as email-only — they get the Daily Brief via email (Substack)
@@ -1351,14 +1575,19 @@ function handleSignup(event) {
   var countryCode = ccEl ? ccEl.value : '+1';
   var region = (countryCode === '+1') ? 'us-ca' : 'intl';
 
-  if (!firstName || !lastName || !phone || !email) {
+  if (!firstName || !lastName || !phone || !email || !password) {
     errorDiv.textContent = 'Please fill out all fields.';
     errorDiv.style.display = 'block';
     return;
   }
 
+  if (password.length < 8) {
+    errorDiv.textContent = 'Password must be at least 8 characters.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+
   // Consent validation — SMS consent is the single required checkbox.
-  // It covers both SMS opt-in AND Terms/Privacy agreement (links embedded).
   // Without SMS consent the account is dead weight — we can't deliver the BFF Brief.
   var smsConsent = document.getElementById('consent-sms');
   if (!smsConsent || !smsConsent.checked) {
@@ -1369,40 +1598,176 @@ function handleSignup(event) {
 
   // Get referral code — prefer sessionStorage (set when visitor first landed on site with ?ref=),
   // fall back to URL param in case they landed directly on /account with ?ref=.
-  // We stored the code without the "mem_" prefix, so add it back to form the full MemberStack member ID.
   var urlParams = new URLSearchParams(window.location.search);
   var refCode = '';
   try { refCode = sessionStorage.getItem('sbff_ref') || ''; } catch(e) {}
   if (!refCode) refCode = urlParams.get('ref') || '';
   var referredBy = refCode ? ('mem_' + refCode) : '';
 
-  // Store the phone with the country code prefix so SimpleTexting / Twilio can route it properly.
-  // For +1 (US/CA), prefix is implicit but we store it explicitly for consistency.
-  // For 'other', we still store the number but won't enroll them in SMS lists.
+  // Store the phone with country code prefix for SimpleTexting / Twilio routing.
   var phoneWithCC = (countryCode === '+1')
     ? ('+1' + phone.replace(/[^0-9]/g, ''))
     : phone;
 
-  // Store pending custom fields — we'll attach them at signup when the code is verified
-  sessionStorage.setItem('sbff_pending_fields', JSON.stringify({
+  var customFields = {
     'first-name': firstName,
     'last-name': lastName,
     'phone': phoneWithCC,
     'region': region,
     'referred-by': referredBy,
-    'sms-consent': (smsConsent && smsConsent.checked) ? 'true' : 'false',
+    'sms-consent': 'true',
+    'bff-brief-enabled': 'true',
+    'breaking-news-enabled': 'false',
+    'referral-count': '0',
+    'time-zone': 'ET'
+  };
+
+  var memberstack = window.$memberstackDom;
+  memberstack.signupMemberEmailPassword({
+    email: email,
+    password: password,
+    customFields: customFields,
+    plans: [{ planId: 'pln_the-insider-jbbd0e0g' }]
+  }).then(function(result) {
+    var newMember = result && result.data && result.data.member;
+    // Save referral-code (short form of member ID) for downstream integrations
+    if (newMember && newMember.id) {
+      var shortCode = newMember.id.indexOf('mem_') === 0
+        ? newMember.id.substring(4)
+        : newMember.id;
+      return memberstack.updateMember({
+        customFields: {
+          'referral-code': shortCode,
+          'onboarding-complete': 'true'
+        }
+      });
+    }
+  }).then(function() {
+    return memberstack.getCurrentMember();
+  }).then(function(result) {
+    if (result && result.data) {
+      _lastMember = result.data;
+      loadReferralData(result.data);
+    }
+    goTo('page-referral');
+  }).catch(function(err) {
+    var msg = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
+    // Friendlier message for the most common cause
+    if (/already|exist|taken/i.test(msg)) {
+      msg = 'An account with that email already exists. Try logging in instead.';
+    }
+    errorDiv.textContent = msg;
+    errorDiv.style.display = 'block';
+  });
+}
+
+// ============================================
+// LOGIN — email + password
+// ============================================
+function handleLogin(event) {
+  event.preventDefault();
+  var errorDiv = document.getElementById('login-error');
+  errorDiv.style.display = 'none';
+
+  var email = document.getElementById('login-email').value.trim();
+  var password = document.getElementById('login-password').value;
+
+  if (!email || !password) {
+    errorDiv.textContent = 'Please enter your email and password.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+
+  var memberstack = window.$memberstackDom;
+  memberstack.loginMemberEmailPassword({
+    email: email,
+    password: password
+  }).then(function() {
+    return memberstack.getCurrentMember();
+  }).then(function(result) {
+    goTo('page-dash');
+    if (result && result.data) populateDashboard(result.data);
+  }).catch(function(err) {
+    var msg = (err && err.message) ? err.message : 'Invalid email or password.';
+    // Common cases: no password set (Google-only or passwordless-only account), wrong password
+    if (/password/i.test(msg) && /not|no|missing|invalid/i.test(msg)) {
+      msg = 'That email doesn\'t have a password set. Try "Continue with Google" or "Email me a code instead" below.';
+    }
+    errorDiv.textContent = msg;
+    errorDiv.style.display = 'block';
+  });
+}
+
+// ============================================
+// GOOGLE SIGN-IN — used for both signup and login
+// MemberStack auto-links Google to an existing member if the email matches.
+// ============================================
+function handleGoogleAuth() {
+  var memberstack = window.$memberstackDom;
+  if (!memberstack || !memberstack.loginWithProvider) {
+    alert('Google Sign-In is unavailable right now. Please try email login.');
+    return;
+  }
+
+  // Build custom fields for new members created via Google.
+  // If Google is being used for signup (not login), we still want the correct defaults.
+  var urlParams = new URLSearchParams(window.location.search);
+  var refCode = '';
+  try { refCode = sessionStorage.getItem('sbff_ref') || ''; } catch(e) {}
+  if (!refCode) refCode = urlParams.get('ref') || '';
+  var referredBy = refCode ? ('mem_' + refCode) : '';
+
+  // Stash defaults in sessionStorage — the post-Google redirect handler applies
+  // them once we know whether this Google auth created a new member or logged in an existing one.
+  sessionStorage.setItem('sbff_google_pending_fields', JSON.stringify({
+    'referred-by': referredBy,
+    'sms-consent': 'false',
+    'region': 'us-ca',
     'bff-brief-enabled': 'true',
     'breaking-news-enabled': 'false',
     'referral-count': '0',
     'time-zone': 'ET'
   }));
 
+  memberstack.loginWithProvider({
+    provider: 'google',
+    allowSignup: true
+  }).catch(function(err) {
+    // User closed the Google popup or something went wrong
+    console.warn('Google auth cancelled or failed:', err);
+  });
+}
+
+// ============================================
+// FORGOT PASSWORD FLOW
+// Step 1: enter email → send reset code
+// Step 2: enter code + new password → reset + auto-login
+// ============================================
+function goToForgotPassword() {
+  goTo('page-forgot-password');
+  // Prefill email from login form if present
+  var loginEmail = document.getElementById('login-email');
+  var forgotEmail = document.getElementById('forgot-email');
+  if (loginEmail && forgotEmail && loginEmail.value) forgotEmail.value = loginEmail.value;
+}
+
+function handleForgotPasswordSubmit(event) {
+  event.preventDefault();
+  var errorDiv = document.getElementById('forgot-error');
+  errorDiv.style.display = 'none';
+
+  var email = document.getElementById('forgot-email').value.trim();
+  if (!email) {
+    errorDiv.textContent = 'Please enter your email.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+
   var memberstack = window.$memberstackDom;
-  memberstack.sendMemberSignupPasswordlessEmail({ email: email })
+  memberstack.sendMemberResetPasswordEmail({ email: email })
     .then(function() {
-      sessionStorage.setItem('sbff_pending_email', email);
-      sessionStorage.setItem('sbff_pending_mode', 'signup');
-      goTo('page-verify');
+      sessionStorage.setItem('sbff_reset_email', email);
+      goTo('page-reset-password');
     })
     .catch(function(err) {
       errorDiv.textContent = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
@@ -1410,13 +1775,84 @@ function handleSignup(event) {
     });
 }
 
-function handleLogin(event) {
+function handleResetPasswordSubmit(event) {
   event.preventDefault();
-  var form = event.target;
-  var errorDiv = document.getElementById('login-error');
+  var errorDiv = document.getElementById('reset-error');
   errorDiv.style.display = 'none';
 
-  var email = form.querySelector('[data-ms-member="email"]').value.trim();
+  var code = document.getElementById('reset-code').value.trim();
+  var newPassword = document.getElementById('reset-new-password').value;
+  var email = sessionStorage.getItem('sbff_reset_email');
+
+  if (!code || code.length !== 6) {
+    errorDiv.textContent = 'Please enter the 6-digit code.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  if (!newPassword || newPassword.length < 8) {
+    errorDiv.textContent = 'Password must be at least 8 characters.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  if (!email) {
+    errorDiv.textContent = 'Session expired. Please start over.';
+    errorDiv.style.display = 'block';
+    setTimeout(function() { goTo('page-forgot-password'); }, 1500);
+    return;
+  }
+
+  var memberstack = window.$memberstackDom;
+  memberstack.resetMemberPassword({
+    token: code,
+    newPassword: newPassword
+  }).then(function() {
+    sessionStorage.removeItem('sbff_reset_email');
+    // Auto-login with the new password
+    return memberstack.loginMemberEmailPassword({
+      email: email,
+      password: newPassword
+    });
+  }).then(function() {
+    return memberstack.getCurrentMember();
+  }).then(function(result) {
+    goTo('page-dash');
+    if (result && result.data) populateDashboard(result.data);
+  }).catch(function(err) {
+    errorDiv.textContent = (err && err.message) ? err.message : 'Invalid or expired code. Please try again.';
+    errorDiv.style.display = 'block';
+  });
+}
+
+function handleResendResetCode() {
+  var email = sessionStorage.getItem('sbff_reset_email');
+  if (!email) { goTo('page-forgot-password'); return; }
+  var memberstack = window.$memberstackDom;
+  memberstack.sendMemberResetPasswordEmail({ email: email }).then(function() {
+    var confirm = document.getElementById('reset-resend-confirmation');
+    if (confirm) {
+      confirm.style.display = 'block';
+      setTimeout(function() { confirm.style.display = 'none'; }, 4000);
+    }
+  });
+}
+
+// ============================================
+// EMAIL-CODE LOGIN FALLBACK
+// For existing members who don't have a password set yet.
+// ============================================
+function goToEmailCodeLogin() {
+  goTo('page-email-code-login');
+  var loginEmail = document.getElementById('login-email');
+  var codeEmail = document.getElementById('email-code-login-email');
+  if (loginEmail && codeEmail && loginEmail.value) codeEmail.value = loginEmail.value;
+}
+
+function handleEmailCodeLoginSubmit(event) {
+  event.preventDefault();
+  var errorDiv = document.getElementById('email-code-login-error');
+  errorDiv.style.display = 'none';
+
+  var email = document.getElementById('email-code-login-email').value.trim();
   if (!email) {
     errorDiv.textContent = 'Please enter your email.';
     errorDiv.style.display = 'block';
@@ -1438,12 +1874,10 @@ function handleLogin(event) {
 
 function handleResend() {
   var email = sessionStorage.getItem('sbff_pending_email');
-  var mode = sessionStorage.getItem('sbff_pending_mode');
   if (!email) { goTo('page-login'); return; }
 
   var memberstack = window.$memberstackDom;
-  var method = mode === 'login' ? 'sendMemberLoginPasswordlessEmail' : 'sendMemberSignupPasswordlessEmail';
-  memberstack[method]({ email: email }).then(function() {
+  memberstack.sendMemberLoginPasswordlessEmail({ email: email }).then(function() {
     var confirm = document.getElementById('resend-confirmation');
     confirm.style.display = 'block';
     setTimeout(function() { confirm.style.display = 'none'; }, 4000);
@@ -1452,6 +1886,8 @@ function handleResend() {
 
 // ============================================
 // VERIFY 6-DIGIT CODE
+// Only used by the "Email me a code instead" fallback (existing members without passwords).
+// New signups use email+password directly and never see this page.
 // ============================================
 function handleVerifyCode() {
   var errorDiv = document.getElementById('verify-error');
@@ -1467,7 +1903,6 @@ function handleVerifyCode() {
   }
 
   var email = sessionStorage.getItem('sbff_pending_email');
-  var mode = sessionStorage.getItem('sbff_pending_mode');
   if (!email) {
     errorDiv.textContent = 'Session expired. Please start over.';
     errorDiv.style.display = 'block';
@@ -1476,85 +1911,22 @@ function handleVerifyCode() {
   }
 
   var memberstack = window.$memberstackDom;
-
-  if (mode === 'signup') {
-    // Pull pending fields so we can pass them directly to signup
-    var pending = sessionStorage.getItem('sbff_pending_fields');
-    var customFields = {};
-    if (pending) {
-      try { customFields = JSON.parse(pending); } catch (e) {}
-    }
-
-    memberstack.signupMemberPasswordless({
-      passwordlessToken: code,
-      email: email,
-      customFields: customFields
-    }).then(function() {
-      // Clean up pending session data
-      sessionStorage.removeItem('sbff_pending_fields');
-      sessionStorage.removeItem('sbff_pending_email');
-      sessionStorage.removeItem('sbff_pending_mode');
-
-      // Now that the member exists, fetch their ID and save their referral-code
-      // (short form of member ID, minus the "mem_" prefix) so it's available for
-      // downstream integrations like Klaviyo email templates.
-      return memberstack.getCurrentMember().then(function(result) {
-        var newMember = result && result.data;
-        if (newMember && newMember.id) {
-          var shortCode = newMember.id.indexOf('mem_') === 0
-            ? newMember.id.substring(4)
-            : newMember.id;
-          return memberstack.updateMember({
-            customFields: { 'referral-code': shortCode }
-          }).catch(function(err) {
-            // Non-fatal — referral still works, we just don't have it saved in the field
-            console.warn('Failed to save referral-code:', err);
-          });
-        }
-      }).catch(function() { /* non-fatal */ });
-    }).then(function() {
-      // New signup — skip sports/cities steps, attach the free Insider plan immediately,
-      // then go to the referral page. Sports/cities become an optional add-on in the dashboard.
-      return memberstack.addPlan({ planId: 'pln_the-insider-jbbd0e0g' }).then(function() {
-        return memberstack.updateMember({
-          customFields: { 'onboarding-complete': 'true' }
-        });
-      }).then(function() {
-        return memberstack.getCurrentMember();
-      }).then(function(result) {
-        if (result && result.data) {
-          _lastMember = result.data;
-          loadReferralData(result.data);
-        }
-        goTo('page-referral');
-      });
-    }).catch(function(err) {
-      errorDiv.textContent = (err && err.message) ? err.message : 'Invalid or expired code. Please try again.';
-      errorDiv.style.display = 'block';
-      // Clear the code inputs so user can retry
-      inputs.forEach(function(i) { i.value = ''; });
-      if (inputs[0]) inputs[0].focus();
-    });
-  } else {
-    // Login flow
-    memberstack.loginMemberPasswordless({
-      passwordlessToken: code,
-      email: email
-    }).then(function() {
-      sessionStorage.removeItem('sbff_pending_email');
-      sessionStorage.removeItem('sbff_pending_mode');
-      // Returning user → go to dashboard
-      return memberstack.getCurrentMember();
-    }).then(function(result) {
-      goTo('page-dash');
-      if (result && result.data) populateDashboard(result.data);
-    }).catch(function(err) {
-      errorDiv.textContent = (err && err.message) ? err.message : 'Invalid or expired code. Please try again.';
-      errorDiv.style.display = 'block';
-      inputs.forEach(function(i) { i.value = ''; });
-      if (inputs[0]) inputs[0].focus();
-    });
-  }
+  memberstack.loginMemberPasswordless({
+    passwordlessToken: code,
+    email: email
+  }).then(function() {
+    sessionStorage.removeItem('sbff_pending_email');
+    sessionStorage.removeItem('sbff_pending_mode');
+    return memberstack.getCurrentMember();
+  }).then(function(result) {
+    goTo('page-dash');
+    if (result && result.data) populateDashboard(result.data);
+  }).catch(function(err) {
+    errorDiv.textContent = (err && err.message) ? err.message : 'Invalid or expired code. Please try again.';
+    errorDiv.style.display = 'block';
+    inputs.forEach(function(i) { i.value = ''; });
+    if (inputs[0]) inputs[0].focus();
+  });
 }
 
 // Code-input auto-advance and paste support
@@ -1814,6 +2186,174 @@ function handleCancelMembership() {
 }
 
 // ============================================
+// PASSWORD MODAL — change or set a password
+// ============================================
+function openPasswordModal() {
+  // If user has no password (Google-only or passwordless-only), skip the "current password" field
+  var hasPassword = _lastMember && _lastMember.auth && _lastMember.auth.hasPassword;
+  var currentGroup = document.getElementById('password-current-group');
+  var title = document.getElementById('passwordModalTitle');
+  if (hasPassword) {
+    currentGroup.style.display = '';
+    document.getElementById('password-current').required = true;
+    title.textContent = 'Change password';
+  } else {
+    currentGroup.style.display = 'none';
+    document.getElementById('password-current').required = false;
+    title.textContent = 'Set password';
+  }
+  document.getElementById('password-current').value = '';
+  document.getElementById('password-new').value = '';
+  document.getElementById('password-error').style.display = 'none';
+  document.getElementById('passwordModal').style.display = 'block';
+}
+
+function closePasswordModal() {
+  document.getElementById('passwordModal').style.display = 'none';
+}
+
+function submitPasswordChange(event) {
+  event.preventDefault();
+  var errorDiv = document.getElementById('password-error');
+  errorDiv.style.display = 'none';
+
+  var currentPassword = document.getElementById('password-current').value;
+  var newPassword = document.getElementById('password-new').value;
+
+  if (newPassword.length < 8) {
+    errorDiv.textContent = 'Password must be at least 8 characters.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+
+  var memberstack = window.$memberstackDom;
+  var hasPassword = _lastMember && _lastMember.auth && _lastMember.auth.hasPassword;
+
+  var promise;
+  if (hasPassword) {
+    // Change existing password (requires current password)
+    if (!currentPassword) {
+      errorDiv.textContent = 'Please enter your current password.';
+      errorDiv.style.display = 'block';
+      return;
+    }
+    promise = memberstack.updateMemberAuth({
+      oldPassword: currentPassword,
+      newPassword: newPassword
+    });
+  } else {
+    // First-time password set (for members who signed up via Google or passwordless)
+    promise = memberstack.setPassword({ password: newPassword });
+  }
+
+  promise.then(function() {
+    closePasswordModal();
+    // Refresh member data + badges
+    return memberstack.getCurrentMember();
+  }).then(function(result) {
+    if (result && result.data) {
+      _lastMember = result.data;
+      renderSigninMethods(result.data);
+    }
+    alert(hasPassword ? 'Password updated.' : 'Password set. You can now log in with email + password.');
+  }).catch(function(err) {
+    var msg = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
+    errorDiv.textContent = msg;
+    errorDiv.style.display = 'block';
+  });
+}
+
+// ============================================
+// GOOGLE CONNECT — link Google to the current member
+// ============================================
+function handleGoogleConnect() {
+  var memberstack = window.$memberstackDom;
+  if (!memberstack) return;
+
+  // If Google is already connected, offer to disconnect. Otherwise, connect.
+  var hasGoogle = _lastMember && (_lastMember.auth && _lastMember.auth.providers || [])
+    .some(function(p) { return p.provider === 'google'; });
+
+  if (hasGoogle) {
+    // Safeguard: can't disconnect Google if it's the only sign-in method
+    var hasPassword = _lastMember && _lastMember.auth && _lastMember.auth.hasPassword;
+    if (!hasPassword) {
+      alert('Set a password before disconnecting Google, so you can still log in.');
+      return;
+    }
+    if (!window.confirm('Disconnect Google from your account?')) return;
+    memberstack.disconnectProvider({ provider: 'google' })
+      .then(function() {
+        return memberstack.getCurrentMember();
+      })
+      .then(function(result) {
+        if (result && result.data) {
+          _lastMember = result.data;
+          renderSigninMethods(result.data);
+        }
+      })
+      .catch(function(err) {
+        alert((err && err.message) ? err.message : 'Could not disconnect Google. Please try again.');
+      });
+  } else {
+    memberstack.connectProvider({ provider: 'google' })
+      .then(function() {
+        return memberstack.getCurrentMember();
+      })
+      .then(function(result) {
+        if (result && result.data) {
+          _lastMember = result.data;
+          renderSigninMethods(result.data);
+        }
+      })
+      .catch(function(err) {
+        console.warn('Google connect cancelled or failed:', err);
+      });
+  }
+}
+
+// Render Sign-in Methods panel state (password + Google badges)
+function renderSigninMethods(member) {
+  if (!member) return;
+  var hasPassword = !!(member.auth && member.auth.hasPassword);
+  var providers = (member.auth && member.auth.providers) || [];
+  var hasGoogle = providers.some(function(p) { return p.provider === 'google'; });
+
+  var pwdBadge = document.getElementById('password-status-badge');
+  var pwdSub = document.getElementById('password-status-sub');
+  var pwdBtn = document.getElementById('password-action-btn');
+  if (pwdBadge) {
+    pwdBadge.textContent = hasPassword ? 'Set' : 'Not set';
+    pwdBadge.classList.toggle('is-connected', hasPassword);
+  }
+  if (pwdSub) {
+    pwdSub.textContent = hasPassword
+      ? 'You can log in with your email and password.'
+      : 'Log in with your email and password.';
+  }
+  if (pwdBtn) {
+    pwdBtn.textContent = hasPassword ? 'Change password' : 'Set password';
+  }
+
+  var gBadge = document.getElementById('google-status-badge');
+  var gSub = document.getElementById('google-status-sub');
+  var gBtn = document.getElementById('google-action-btn');
+  if (gBadge) {
+    gBadge.textContent = hasGoogle ? 'Connected' : 'Not connected';
+    gBadge.classList.toggle('is-connected', hasGoogle);
+  }
+  if (gSub) {
+    gSub.textContent = hasGoogle
+      ? 'One-tap sign-in with Google is enabled.'
+      : 'Sign in with one tap using your Google account.';
+  }
+  if (gBtn) {
+    gBtn.textContent = hasGoogle ? 'Disconnect' : 'Connect';
+    gBtn.classList.toggle('signin-method-card__action--danger', hasGoogle);
+  }
+}
+
+// ============================================
 // ON PAGE LOAD — check auth state and route
 // ============================================
 (function() {
@@ -1835,24 +2375,57 @@ function handleCancelMembership() {
         return;
       }
 
-      // Logged in — apply any pending signup custom fields
-      applyPendingCustomFields().then(function() {
-        // Re-fetch member to get updated custom fields
-        return memberstack.getCurrentMember();
-      }).then(function(result) {
-        var member = result && result.data;
-        var customFields = (member && member.customFields) || {};
-        var onboardingComplete = customFields['onboarding-complete'] === 'true';
-
-        if (isOnboarding && !onboardingComplete) {
-          // Legacy onboarding URL — route to referral page (signup → consent → referral → dashboard)
-          goTo('page-referral');
-        } else {
-          // Returning user OR completed onboarding — go to dashboard
-          goTo('page-dash');
-          populateDashboard(member);
-        }
+      var customFields = (member && member.customFields) || {};
+      var onboardingComplete = customFields['onboarding-complete'] === 'true';
+      var planConnections = (member && member.planConnections) || [];
+      var hasInsiderPlan = planConnections.some(function(pc) {
+        return pc.planId === 'pln_the-insider-jbbd0e0g' && pc.status !== 'CANCELED';
       });
+
+      // Post-Google-auth NEW member: they have a MemberStack account but no plan
+      // and no onboarding-complete flag. Attach the Insider plan + default fields.
+      if (!onboardingComplete && !hasInsiderPlan) {
+        var pendingGoogleFields = {};
+        try {
+          var raw = sessionStorage.getItem('sbff_google_pending_fields');
+          if (raw) pendingGoogleFields = JSON.parse(raw);
+        } catch (e) {}
+
+        // Derive referral code from their member ID
+        var shortCode = member.id.indexOf('mem_') === 0 ? member.id.substring(4) : member.id;
+        pendingGoogleFields['referral-code'] = shortCode;
+        pendingGoogleFields['onboarding-complete'] = 'true';
+
+        memberstack.addPlan({ planId: 'pln_the-insider-jbbd0e0g' })
+          .then(function() {
+            return memberstack.updateMember({ customFields: pendingGoogleFields });
+          })
+          .then(function() {
+            sessionStorage.removeItem('sbff_google_pending_fields');
+            return memberstack.getCurrentMember();
+          })
+          .then(function(result) {
+            if (result && result.data) {
+              _lastMember = result.data;
+              loadReferralData(result.data);
+            }
+            goTo('page-referral');
+          })
+          .catch(function(err) {
+            console.error('Google new-member setup failed:', err);
+            goTo('page-dash');
+            populateDashboard(member);
+          });
+        return;
+      }
+
+      // Existing / already-onboarded member: go to dashboard
+      if (isOnboarding && !onboardingComplete) {
+        goTo('page-referral');
+      } else {
+        goTo('page-dash');
+        populateDashboard(member);
+      }
     });
   });
 })();
@@ -1872,6 +2445,10 @@ function populateDashboardFromMemory() {
 function populateDashboard(member) {
   if (!member) return;
   _lastMember = member;
+
+  // Sign-in Methods panel (password + Google badges)
+  renderSigninMethods(member);
+
   var customFields = member.customFields || {};
   var firstName = customFields['first-name'] || 'there';
   var lastName = customFields['last-name'] || '';
